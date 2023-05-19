@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, StyleSheet , Text , View, SafeAreaView , TextInput , Button } from 'react-native';
+import { Image, StyleSheet , Text , View, SafeAreaView , TextInput , TouchableOpacity , Alert } from 'react-native';
 
 function StartScreen(props) {
     return (
@@ -32,19 +32,22 @@ function StartScreen(props) {
                 placeholder="Confirm Password"
             />
 
-            <View style={styles.signup}>
+            <View style={styles.lineContainer}>
                 <Text>By creating an account, you agree to our </Text>
-                <Text>terms</Text>
+                <TouchableOpacity onPress={termsPressed}>
+                  <Text style={styles.terms}>terms</Text>
+                </TouchableOpacity>
             </View>
 
-            <Button style={styles.button} 
-                title='Sign Up'
-                onPress={() => console.log("Login button pressed")}
-            />
+            <TouchableOpacity onPress={signupPressed} style={styles.buttonContainer}> 
+                <Text style={styles.buttonText}>Sign up</Text>
+            </TouchableOpacity>
 
-            <View style={styles.signup}>
+            <View style={styles.lineContainer}>
                 <Text>Already have an account? </Text>
-                <Text>Log In</Text>
+                <TouchableOpacity onPress={loginPressed}>
+                    <Text style={styles.login}>Log In</Text>
+                </TouchableOpacity>
             </View>
             
         </SafeAreaView>
@@ -59,24 +62,53 @@ const styles = StyleSheet.create({
     },
 
     logo: {
-        width: 200,
-        height: 200,
+        width: 250,
+        height: 250,
+        margin: -30,
     },
 
     input: {
         height: 40,
         width: 210,
-        margin: 12,
+        margin: 4,
         borderWidth: 1,
         padding: 10,
     },
 
-    button: {
-        borderRadius: 8,
-        padding: 20,
-        backgroundColor: '#f01d71',
+    buttonContainer: {
+        borderRadius: 15,
+        paddingHorizontal: 35,
+        paddingVertical: 10,
+        backgroundColor: "#808080",
+        marginTop: 4,
+        marginBottom: 6, 
     },
 
+    buttonText: {
+        fontSize: 30,
+        color: "#fff",
+        fontWeight: "bold",
+        alignSelf: "center",
+        textTransform: "uppercase"
+    },
+
+    lineContainer: {
+        flexDirection: 'row',
+    },
+
+    terms: {
+        color: '#0000FF',
+    },
+
+    login: {
+        color: '#FF0000',
+    }
+
 })
+
+const signupPressed = () => console.log("Sign up button pressed");
+const termsPressed = () => console.log("terms button pressed");
+const loginPressed = () => console.log("login button pressed");
+
 
 export default StartScreen;

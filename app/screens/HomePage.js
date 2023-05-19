@@ -4,7 +4,7 @@ import { Image, StyleSheet , Text , View, SafeAreaView , TextInput , Button } fr
 function StartScreen(props) {
     return (
         <SafeAreaView style={styles.container}>
-            
+            <Text>zxc</Text>
         </SafeAreaView>
     ); 
 }
