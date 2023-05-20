@@ -1,10 +1,20 @@
-import React from 'react';
-import { Image, StyleSheet , View , TextInput, SafeAreaView , Text, TouchableOpacity , Alert } from 'react-native';
+import React, { useState } from 'react';
+import { Image, StyleSheet , View , SafeAreaView , Text, TouchableOpacity } from 'react-native';
+
+import CustomInput from '../components/CustomInput'
+import CustomButton from '../components/CustomButton'
 
 function LoginScreen(props) {
 
-    const [text, onChangeText] = React.useState('Useless Text');
-    const [number, onChangeNumber] = React.useState('');
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+
+    const loginPressed = () => {
+        console.warn("Login")
+    };
+
+    const forgotPressed = () => console.warn("Forgot Password");
+    const signupPressed = () => console.warn("Sign Up");
 
     return (
         <SafeAreaView style={styles.container}>
@@ -12,25 +22,14 @@ function LoginScreen(props) {
             <Image style={styles.logo} 
                 source={require('../assets/logo.png')} />
             
-            <View style={styles.keyable}>
-            <TextInput
-                style={styles.input}
-                placeholder="Username"
-            />
-
-            <TextInput
-                style={styles.input}
-                placeholder="Password"
-            />
-            </View>
+            <CustomInput placeholder= "Username" value={username} setValue={setUsername}/>
+            <CustomInput placeholder= "Password" value={password} setValue={setPassword} secureTextEntry/>
 
             <TouchableOpacity onPress={forgotPressed}> 
             <Text>Forgot Password?</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={loginPressed} style={styles.buttonContainer}> 
-                <Text style={styles.buttonText}>Login</Text>
-            </TouchableOpacity>
+            <CustomButton text= "Login" onPress={loginPressed}/>
 
             <View style={styles.signupContainer}>
                 <Text>Don't have account? </Text>
@@ -58,36 +57,6 @@ const styles = StyleSheet.create({
         margin:-10,
     },
 
-    keyable: {
-        padding: 0,
-        flex: 0,
-        margin: 0,
-    },
-
-    input: {
-        height: 40,
-        width: 210,
-        margin: 5,
-        borderWidth: 1,
-        padding: 10,
-    },
-
-    buttonContainer: {
-        borderRadius: 15,
-        paddingHorizontal: 35,
-        paddingVertical: 10,
-        backgroundColor: "#808080",
-        margin: 3,
-    },
-
-    buttonText: {
-        fontSize: 30,
-        color: "#fff",
-        fontWeight: "bold",
-        alignSelf: "center",
-        textTransform: "uppercase"
-    },
-
     signupContainer: {
         flexDirection: "row"
     },
@@ -97,9 +66,5 @@ const styles = StyleSheet.create({
 
     }
 })
-
-const loginPressed = () => console.log("Login button pressed");
-const forgotPressed = () => console.log("Forgot Password button pressed");
-const signupPressed = () => console.log("Forgot Password button pressed");
 
 export default LoginScreen;
