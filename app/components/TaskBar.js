@@ -40,7 +40,7 @@ const TaskBar = () => {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        height: 100,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-evenly',
