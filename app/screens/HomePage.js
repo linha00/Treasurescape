@@ -1,10 +1,18 @@
 import React from 'react';
 import { Image, StyleSheet , Text , View, SafeAreaView , TextInput , Button } from 'react-native';
+import color from '../config/colors'
+
+import TaskBar from '../components/TaskBar';
+import SidePanelButton from '../components/SidePanelButton';
+import ProfileButton from '../components/ProfileButton';
 
 function StartScreen(props) {
     return (
+        
         <SafeAreaView style={styles.container}>
             <View style={styles.container1}>
+                <SidePanelButton/>
+                <ProfileButton/>
                 <View style={styles.texts}>
                     <Text style={styles.username}>Username</Text>
                     <Text style={styles.totalgold}>Total Gold:</Text>
@@ -17,36 +25,31 @@ function StartScreen(props) {
             </View>
 
             <View style={styles.container2}>
-                <View style={styles.box}>
-                    <Text>placeholer</Text>
+                <View style={styles.section}>
+                    <Text style={styles.headers}>Misions</Text>
+                    <View style={styles.box}>
+
+                    </View>
+
                 </View>
 
-                <View style={styles.box}>
-                    <Text>placeholer</Text>
+                <View style={styles.section}>
+                    <Text style={styles.headers}>Map</Text>
+                    <View style={styles.box}>
+
+                    </View>
                 </View>
 
-                <View style={styles.box}>
-                    <Text>placeholer</Text>
+                <View style={styles.section}>
+                    <Text style={styles.headers}>Leaderboard</Text>
+                    <View style={styles.box}>
+
+                    </View>
                 </View>
             </View>
 
-            <View style={styles.taskbar}>
-                <Text style={styles.tasks}>
-                    task1
-                </Text>
-                <Text style={styles.tasks}>
-                    task2
-                </Text>
-                <Text style={styles.tasks}>
-                    task3
-                </Text>
-                <Text style={styles.tasks}>
-                    task4
-                </Text>
-                <Text style={styles.tasks}>
-                    task5
-                </Text>
-            </View>
+            <TaskBar style={styles.taskbar}/>
+
 
         </SafeAreaView>
     ); 
@@ -63,7 +66,7 @@ const styles = StyleSheet.create({
         flex: 3,
         width: "100%",
         flexDirection: 'row',
-        backgroundColor: '#D3D3D3',
+        backgroundColor: color.secondary,
         alignItems: 'flex-end',
         justifyContent: 'space-between',
         paddingLeft: 30,
@@ -77,12 +80,27 @@ const styles = StyleSheet.create({
         flex: 9,
         width: "85%",
         marginVertical: 20,
-        
     },
-    
+
+    section: {
+        flex: 3,
+        marginVertical: 5,        
+    },
+
+    headers: {
+        fontSize: 20,
+    },
+
+    box: {
+        backgroundColor: color.primary,
+        width: '100%',
+        height: '85%',
+        borderRadius: 20,
+    },
+
     username: {
         fontSize: 30,
-        color: '#5A5A5A',
+        color: color.quaternary,
     },
 
     totalgold: {
@@ -92,22 +110,8 @@ const styles = StyleSheet.create({
 
     gold: {
         fontSize: 35,
-        color: '#FDDC5C',
+        color: color.gold,
         paddingLeft: 30,
-    },
-
-    box: {
-        flex: 3,
-        backgroundColor: 'blue',
-    },
-    
-    taskbar: {
-        flex: 1,
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    
-    tasks: {
     },
 
 })

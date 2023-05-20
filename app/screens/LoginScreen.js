@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Image, StyleSheet , View , SafeAreaView , Text, TouchableOpacity } from 'react-native';
+import color from '../config/colors'
 
 import CustomInput from '../components/CustomInput'
 import CustomButton from '../components/CustomButton'
@@ -62,7 +63,7 @@ const styles = StyleSheet.create({
     },
 
     signup: {
-        color: "#FF0000",
+        color: color.red,
 
     }
 })
