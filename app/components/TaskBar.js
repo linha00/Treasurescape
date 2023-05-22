@@ -10,27 +10,27 @@ const TaskBar = () => {
 
     return (
         <View style={styles.container}> 
-            <TouchableOpacity onPress={onPress} style={styles.task}> 
+            <TouchableOpacity onPress={() => onPress("Home")} style={styles.task}> 
                 <Text>image</Text>
                 <Text style={styles.text}>Home</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={onPress} style={styles.task}>
+            <TouchableOpacity onPress={() => onPress("Missions")} style={styles.task}>
                 <Text>image</Text> 
                 <Text style={styles.text}>Missions</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={onPress} style={styles.task}> 
+            <TouchableOpacity onPress={() => onPress("Map")} style={styles.task}> 
                 <Text>image</Text>
                 <Text style={styles.text}>Map</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={onPress} style={styles.task}> 
+            <TouchableOpacity onPress={() => onPress("Friends")} style={styles.task}> 
                 <Text>image</Text>
                 <Text style={styles.text}>Friends</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={onPress} style={styles.task}> 
+            <TouchableOpacity onPress={() => onPress("Shop")} style={styles.task}> 
                 <Text>image</Text>
                 <Text style={styles.text}>Shop</Text>
             </TouchableOpacity>
