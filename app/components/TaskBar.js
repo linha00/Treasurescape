@@ -2,8 +2,8 @@ import React from 'react';
 import { StyleSheet , View, TouchableOpacity , Text } from 'react-native';
 import color from '../config/colors'
 
-const onPress = () => {
-
+const onPress = (text) => {
+    console.log(text + " taskbar pressed");
 }
 
 const TaskBar = () => {

@@ -12,8 +12,8 @@ function MissionPage(props) {
 
     return (
         <SafeAreaView style={styles.container}>
+            <BackButton style={styles.back}/>
             <View style={styles.container1}>
-                <BackButton style={styles.back}/>
                 <Image style={styles.logo} 
                     source={require('../assets/logo.png')} />
             </View>
@@ -41,7 +41,6 @@ function MissionPage(props) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        flexDirection: 'column', 
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -51,7 +50,6 @@ const styles = StyleSheet.create({
         width: '90%',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: color.secondary,
     },  
 
     container2: {
@@ -59,11 +57,12 @@ const styles = StyleSheet.create({
         width: '90%',
         alignItems: 'flex-start',
         justifyContent: 'flex-start',
-        padding: 20,
+        padding: 10,
     }, 
 
     button: {
         flex: 0.8,
+        top: -50,
         alignItems: 'center',
         justifyContent: 'center',
     },

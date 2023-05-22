@@ -12,9 +12,17 @@ function StartScreen(props) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [secondPassword, setSecondPassword] = useState('');
+    const passwordConfirmation = password == secondPassword;
 
     const signupPressed = () => {
-        console.warn("Sign up")
+        console.warn("Sign up");
+        console.log(
+            "\nFull name: " + name +
+            "\nUsername: " + username +
+            "\nemail: " + email +
+            "\npassword: " + password +
+            "\nConfirmation: " + passwordConfirmation
+        )
     };
 
     const termsPressed = () => console.warn("terms");

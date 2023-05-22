@@ -11,7 +11,11 @@ function LoginScreen(props) {
     const [password, setPassword] = useState('');
 
     const loginPressed = () => {
-        console.warn("Login")
+        console.warn("Login");
+        console.log(
+                "\nusername: " + username +
+                "\nPassword: " + password
+            );
     };
 
     const forgotPressed = () => console.warn("Forgot Password");
@@ -23,7 +27,7 @@ function LoginScreen(props) {
             <Image style={styles.logo} 
                 source={require('../assets/logo.png')} />
             
-            <CustomInput placeholder= "Username" value={username} setValue={setUsername}/>
+            <CustomInput placeholder= "Username" value={username} setValue={setUsername} />
             <CustomInput placeholder= "Password" value={password} setValue={setPassword} secureTextEntry/>
 
             <TouchableOpacity onPress={forgotPressed}> 

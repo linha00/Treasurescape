@@ -18,6 +18,9 @@ const BackButton = ({onPress}) => {
 
 const styles = StyleSheet.create({
     container: {
+        position: 'absolute',
+        top: 50,
+        left: 20,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
