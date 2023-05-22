@@ -6,7 +6,7 @@ import TaskBar from '../components/TaskBar';
 import SidePanelButton from '../components/SidePanelButton';
 import Shop from '../components/Shop';
 
-function ShopPage(props) {
+function ShopPage() {
     return (
         
         <SafeAreaView style={styles.container}>

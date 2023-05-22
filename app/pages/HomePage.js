@@ -6,7 +6,7 @@ import TaskBar from '../components/TaskBar';
 import SidePanelButton from '../components/SidePanelButton';
 import ProfileButton from '../components/ProfileButton';
 
-function StartScreen(props) {
+function StartScreen() {
     return (
         
         <SafeAreaView style={styles.container}>

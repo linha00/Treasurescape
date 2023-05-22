@@ -1,7 +1,7 @@
 import React from 'react';
 import { Image, StyleSheet , Text , View} from 'react-native';
 
-function StartScreen(props) {
+function StartScreen() {
     return (
         <View style= {styles.container}>
             <Image style={styles.homeLogo} 

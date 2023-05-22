@@ -5,7 +5,7 @@ import color from '../config/colors'
 import CustomInput from '../components/CustomInput';
 import CustomButton from '../components/CustomButton';
 
-function StartScreen(props) {
+function StartScreen() {
 
     const [name, setName] = useState('');
     const [username, setUsername] = useState('');

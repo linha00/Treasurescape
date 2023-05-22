@@ -6,7 +6,7 @@ import BackButton from '../components/BackButton';
 import CustomButton from '../components/CustomButton';
 import TaskBar from '../components/TaskBar';
 
-function MissionPage(props) {
+function MissionPage() {
 
 
 

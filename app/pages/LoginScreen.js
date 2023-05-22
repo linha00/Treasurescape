@@ -5,7 +5,7 @@ import color from '../config/colors'
 import CustomInput from '../components/CustomInput'
 import CustomButton from '../components/CustomButton'
 
-function LoginScreen(props) {
+function LoginScreen() {
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
