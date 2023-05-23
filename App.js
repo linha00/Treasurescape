@@ -1,12 +1,14 @@
 import React from 'react';
 import { TouchableWithoutFeedback , Keyboard } from 'react-native';
 
-import StartScreen from './app/pages/StartScreen';
-import LoginScreen from './app/pages/LoginScreen';
-import SignUp from './app/pages/SignUp';
-import HomePage from './app/pages/HomePage';
-import MissionPage from './app/pages/MissionPage';
-import ShopPage from './app/pages/ShopPage';
+import StartScreen from './pages/startScreen';
+import LoginPage from './pages/loginPage';
+import SignupPage from './pages/signupPage';
+import HomePage from './pages/homePage';
+import MissionPage from './pages/missionPage';
+import ShopPage from './pages/shopPage';
+
+import Navigator from './routes/homeStack';
 
 export default function App() {
 
@@ -18,7 +20,7 @@ export default function App() {
     return (
         <TouchableWithoutFeedback onPress={press}>
             {/* change this */}
-            {/*==>*/ <ShopPage/> /*<==*/}
+            {/*==>*/ <Navigator/> /*<==*/}
         </TouchableWithoutFeedback>
     )
 }
