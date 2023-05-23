@@ -1,22 +1,25 @@
 import React from 'react';
-import { Image, StyleSheet , Text , View, SafeAreaView } from 'react-native';
+import { StyleSheet , Text , View, SafeAreaView, Button } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import color from '../config/colors'
 
 import TaskBar from '../components/taskBar';
 import SidePanelButton from '../components/sidePanelButton';
 import ProfileButton from '../components/profileButton';
 
-function StartScreen({ navigation }) {
+function StartScreen() {
+
+    const navigation = useNavigation();
 
     const pressHandler = () => {
-        navigation.goBack();
         console.warn("temp button to go back to login page");
+        navigation.goBack();
     };
 
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.container1}>
-                <SidePanelButton onPress={pressHandler}/>
+                <SidePanelButton/>
                 <ProfileButton />
                 <View style={styles.texts}>
                     <Text style={styles.username}>Username</Text>
@@ -33,7 +36,7 @@ function StartScreen({ navigation }) {
                 <View style={styles.section}>
                     <Text style={styles.headers}>Misions</Text>
                     <View style={styles.box}>
-
+                        <Button onPress={pressHandler} title="temp button to go back to login"/>
                     </View>
 
                 </View>

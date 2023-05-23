@@ -4,6 +4,7 @@ import color from '../config/colors'
 
 import CustomInput from '../components/customInput';
 import CustomButton from '../components/customButton';
+import { useNavigation } from '@react-navigation/native';
 
 function StartScreen() {
 
@@ -13,6 +14,8 @@ function StartScreen() {
     const [password, setPassword] = useState('');
     const [secondPassword, setSecondPassword] = useState('');
     const passwordConfirmation = password == secondPassword;
+
+    const navigation = useNavigation();
 
     const signupPressed = () => {
         console.warn("Sign up");
@@ -26,8 +29,11 @@ function StartScreen() {
     };
 
     const termsPressed = () => console.warn("terms");
-    const loginPressed = () => console.warn("login");
-
+    const loginPressed = () => {
+        console.warn("login");
+        navigation.goBack();
+    }
+    
     return (
         <SafeAreaView style={styles.container}>
             <Image style={styles.logo} 

@@ -1,28 +1,38 @@
 import React, { useState } from 'react';
 import { Image, StyleSheet , View , SafeAreaView , Text, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import color from '../config/colors'
 
 import CustomInput from '../components/customInput'
 import CustomButton from '../components/customButton'
 
-function LoginScreen({ navigation }) {
+function LoginScreen() {
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
+    const navigation = useNavigation();
+
     const loginPressed = () => {
-        console.warn("Login");
+        // need code the validation of user
         console.log(
-                "\nusername: " + username +
-                "\nPassword: " + password
+            "\nusername: " + username +
+            "\nPassword: " + password
             );
-        
+        console.warn("Login");
         navigation.navigate('Home');
+        };
+
+    const forgotPressed = () => {
+        console.warn("Forgot Password");
+        navigation.navigate('ForgotPassword');
     };
 
-    const forgotPressed = () => console.warn("Forgot Password");
-    const signupPressed = () => console.warn("Sign Up");
-
+    const signupPressed = () => {
+        console.warn("Sign Up");
+        navigation.navigate('Signup');
+    };
+    
     return (
         <SafeAreaView style={styles.container}>
             
