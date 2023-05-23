@@ -1,18 +1,23 @@
 import React from 'react';
-import { Image, StyleSheet , Text , View, SafeAreaView , TextInput , Button } from 'react-native';
+import { Image, StyleSheet , Text , View, SafeAreaView } from 'react-native';
 import color from '../config/colors'
 
 import TaskBar from '../components/taskBar';
 import SidePanelButton from '../components/sidePanelButton';
 import ProfileButton from '../components/profileButton';
 
-function StartScreen() {
+function StartScreen({ navigation }) {
+
+    const pressHandler = () => {
+        navigation.goBack();
+        console.warn("temp button to go back to login page");
+    };
+
     return (
-        
         <SafeAreaView style={styles.container}>
             <View style={styles.container1}>
-                <SidePanelButton/>
-                <ProfileButton/>
+                <SidePanelButton onPress={pressHandler}/>
+                <ProfileButton />
                 <View style={styles.texts}>
                     <Text style={styles.username}>Username</Text>
                     <Text style={styles.totalgold}>Total Gold:</Text>

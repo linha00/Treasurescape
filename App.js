@@ -1,7 +1,6 @@
 import React from 'react';
 import { TouchableWithoutFeedback , Keyboard } from 'react-native';
 
-import StartScreen from './pages/startScreen';
 import LoginPage from './pages/loginPage';
 import SignupPage from './pages/signupPage';
 import HomePage from './pages/homePage';

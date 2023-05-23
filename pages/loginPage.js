@@ -5,7 +5,7 @@ import color from '../config/colors'
 import CustomInput from '../components/customInput'
 import CustomButton from '../components/customButton'
 
-function LoginScreen() {
+function LoginScreen({ navigation }) {
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -16,6 +16,8 @@ function LoginScreen() {
                 "\nusername: " + username +
                 "\nPassword: " + password
             );
+        
+        navigation.navigate('Home');
     };
 
     const forgotPressed = () => console.warn("Forgot Password");
