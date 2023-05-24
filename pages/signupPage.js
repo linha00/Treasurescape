@@ -5,6 +5,7 @@ import color from '../config/colors'
 import CustomInput from '../components/customInput';
 import CustomButton from '../components/customButton';
 import { useNavigation } from '@react-navigation/native';
+import BackButton from '../components/backButton';
 
 function StartScreen() {
 
@@ -26,6 +27,9 @@ function StartScreen() {
             "\npassword: " + password +
             "\nConfirmation: " + passwordConfirmation
         )
+        navigation.goBack();
+
+        //the signup process
     };
 
     const termsPressed = () => console.warn("terms");
@@ -36,6 +40,8 @@ function StartScreen() {
     
     return (
         <SafeAreaView style={styles.container}>
+            <BackButton onPress={() => navigation.goBack()}/>
+
             <Image style={styles.logo} 
                 source={require('../assets/logo.png')} />
 
