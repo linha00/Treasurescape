@@ -1,15 +1,15 @@
 import React from 'react';
 import { StyleSheet , View , TextInput } from 'react-native';
 
-const CustomInput = ({ value , setValue , placeholder , secureTextEntry, type = "Primary" , maxLength = 100}) => {
+const CustomInput = ({ value , setValue , placeholder , secureTextEntry, version = "Primary" , maxLength = 100 }) => {
 
 
     return (
-        <View style={[styles.container, styles[`container_${type}`]]}>
+        <View style={[styles.container, styles[`container_${version}`]]}>
             <TextInput
                 value ={value}
                 onChangeText={setValue}
-                style={[styles.input , styles[`input_${type}`]]}
+                style={[styles.input , styles[`input_${version}`]]}
                 maxLength={maxLength}
                 placeholder= {placeholder}
                 secureTextEntry = {secureTextEntry}

@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
-import { Image, StyleSheet , View , SafeAreaView , Text, TouchableOpacity } from 'react-native';
+import { Image, StyleSheet , View , SafeAreaView , Text, TouchableWithoutFeedback , Keyboard , Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import color from '../config/colors'
 
 import CustomInput from '../components/customInput'
 import CustomButton from '../components/customButton'
 import BackButton from '../components/backButton';
+
+const press = () => {
+    Keyboard.dismiss();
+}
 
 function ResetPassword() {
 
@@ -15,32 +19,52 @@ function ResetPassword() {
     const navigation = useNavigation();
 
     const back = () => {
-        console.warn("back pressed");
         navigation.goBack();
     };
 
     const PressReset = () => {
-        console.log(
-            "\nPassword: " + password +
-            "\nverification: " + (password == secondPassword)
+        if (password.length > 5 && password == secondPassword) {
+            Alert.alert(
+                "Password changed successfully", "you can process to login with the new password.",
+                [{ text: 'Ok' }],
+                { cancelable: true }
             );
-        console.warn("Password reseted");
-        navigation.goBack();
+            console.log(
+                "\nPassword Changed\nPassword: " + password 
+                );
+            navigation.goBack();
+        } else {
+            if (!(password.length > 5)) {
+                Alert.alert(
+                    "Please enter a valid Password", "Password must be at least be 6 Char long",
+                    [{ text: 'Ok' }],
+                    { cancelable: true }
+                );
+            } else {
+                Alert.alert(
+                    "Please enter the same Password", "",
+                    [{ text: 'Ok' }],
+                    { cancelable: true }
+                );
+            }
+        }
         };
 
     return (
-        <SafeAreaView style={styles.container}>
-            <BackButton onPress={back}/>
-            
-            <Text style={styles.header}>
-                Enter new password
-            </Text>
+        <TouchableWithoutFeedback onPress={press}>
+            <SafeAreaView style={styles.container}>
+                <BackButton onPress={back}/>
+                
+                <Text style={styles.header}>
+                    Enter new password
+                </Text>
 
-            <CustomInput placeholder="password" setValue={setPassword}/>
-            <CustomInput placeholder="confirm password" setValue={setsecondPassword}/>
+                <CustomInput placeholder="password" setValue={setPassword}/>
+                <CustomInput placeholder="confirm password" setValue={setsecondPassword}/>
 
-            <CustomButton text= "reset" onPress={PressReset}/>
-        </SafeAreaView>
+                <CustomButton text= "reset" onPress={PressReset}/>
+            </SafeAreaView>
+        </TouchableWithoutFeedback>
     );
 }
 

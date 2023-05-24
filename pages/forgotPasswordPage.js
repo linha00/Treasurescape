@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
-import { StyleSheet , SafeAreaView , Text } from 'react-native';
+import { StyleSheet , SafeAreaView , Text , TouchableWithoutFeedback , Keyboard , Alert} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import color from '../config/colors';
 
 import CustomInput from '../components/customInput';
 import CustomButton from '../components/customButton';
 import BackButton from '../components/backButton';
+
+const press = () => {
+    Keyboard.dismiss();
+}
 
 function ForgotPasswordPage() {
 
@@ -14,31 +18,44 @@ function ForgotPasswordPage() {
     const [email, setEmail] = useState('');
 
     const pressedSendEmail = () => {
-        console.warn("code sent to email");
-        console.log("email: " + email);
-        navigation.goBack();
-        navigation.navigate('CodeVerification');
+        if (email.length > 7 && email.indexOf("@") > 2 && email.includes(".com")) {
+            Alert.alert(
+                "Verification code has been sent to your email", "",
+                [{ text: 'Ok' }],
+                { cancelable: true }
+            );
+            console.log("\nVerification sent to\nemail: " + email);
+            navigation.goBack();
+            navigation.navigate('CodeVerification');
+        } else {
+            Alert.alert(
+                "Please enter a valid Email", "",
+                [{ text: 'Ok' }],
+                { cancelable: true }
+            );
+        }
     };
 
     const back = () => {
-        console.warn("back pressed");
         navigation.goBack();
     };
 
     return (
-        <SafeAreaView style={styles.container}>
-            <BackButton onPress={back}/>
+        <TouchableWithoutFeedback onPress={press}>
+            <SafeAreaView style={styles.container}>
+                <BackButton onPress={back}/>
 
-            <Text style={styles.header}>
-                Forgot your Password?
-            </Text>
+                <Text style={styles.header}>
+                    Forgot your Password?
+                </Text>
 
-            <Text style={styles.text}>
-                Enter your email below to reset your password        
-            </Text>
-            <CustomInput placeholder= "Email" value={email} setValue={setEmail} />
-            <CustomButton text= "Submit" onPress={pressedSendEmail}/>
-        </SafeAreaView>
+                <Text style={styles.text}>
+                    Enter your email below to reset your password        
+                </Text>
+                <CustomInput placeholder= "Email" value={email} setValue={setEmail} />
+                <CustomButton text= "Submit" onPress={pressedSendEmail}/>
+            </SafeAreaView>
+        </TouchableWithoutFeedback>
     );
 }
 

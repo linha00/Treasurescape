@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
-import { Image, StyleSheet , View , SafeAreaView , Text, TouchableOpacity } from 'react-native';
+import { Image, StyleSheet , View , SafeAreaView , Text, TouchableOpacity , TouchableWithoutFeedback , Keyboard , Alert} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import color from '../config/colors'
 
 import CustomInput from '../components/customInput'
 import CustomButton from '../components/customButton'
+
+    const press = () => {
+        Keyboard.dismiss();
+    };
 
 function LoginScreen() {
 
@@ -14,49 +18,55 @@ function LoginScreen() {
     const navigation = useNavigation();
 
     const loginPressed = () => {
-        // need code the validation of user
-        console.log(
-            "\nusername: " + username +
-            "\nPassword: " + password
+        if (username == "admin" && password == "password" /*database verification*/) {
+            console.log(
+                "\nLogin successful" +
+                "\nusername: " + username +
+                "\nPassword: " + password
+                );
+            navigation.navigate('Home');
+        } else {
+            Alert.alert(
+                "Incorrect username or password", "",
+                [{ text: 'Ok' }],
+                { cancelable: true }
             );
-        console.warn("Login");
-        navigation.navigate('Home');
+        }
         };
 
     const forgotPressed = () => {
-        console.warn("Forgot Password");
         navigation.navigate('ForgotPassword');
     };
 
     const signupPressed = () => {
-        console.warn("Sign Up");
         navigation.navigate('Signup');
     };
     
     return (
-        <SafeAreaView style={styles.container}>
-            
-            <Image style={styles.logo} 
-                source={require('../assets/logo.png')} />
-            
-            <CustomInput placeholder= "Username" value={username} setValue={setUsername} />
-            <CustomInput placeholder= "Password" value={password} setValue={setPassword} secureTextEntry/>
+        <TouchableWithoutFeedback onPress={press}>
+            <SafeAreaView style={styles.container}>
+                <Image style={styles.logo} 
+                    source={require('../assets/logo.png')} />
+                
+                <CustomInput placeholder= "Username" value={username} setValue={setUsername} />
+                <CustomInput placeholder= "Password" value={password} setValue={setPassword} secureTextEntry/>
 
-            <TouchableOpacity onPress={forgotPressed}> 
-            <Text>Forgot Password?</Text>
-            </TouchableOpacity>
-
-            <CustomButton text= "Login" onPress={loginPressed}/>
-
-            <View style={styles.signupContainer}>
-                <Text>Don't have account? </Text>
-
-                <TouchableOpacity onPress={signupPressed}> 
-                <Text style={styles.signup}>Sign up</Text>
+                <TouchableOpacity onPress={forgotPressed}> 
+                <Text>Forgot Password?</Text>
                 </TouchableOpacity>
-            </View>
-            
-        </SafeAreaView>
+
+                <CustomButton text= "Login" onPress={loginPressed}/>
+
+                <View style={styles.signupContainer}>
+                    <Text>Don't have account? </Text>
+
+                    <TouchableOpacity onPress={signupPressed}> 
+                    <Text style={styles.signup}>Sign up</Text>
+                    </TouchableOpacity>
+                </View>
+            </SafeAreaView>
+        </TouchableWithoutFeedback>
+        
     );
 }
 
