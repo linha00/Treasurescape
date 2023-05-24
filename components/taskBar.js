@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet , View, TouchableOpacity , Text } from 'react-native';
+import { StyleSheet , View, TouchableOpacity , Text , Image } from 'react-native';
 import color from '../config/colors'
 
 const onPress = (text) => {
@@ -11,27 +11,27 @@ const TaskBar = () => {
     return (
         <View style={styles.container}> 
             <TouchableOpacity onPress={() => onPress("Home")} style={styles.task}> 
-                <Text>image</Text>
+                <Image style={styles.logo} source={require('../assets/home.png')}/>
                 <Text style={styles.text}>Home</Text>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => onPress("Missions")} style={styles.task}>
-                <Text>image</Text> 
+                <Image style={styles.logo} source={require('../assets/missions.png')}/>
                 <Text style={styles.text}>Missions</Text>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => onPress("Map")} style={styles.task}> 
-                <Text>image</Text>
+                <Image style={styles.logo} source={require('../assets/map.png')}/>
                 <Text style={styles.text}>Map</Text>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => onPress("Friends")} style={styles.task}> 
-                <Text>image</Text>
+                <Image style={styles.logo} source={require('../assets/friends.png')}/>
                 <Text style={styles.text}>Friends</Text>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => onPress("Shop")} style={styles.task}> 
-                <Text>image</Text>
+                <Image style={styles.logo} source={require('../assets/shop.png')}/>
                 <Text style={styles.text}>Shop</Text>
             </TouchableOpacity>
         </View>
@@ -59,7 +59,12 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 15,
         fontWeight: 'bold',
-    }
+    },
+
+    logo: {
+        width: 30,
+        height: 30,
+    },
 
 })
 

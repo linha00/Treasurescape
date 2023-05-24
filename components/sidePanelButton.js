@@ -1,11 +1,11 @@
 import React from 'react';
-import { StyleSheet , TouchableOpacity , Text } from 'react-native';
+import { StyleSheet , TouchableOpacity , Image } from 'react-native';
 
 const SidePanelButton = ({onPress}) => {
 
     return (
         <TouchableOpacity onPress={onPress} style={styles.container}> 
-            <Text style={styles.text}>placeholder</Text>
+            <Image style={styles.image} source={require('../assets/sidePanel.png')}/>
         </TouchableOpacity>
     );
 }
@@ -15,6 +15,11 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 50,
         left: 20,
+    },
+
+    image: {
+        width: 25,
+        height: 25,
     },
 
 })

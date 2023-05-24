@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet , Text , View, SafeAreaView, Button } from 'react-native';
+import { StyleSheet , Text , View, SafeAreaView, Button , Image} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import color from '../config/colors'
 
@@ -27,16 +27,16 @@ function StartScreen() {
                     <Text style={styles.gold}>200g</Text>
                 </View>
 
-                <Text>
-                    image placeholder
-                </Text>
+                <Image style={styles.avatar} source={require('../assets/avatar1.png')}/>
             </View>
 
             <View style={styles.container2}>
                 <View style={styles.section}>
                     <Text style={styles.headers}>Misions</Text>
-                    <View style={styles.box}>
-                        <Button onPress={pressHandler} title="temp button to go back to login"/>
+                    <View style={[styles.box , styles.temp]}>
+                        <View style={styles.tempbuttom}>
+                            <Button onPress={pressHandler} title="temp button to go back to login"/>
+                        </View>
                     </View>
 
                 </View>
@@ -122,6 +122,21 @@ const styles = StyleSheet.create({
         paddingLeft: 30,
     },
 
+    tempbuttom: {
+        width: '80%',
+    },
+
+    temp: {
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+
+    avatar: {
+        width: 200,
+        height: 200,
+        top: 15,
+        left: 20,
+    },
 })
 
 export default StartScreen;
