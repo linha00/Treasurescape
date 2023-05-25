@@ -1,5 +1,5 @@
 {
-  "providers": {
+  "dev": {
     "awscloudformation": {
       "AuthRoleName": "amplify-treasurescape-dev-184054-authRole",
       "UnauthRoleArn": "arn:aws:iam::462193750867:role/amplify-treasurescape-dev-184054-unauthRole",

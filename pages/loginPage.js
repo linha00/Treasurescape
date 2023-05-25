@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Image, StyleSheet , View , SafeAreaView , Text, TouchableOpacity , TouchableWithoutFeedback , Keyboard , Alert} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { Auth } from 'aws-amplify';
 import color from '../config/colors'
 
 import CustomInput from '../components/customInput'
@@ -17,7 +18,8 @@ function LoginScreen() {
 
     const navigation = useNavigation();
 
-    const loginPressed = () => {
+    const loginPressed = async(data) => {
+        const response = await Auth.signIn(data.username, data.password);
         if (username == "admin" && password == "password" /*database verification*/) {
             console.log(
                 "\nLogin successful" +
