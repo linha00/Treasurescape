@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Image, StyleSheet , View , SafeAreaView , Text, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import color from '../config/colors'
 
 import BackButton from '../components/backButton';
@@ -7,13 +8,17 @@ import CustomButton from '../components/customButton';
 import TaskBar from '../components/taskBar';
 
 function MissionPage() {
-
-
+    const navigation = useNavigation();
+    
+    const press = () => {
+        navigation.goBack();
+        navigation.navigate('Home');
+    }
 
     return (
         <SafeAreaView style={styles.container}>
-            <BackButton style={styles.back}/>
             <View style={styles.container1}>
+                <BackButton onPress={press}/>
                 <Image style={styles.logo} 
                     source={require('../assets/logo.png')} />
             </View>
@@ -74,8 +79,8 @@ const styles = StyleSheet.create({
 
     back: {
         position: 'absolute',
-        top: 10,
-        left: 10,
+        top: 101,
+        left: 101,
     },
 
     header: {

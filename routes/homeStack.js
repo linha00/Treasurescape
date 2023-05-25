@@ -2,6 +2,7 @@ import React , {useEffect, useState} from 'react';
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Auth , Hub } from 'aws-amplify';
+import { ActivityIndicator, View } from 'react-native';
 
 import HomePage from '../pages/homePage';
 import LoginPage from '../pages/loginPage';
@@ -11,7 +12,8 @@ import SignupPage from '../pages/signupPage';
 import MissionPage from '../pages/missionPage';
 import ShopPage from '../pages/shopPage';
 import ResetPassword from '../pages/resetPassword';
-import { ActivityIndicator, View } from 'react-native';
+import MapPage from '../pages/MapPage';
+import FriendsPage from '../pages/friendsPage';
 
 const Stack = createNativeStackNavigator();
 
@@ -66,6 +68,8 @@ const Navigation = () => {
                         <Stack.Screen name="Home" component={HomePage} />
                         <Stack.Screen name="Mission" component={MissionPage} />
                         <Stack.Screen name="Shop" component={ShopPage} />
+                        <Stack.Screen name="Map" component={MapPage} />
+                        <Stack.Screen name="Friends" component={FriendsPage} />
                     {/* </>
                 )} */}
 
