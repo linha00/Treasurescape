@@ -22,7 +22,7 @@ function CodeVerification() {
     const code = code1 + code2 + code3 + code4;
 
     const pressedSendEmail = () => {
-        if (code == "0000"/*check for verification*/) {
+        if (code == "1111"/*check for verification*/) {
             navigation.goBack();
             navigation.navigate('ResetPassword');
             console.log("\nverification successfully");

@@ -76,6 +76,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
 
+    header: {
+        fontSize: 20,
+        marginBottom: 10,
+    },
+
 })
 
 export default ResetPassword;
