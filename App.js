@@ -8,7 +8,6 @@ import config from './src/aws-exports';
 Amplify.configure(config);
 
 const App = () => {
-
     return (
         <SafeAreaView style={styles.root}>
             <Navigation/> 
@@ -21,5 +20,6 @@ const styles = StyleSheet.create({
         flex: 1,
     }
 });
+
 
 export default App;

@@ -1,45 +1,47 @@
-import React, { useState } from 'react';
-import { Image, StyleSheet , View , SafeAreaView , Text, TouchableOpacity , TouchableWithoutFeedback , Keyboard , Alert} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { Auth } from 'aws-amplify';
+import React, {useState} from 'react';
+import {Image, StyleSheet, View, SafeAreaView, Text, TouchableOpacity, TouchableWithoutFeedback, Keyboard, Alert} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {Auth} from 'aws-amplify';
+import {useForm} from 'react-hook-form';
 import color from '../config/colors'
 
-import CustomInput from '../components/customInput'
-import CustomButton from '../components/customButton'
+import CustomInput from '../components/customInput';
+import CustomButton from '../components/customButton';
 
     const press = () => {
         Keyboard.dismiss();
     };
 
 function LoginScreen() {
-
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-
     const navigation = useNavigation();
+    const [loading, setLoading] = useState(false);
+    const {control, handleSubmit, formState: {errors}} = useForm();
 
-    const loginPressed = async(data) => {
+    //handles the verification of users and transition to the homepage
+    const loginPressed = async (data) => {
+        console.log(
+            "\nLogin attempt:" +
+            "\nusername: " + data.username +
+            "\nPassword: " + data.password
+        );
+
+        if (loading) {
+            return;
+        }
+
+        setLoading(true);
         try {
             const response = await Auth.signIn(data.username, data.password);
+            console.log(
+                "\nLogin successful" +
+                "\nusername: " + data.username 
+            );
+            navigation.navigate('Home');
         } catch(e) {
             Alert.alert('Oops', e.message);
         }
-
-        // console.log(response);
-        // if (username == "admin" && password == "password" /*database verification*/) {
-        //     console.log(
-        //         "\nLogin successful" +
-        //         "\nusername: " + username +
-        //         "\nPassword: " + password
-        //         );
-        //     navigation.navigate('Home');
-        // } else {
-        //     Alert.alert(
-        //         "Incorrect username or password", "",
-        //         [{ text: 'Ok' }],
-        //         { cancelable: true }
-        //     );
-        // }
+        
+        setLoading(false);
     };
 
     const forgotPressed = () => {
@@ -51,30 +53,46 @@ function LoginScreen() {
     };
     
     return (
-        <TouchableWithoutFeedback onPress={press}>
-            <SafeAreaView style={styles.container}>
-                <Image style={styles.logo} 
-                    source={require('../assets/logo.png')} />
-                
-                <CustomInput placeholder= "Username" value={username} setValue={setUsername} />
-                <CustomInput placeholder= "Password" value={password} setValue={setPassword} secureTextEntry/>
+        <TouchableWithoutFeedback onPress = {press}>
+            <SafeAreaView style = {styles.container}>
+                <Image style = {styles.logo} 
+                    source = {require('../assets/logo.png')} />
 
-                <TouchableOpacity onPress={forgotPressed}> 
-                <Text>Forgot Password?</Text>
+                <CustomInput 
+                    name = "username"
+                    placeholder = "Username" 
+                    control = {control}
+                    rules = {{
+                        required: "Username is required",
+                    }}
+                />
+                <CustomInput 
+                    name = "password"
+                    placeholder = "Password" 
+                    control = {control}
+                    rules = {{
+                        required: "Password is required",
+                    }}
+                    secureTextEntry 
+                />
+
+                <TouchableOpacity onPress = {forgotPressed}> 
+                    <Text>Forgot Password?</Text>
                 </TouchableOpacity>
 
-                <CustomButton text= "Login" onPress={loginPressed}/>
+                <CustomButton 
+                    text = {loading ? "Loading" : "Login"} 
+                    onPress = {handleSubmit(loginPressed)}
+                />
 
-                <View style={styles.signupContainer}>
-                    <Text>Don't have account? </Text>
-
-                    <TouchableOpacity onPress={signupPressed}> 
-                    <Text style={styles.signup}>Sign up</Text>
+                <View style = {styles.signupContainer}>
+                    <Text>Don't have account?</Text>
+                    <TouchableOpacity onPress = {signupPressed}> 
+                        <Text style = {styles.signup}>Sign up</Text>
                     </TouchableOpacity>
                 </View>
             </SafeAreaView>
         </TouchableWithoutFeedback>
-        
     );
 }
 
