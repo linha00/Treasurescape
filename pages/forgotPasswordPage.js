@@ -15,19 +15,19 @@ const press = () => {
 
 function ForgotPasswordPage() {
     const navigation = useNavigation();
-    const [loading, setLoading] = useState(false);
     const {control, handleSubmit, formState: {errors}} = useForm();
 
-    const pressedSendEmail = async data => {
-        console.log("\nVerification sent to\nemail: " + data.email);
-        
-        Alert.alert(
-            "Verification code has been sent to your email", "",
-            [{text: 'Ok'}],
-            {cancelable: true}
-        );
-        navigation.goBack();
-        navigation.navigate('CodeVerification');
+    const pressedSubmit = async data => {
+        const {username} = data;
+        try {
+            const response = await Auth.forgotPassword(username);
+            console.log("\nVerification sent to\nUsername: " + username);
+            Alert.alert("Verification code has been sent to your email", "");
+            navigation.goBack();
+            navigation.navigate('ResetPassword', {username});
+        } catch(e) {
+            Alert.alert('Oops', e.message);
+        }
     };
 
     const back = () => {
@@ -44,25 +44,21 @@ function ForgotPasswordPage() {
                 </Text>
 
                 <Text style = {styles.text}>
-                    Enter your email below to reset your password        
+                    Enter your Username below to reset your password        
                 </Text>
                 <View style = {{marginBottom: 5, width: "100%", alignItems: "center"}}>
                     <CustomInput
-                        name = "email"
-                        placeholder = "Email"
+                        name = "username"
+                        placeholder = "Username"
                         control = {control}
                         rules = {{
-                            required: "Email is required",
-                            pattern: {
-                                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                                message: "Invalid email address"
-                            },
+                            required: "Username is required",
                         }}
                     />
                 </View>
                 <CustomButton 
                     text= "Submit" 
-                    onPress = {handleSubmit(pressedSendEmail)}
+                    onPress = {handleSubmit(pressedSubmit)}
                 />
             </SafeAreaView>
         </TouchableWithoutFeedback>

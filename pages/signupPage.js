@@ -21,6 +21,7 @@ function SignupPage() {
     const pwd = watch("password");
 
     const signupPressed = async (data) => {
+        const {username, password, email, name} = data;
         console.log(
             "\nSignup Attempt" +
             "\nName: " + data.name +
@@ -35,12 +36,21 @@ function SignupPage() {
 
         setLoading(true);
         try {
-            const response = await Auth.signUp(data.name, data.username, data.email, data.password);
+            const response = await Auth.signUp({
+                username,
+                password, 
+                attributes: {
+                    email, 
+                    name,
+                    preferred_username: username
+                }
+            });
             console.log(
                 "\nSignup successful" +
                 "\nusername: " + data.username 
             );
-            navigation.navigate('Home');
+            navigation.goBack();
+            Alert.alert("Account Created", "");
         } catch(e) {
             Alert.alert('Oops', e.message);
         }
@@ -65,7 +75,7 @@ function SignupPage() {
                 <View style = {styles.container1}>
                     <CustomInput
                         name = "name"
-                        placeholder = "Full Name"
+                        placeholder = "Name"
                         control = {control}
                         rules = {{
                             required: "Full Name is required",

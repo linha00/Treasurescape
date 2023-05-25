@@ -19,10 +19,12 @@ function LoginScreen() {
 
     //handles the verification of users and transition to the homepage
     const loginPressed = async (data) => {
+        const {username, password} = data;
+
         console.log(
             "\nLogin attempt:" +
-            "\nusername: " + data.username +
-            "\nPassword: " + data.password
+            "\nusername: " + username +
+            "\nPassword: " + password
         );
 
         if (loading) {
@@ -31,16 +33,16 @@ function LoginScreen() {
 
         setLoading(true);
         try {
-            const response = await Auth.signIn(data.username, data.password);
+            const response = await Auth.signIn(username, password);
             console.log(
                 "\nLogin successful" +
-                "\nusername: " + data.username 
+                "\nusername: " + username 
             );
-            navigation.navigate('Home');
+            navigation.navigate('Home', {username});
         } catch(e) {
             Alert.alert('Oops', e.message);
         }
-        
+
         setLoading(false);
     };
 
