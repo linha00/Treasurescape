@@ -19,22 +19,28 @@ function LoginScreen() {
     const navigation = useNavigation();
 
     const loginPressed = async(data) => {
-        const response = await Auth.signIn(data.username, data.password);
-        if (username == "admin" && password == "password" /*database verification*/) {
-            console.log(
-                "\nLogin successful" +
-                "\nusername: " + username +
-                "\nPassword: " + password
-                );
-            navigation.navigate('Home');
-        } else {
-            Alert.alert(
-                "Incorrect username or password", "",
-                [{ text: 'Ok' }],
-                { cancelable: true }
-            );
+        try {
+            const response = await Auth.signIn(data.username, data.password);
+        } catch(e) {
+            Alert.alert('Oops', e.message);
         }
-        };
+
+        // console.log(response);
+        // if (username == "admin" && password == "password" /*database verification*/) {
+        //     console.log(
+        //         "\nLogin successful" +
+        //         "\nusername: " + username +
+        //         "\nPassword: " + password
+        //         );
+        //     navigation.navigate('Home');
+        // } else {
+        //     Alert.alert(
+        //         "Incorrect username or password", "",
+        //         [{ text: 'Ok' }],
+        //         { cancelable: true }
+        //     );
+        // }
+    };
 
     const forgotPressed = () => {
         navigation.navigate('ForgotPassword');

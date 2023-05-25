@@ -1,15 +1,58 @@
 {
   "providers": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-treasurescape-dev-184054-authRole",
-      "UnauthRoleArn": "arn:aws:iam::462193750867:role/amplify-treasurescape-dev-184054-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::462193750867:role/amplify-treasurescape-dev-184054-authRole",
-      "Region": "ap-southeast-1",
-      "DeploymentBucketName": "amplify-treasurescape-dev-184054-deployment",
-      "UnauthRoleName": "amplify-treasurescape-dev-184054-unauthRole",
-      "StackName": "amplify-treasurescape-dev-184054",
-      "StackId": "arn:aws:cloudformation:ap-southeast-1:462193750867:stack/amplify-treasurescape-dev-184054/a0745a90-fae8-11ed-9a15-0601f1845bee",
-      "AmplifyAppId": "d387htro11eddw"
+      "AuthRoleName": "amplify-treasurescape-staging-82610-authRole",
+      "UnauthRoleArn": "arn:aws:iam::462193750867:role/amplify-treasurescape-staging-82610-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::462193750867:role/amplify-treasurescape-staging-82610-authRole",
+      "Region": "us-east-2",
+      "DeploymentBucketName": "amplify-treasurescape-staging-82610-deployment",
+      "UnauthRoleName": "amplify-treasurescape-staging-82610-unauthRole",
+      "StackName": "amplify-treasurescape-staging-82610",
+      "StackId": "arn:aws:cloudformation:us-east-2:462193750867:stack/amplify-treasurescape-staging-82610/cdbe1d00-fad5-11ed-a054-0a98f115c7af",
+      "AmplifyAppId": "dbucr2r6z8maw"
+    }
+  },
+  "auth": {
+    "treasureScape": {
+      "service": "Cognito",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false,
+      "frontendAuthConfig": {
+        "socialProviders": [],
+        "usernameAttributes": [],
+        "signupAttributes": [
+          "NAME",
+          "PREFERRED_USERNAME",
+          "EMAIL"
+        ],
+        "passwordProtectionSettings": {
+          "passwordPolicyMinLength": 6,
+          "passwordPolicyCharacters": []
+        },
+        "mfaConfiguration": "OFF",
+        "mfaTypes": [
+          "SMS"
+        ],
+        "verificationMechanisms": [
+          "EMAIL"
+        ]
+      },
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-treasurescape-staging-82610-deployment/amplify-cfn-templates/auth/treasureScape-cloudformation-template.json",
+        "logicalId": "authtreasureScape"
+      },
+      "lastPushTimeStamp": "2023-05-25T08:36:33.805Z",
+      "output": {
+        "UserPoolId": "us-east-2_be7RE6fH8",
+        "AppClientIDWeb": "6lhnmo7d64slgqt2eu0gme6ns",
+        "AppClientID": "652ktjr6piouuubb5v4qetu3a2",
+        "IdentityPoolId": "us-east-2:cc799690-b888-4ad5-a373-3a62766eacd9",
+        "UserPoolArn": "arn:aws:cognito-idp:us-east-2:462193750867:userpool/us-east-2_be7RE6fH8",
+        "IdentityPoolName": "testAuthIdentityPool__staging",
+        "UserPoolName": "treasureScape"
+      },
+      "lastPushDirHash": "Rq75hdKxRlISHvAg9QEIhyTtHj4="
     }
   }
 }
