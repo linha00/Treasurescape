@@ -17,8 +17,10 @@ As freshmen, it was hard for us to navigate the campus efficiently as we were no
 - react native
 - AWS Amplify
 
-## Working on:
-
+## Currently Working On:
+1. better database options
+2. geolocation api
+3. Augmented Reality api
 
 ## Quickstart
 1. install [NodeJS](https://nodejs.org/en/download) for windows or 
@@ -30,6 +32,13 @@ volta install node@18
 ``` 
 2. Fork and clone the project
 3. Navigate into the project dir using cd
-4. npm install expo if nessessory
-5. Run npm start to start the program
+4. install any nessessory dependency 
+```bash
+npm install expo
+npm install react-hook-form
+```
+5. start the program
+```bash
+npm start
+```
 6. scan the QR code or key in the url into expo go app on your phone / simulator
