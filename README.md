@@ -14,16 +14,16 @@ As freshmen, it was hard for us to navigate the campus efficiently as we were no
    7. User Database 
 
 ## Technologies used:
-- react native
+- React Native
 - AWS Amplify
 
 ## Currently Working On:
-1. better database options
-2. geolocation api
-3. Augmented Reality api
+1. Looking for better database to suit our needs
+2. Geolocation API
+3. Augmented Reality API
 
 ## Quickstart
-1. install [NodeJS](https://nodejs.org/en/download) for windows or 
+1. Install [NodeJS](https://nodejs.org/en/download) for windows or 
 ```bash
 #for linux
 curl https://get.volta.sh | bash
@@ -32,17 +32,17 @@ volta install node@18
 ``` 
 2. Fork and clone the project
 3. Navigate into the project dir using cd
-4. install any nessessory dependency 
+4. Install any nessessory dependency 
 ```bash
 npm install expo
 npm install react-hook-form
 ```
-5. start the program
+5. Start the program
 ```bash
 npm start
 ```
-6. scan the QR code or key in the url into expo go app on your phone / simulator
+6. Scan the QR code or key in the url into expo go app on your phone / simulator
 
 ## Branches 
-1. main - the barebone skeleton of the app
+1. Main - the barebone skeleton of the app
 2. AWS-backend - AWS amplify installed and linked to AWS server
