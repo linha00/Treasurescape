@@ -18,3 +18,9 @@ Technologies used:
 - react native
 - AWS Amplify
 
+Quickstart
+1. Fork and clone the project
+2. Navigate into the project dir using cd
+3. npm install expo if nessessory
+4. Run npm start to start the program
+5. scan the QR code or key in the url into expo go app on your phone / simulator
