@@ -9,6 +9,8 @@ Amplify.configure(config);
 
 const App = () => {
     return (
+// username is admin and password is password 
+// or you can create a new account 
         <SafeAreaView style={styles.root}>
             <Navigation/> 
         </SafeAreaView>
