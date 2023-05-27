@@ -26,6 +26,9 @@ As freshmen, it was hard for us to navigate the campus efficiently as we were no
 
 - As a club/organisation, I would want freshmen to know more about what I do so they can turn into prospective members.
 
+## ER diagram for database
+![image](https://github.com/linha00/Treasurescape/assets/121675791/4f5540d6-c590-4d2d-9f3f-8904d5e244c8)
+
 
 ## Technologies used:
 - React Native
