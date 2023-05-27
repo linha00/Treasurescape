@@ -1,5 +1,5 @@
-# TREASURESCAPE
-TreasureScape aims to help students get acquinted with the nus campus in a fun and engaging way through a game of treasure hunt!
+<h1 align="center">TREASURESCAPE</h1>
+<h3 align="center">TreasureScape aims to help students get acquinted with the nus campus in a fun and engaging way through a game of treasure hunt!</h3>
 
 As freshmen, it was hard for us to navigate the campus efficiently as we were not familiar with the ROUTES AND shortcuts to different locations. This application aims to alleviate this pain point and provide a more seamless navigation experience around the campus.
 
@@ -42,3 +42,7 @@ npm install react-hook-form
 npm start
 ```
 6. scan the QR code or key in the url into expo go app on your phone / simulator
+
+## Branches 
+1. main - the barebone skeleton of the app
+2. AWS-backend - AWS amplify installed and linked to AWS server
