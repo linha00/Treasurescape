@@ -1,18 +1,19 @@
 import React from 'react';
 import { StyleSheet , Text , View, SafeAreaView, Button , Image} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import color from '../config/colors'
+import { useNavigation, useRoute } from '@react-navigation/native';
+import color from '../config/colors';
 
 import TaskBar from '../components/taskBar';
 import SidePanelButton from '../components/sidePanelButton';
 import ProfileButton from '../components/profileButton';
 
 function StartScreen() {
+    const route = useRoute();
+    const username = route?.params?.username;
 
     const navigation = useNavigation();
 
     const pressHandler = () => {
-        console.warn("temp button to go back to login page");
         navigation.goBack();
     };
 
@@ -22,7 +23,7 @@ function StartScreen() {
                 <SidePanelButton/>
                 <ProfileButton />
                 <View style={styles.texts}>
-                    <Text style={styles.username}>Username</Text>
+                    <Text style={styles.username}>{username}</Text>
                     <Text style={styles.totalgold}>Total Gold:</Text>
                     <Text style={styles.gold}>200g</Text>
                 </View>
@@ -35,7 +36,7 @@ function StartScreen() {
                     <Text style={styles.headers}>Misions</Text>
                     <View style={[styles.box , styles.temp]}>
                         <View style={styles.tempbuttom}>
-                            <Button onPress={pressHandler} title="temp button to go back to login"/>
+                            <Button onPress={pressHandler} title="temp signout button"/>
                         </View>
                     </View>
 
@@ -123,7 +124,7 @@ const styles = StyleSheet.create({
     },
 
     tempbuttom: {
-        width: '80%',
+        width: '50%',
     },
 
     temp: {

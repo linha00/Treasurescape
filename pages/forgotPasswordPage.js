@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { StyleSheet , SafeAreaView , Text , TouchableWithoutFeedback , Keyboard , Alert} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React, {useState} from 'react';
+import {StyleSheet, SafeAreaView, Text, TouchableWithoutFeedback, Keyboard, Alert, View} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {useForm} from 'react-hook-form';
 import color from '../config/colors';
 
 import CustomInput from '../components/customInput';
@@ -12,27 +13,19 @@ const press = () => {
 }
 
 function ForgotPasswordPage() {
-
     const navigation = useNavigation();
+    const {control, handleSubmit} = useForm();
 
-    const [email, setEmail] = useState('');
-
-    const pressedSendEmail = () => {
-        if (email.length > 7 && email.indexOf("@") > 2 && email.includes(".com") || email == "admin") {
-            Alert.alert(
-                "Verification code has been sent to your email", "",
-                [{ text: 'Ok' }],
-                { cancelable: true }
-            );
-            console.log("\nVerification sent to\nemail: " + email);
+    const pressedSubmit = (data) => {
+        const {username} = data;
+        try {
+            // const response = await Auth.forgotPassword(username);
+            console.log("\nVerification sent to\nUsername: " + username);
+            Alert.alert("Verification code has been sent to your email", "");
             navigation.goBack();
-            navigation.navigate('CodeVerification');
-        } else {
-            Alert.alert(
-                "Please enter a valid Email", "",
-                [{ text: 'Ok' }],
-                { cancelable: true }
-            );
+            navigation.navigate('ResetPassword', {username});
+        } catch(e) {
+            Alert.alert('Oops', e.message);
         }
     };
 
@@ -41,19 +34,32 @@ function ForgotPasswordPage() {
     };
 
     return (
-        <TouchableWithoutFeedback onPress={press}>
-            <SafeAreaView style={styles.container}>
-                <BackButton onPress={back}/>
+        <TouchableWithoutFeedback onPress = {press}>
+            <SafeAreaView style = {styles.container}>
+                <BackButton onPress = {back}/>
 
-                <Text style={styles.header}>
+                <Text style = {styles.header}>
                     Forgot your Password?
                 </Text>
 
-                <Text style={styles.text}>
-                    Enter your email below to reset your password        
+                <Text style = {styles.text}>
+                    Enter your Username below to reset your password        
                 </Text>
-                <CustomInput placeholder= "Email" value={email} setValue={setEmail} />
-                <CustomButton text= "Submit" onPress={pressedSendEmail}/>
+                <View style = {{marginBottom: 5, width: "100%", alignItems: "center"}}>
+                <CustomInput
+                        name = "username"
+                        placeholder = "Username"
+                        control = {control}
+                        rules = {{
+                            required: "Username is required",
+                            minLength: {value: 5, message: "Username should be minimum 5 characers long"},
+                        }}
+                    />
+                </View>
+                <CustomButton 
+                    text= "Submit" 
+                    onPress = {handleSubmit(pressedSubmit)}
+                />
             </SafeAreaView>
         </TouchableWithoutFeedback>
     );
@@ -65,18 +71,18 @@ const styles = StyleSheet.create({
         flexDirection: 'column', 
         alignItems: 'center',
         justifyContent: 'center',
-    },
+},
     
     header: {
         fontSize: 30,
         marginBottom: 10,
-    },
+},
 
     text: {
         fontSize: 15,
         color: color.tertiary,
         marginBottom: 10,
-    },
+},
 })
 
 export default ForgotPasswordPage;

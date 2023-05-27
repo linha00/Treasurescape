@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { Image, StyleSheet , View , SafeAreaView , Text, TouchableOpacity , TouchableWithoutFeedback , Keyboard , Alert} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React, {useState} from 'react';
+import {Image, StyleSheet, View, SafeAreaView, Text, TouchableOpacity, TouchableWithoutFeedback, Keyboard, Alert} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {useForm} from 'react-hook-form';
 import color from '../config/colors'
 
 import CustomInput from '../components/customInput'
@@ -11,28 +12,38 @@ import CustomButton from '../components/customButton'
     };
 
 function LoginScreen() {
-
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-
     const navigation = useNavigation();
+    const [loading, setLoading] = useState(false);
+    const {control, handleSubmit, formState: {errors}} = useForm();
 
-    const loginPressed = () => {
-        if (username == "admin" && password == "password" /*database verification*/) {
+
+    const loginPressed = (data) => {
+        const {username, password} = data;
+
+        console.log(
+            "\nLogin attempt:" +
+            "\nusername: " + username +
+            "\nPassword: " + password
+        );
+
+        if (loading) {
+            return;
+        }
+
+        setLoading(true);
+        try {
+            // const response = await Auth.signIn(username, password);
             console.log(
                 "\nLogin successful" +
-                "\nusername: " + username +
-                "\nPassword: " + password
-                );
-            navigation.navigate('Home');
-        } else {
-            Alert.alert(
-                "Incorrect username or password", "",
-                [{ text: 'Ok' }],
-                { cancelable: true }
+                "\nusername: " + username 
             );
+            navigation.navigate('Home', {username});
+        } catch(e) {
+            Alert.alert('Oops', e.message);
         }
-        };
+
+        setLoading(false);
+    };
 
     const forgotPressed = () => {
         navigation.navigate('ForgotPassword');
@@ -48,14 +59,32 @@ function LoginScreen() {
                 <Image style={styles.logo} 
                     source={require('../assets/logo.png')} />
                 
-                <CustomInput placeholder= "Username" value={username} setValue={setUsername} />
-                <CustomInput placeholder= "Password" value={password} setValue={setPassword} secureTextEntry/>
+                <CustomInput 
+                    name = "username"
+                    placeholder = "Username" 
+                    control = {control}
+                    rules = {{
+                        required: "Username is required",
+                    }}
+                />
+                <CustomInput 
+                    name = "password"
+                    placeholder = "Password" 
+                    control = {control}
+                    rules = {{
+                        required: "Password is required",
+                    }}
+                    secureTextEntry 
+                />
 
                 <TouchableOpacity onPress={forgotPressed}> 
                 <Text>Forgot Password?</Text>
                 </TouchableOpacity>
 
-                <CustomButton text= "Login" onPress={loginPressed}/>
+                <CustomButton 
+                    text = {loading ? "Loading" : "Login"} 
+                    onPress = {handleSubmit(loginPressed)}
+                />
 
                 <View style={styles.signupContainer}>
                     <Text>Don't have account? </Text>

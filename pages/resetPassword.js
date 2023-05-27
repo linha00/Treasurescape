@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { Image, StyleSheet , View , SafeAreaView , Text, TouchableWithoutFeedback , Keyboard , Alert } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React, {useState} from 'react';
+import {StyleSheet, SafeAreaView, Text, TouchableWithoutFeedback, Keyboard, Alert} from 'react-native';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {useForm} from 'react-hook-form';
 import color from '../config/colors'
 
 import CustomInput from '../components/customInput'
@@ -12,57 +13,72 @@ const press = () => {
 }
 
 function ResetPassword() {
-
-    const [password, setPassword] = useState('');
-    const [secondPassword, setsecondPassword] = useState('');
-
     const navigation = useNavigation();
+    const {control, handleSubmit, watch, formState: {errors}} = useForm();
+
+    const pwd = watch("password");
+    const route = useRoute();
+    const username = route?.params?.username;
 
     const back = () => {
         navigation.goBack();
     };
 
-    const PressReset = () => {
-        if (password.length > 5 && password == secondPassword) {
-            Alert.alert(
-                "Password changed successfully", "you can process to login with the new password.",
-                [{ text: 'Ok' }],
-                { cancelable: true }
-            );
+    const PressReset = async data => {
+        try {
+            // const response = await Auth.forgotPasswordSubmit(username, data.code, data.password);
+            Alert.alert("Password changed successfully", "you can process to login with the new password.");
             console.log(
-                "\nPassword Changed\nPassword: " + password 
-                );
+                "\nPassword Changed\nPassword: " + data.password 
+            );
             navigation.goBack();
-        } else {
-            if (!(password.length > 5)) {
-                Alert.alert(
-                    "Please enter a valid Password", "Password must be at least be 6 Char long",
-                    [{ text: 'Ok' }],
-                    { cancelable: true }
-                );
-            } else {
-                Alert.alert(
-                    "Please enter the same Password", "",
-                    [{ text: 'Ok' }],
-                    { cancelable: true }
-                );
-            }
+        } catch(e) {
+            Alert.alert('Oops', e.message);
         }
-        };
+ 
+    };
 
     return (
-        <TouchableWithoutFeedback onPress={press}>
-            <SafeAreaView style={styles.container}>
-                <BackButton onPress={back}/>
+        <TouchableWithoutFeedback onPress = {press}>
+            <SafeAreaView style = {styles.container}>
+                <BackButton onPress = {back}/>
                 
-                <Text style={styles.header}>
-                    Enter new password
+                <Text style = {styles.header}>
+                    Reset Your Password
                 </Text>
+                <CustomInput
+                    name = "code"
+                    placeholder = "Verification Code"
+                    control = {control}
+                    rules = {{
+                        required: "Code is required",
+                        minLength: {value: 4, message: "The code is 6 characers long"},
+                    }}
+                />
+                <CustomInput
+                    name = "password"
+                    placeholder = "Password"
+                    control = {control}
+                    rules = {{
+                        required: "Password is required",
+                        minLength: {value: 5, message: "Password should be minimum 6 characers long"},
+                    }}
+                />
+                <CustomInput
+                    name = "repeatPassword"
+                    placeholder = "Repeat Password"
+                    control = {control}
+                    rules = {{
+                        required: "Password is required",
+                        minLength: {value: 5, message: "Password should be minimum 6 characers long"},
+                        validate: value => value == pwd || "Password do not match"
+                    }}
+                />
 
-                <CustomInput placeholder="password" setValue={setPassword}/>
-                <CustomInput placeholder="confirm password" setValue={setsecondPassword}/>
-
-                <CustomButton text= "reset" onPress={PressReset}/>
+                <CustomButton 
+                    text= "reset" 
+                    onPress = {handleSubmit(PressReset)}
+                />
             </SafeAreaView>
         </TouchableWithoutFeedback>
     );
@@ -74,12 +90,12 @@ const styles = StyleSheet.create({
         flexDirection: 'column', 
         alignItems: 'center',
         justifyContent: 'center',
-    },
+},
 
     header: {
         fontSize: 20,
         marginBottom: 10,
-    },
+},
 
 })
 
