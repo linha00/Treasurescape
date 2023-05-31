@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet , Text , View, SafeAreaView, Button , Image} from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import color from '../config/colors';
@@ -8,51 +8,53 @@ import SidePanelButton from '../components/sidePanelButton';
 import ProfileButton from '../components/profileButton';
 
 function StartScreen() {
-    const route = useRoute();
-    const username = route?.params?.username;
-
     const navigation = useNavigation();
-
+    const route = useRoute();
+    const temp = route?.params?.username;
+    const username = temp;
+    
     const pressHandler = () => {
         navigation.goBack();
     };
 
     return (
         <SafeAreaView style={styles.container}>
-            <View style={styles.container1}>
-                <SidePanelButton/>
-                <ProfileButton />
-                <View style={styles.texts}>
-                    <Text style={styles.username}>{username}</Text>
-                    <Text style={styles.totalgold}>Total Gold:</Text>
-                    <Text style={styles.gold}>200g</Text>
+            <View style = {styles.top}>
+                <View style={styles.container1}>
+                    <SidePanelButton/>
+                    <ProfileButton />
+                    <View style={styles.texts}>
+                        <Text style={styles.username}>{username}</Text>
+                        <Text style={styles.totalgold}>Total Gold:</Text>
+                        <Text style={styles.gold}>200g</Text>
+                    </View>
+
+                    <Image style={styles.avatar} source={require('../assets/avatar1.png')}/>
                 </View>
 
-                <Image style={styles.avatar} source={require('../assets/avatar1.png')}/>
-            </View>
+                <View style={styles.container2}>
+                    <View style={styles.section}>
+                        <Text style={styles.headers}>Misions</Text>
+                        <View style={[styles.box , styles.temp]}>
+                            <View style={styles.tempbuttom}>
+                                <Button onPress={pressHandler} title="temp signout button"/>
+                            </View>
+                        </View>
 
-            <View style={styles.container2}>
-                <View style={styles.section}>
-                    <Text style={styles.headers}>Misions</Text>
-                    <View style={[styles.box , styles.temp]}>
-                        <View style={styles.tempbuttom}>
-                            <Button onPress={pressHandler} title="temp signout button"/>
+                    </View>
+
+                    <View style={styles.section}>
+                        <Text style={styles.headers}>Map</Text>
+                        <View style={styles.box}>
+
                         </View>
                     </View>
 
-                </View>
+                    <View style={styles.section}>
+                        <Text style={styles.headers}>Leaderboard</Text>
+                        <View style={styles.box}>
 
-                <View style={styles.section}>
-                    <Text style={styles.headers}>Map</Text>
-                    <View style={styles.box}>
-
-                    </View>
-                </View>
-
-                <View style={styles.section}>
-                    <Text style={styles.headers}>Leaderboard</Text>
-                    <View style={styles.box}>
-
+                        </View>
                     </View>
                 </View>
             </View>
@@ -66,6 +68,13 @@ function StartScreen() {
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+
+    top: {
+        width: '100%',
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',

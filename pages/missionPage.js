@@ -5,31 +5,38 @@ import color from '../config/colors'
 import BackButton from '../components/backButton';
 import CustomButton from '../components/customButton';
 import TaskBar from '../components/taskBar';
+import { useNavigation } from '@react-navigation/native';
 
 function MissionPage() {
+    const navigation = useNavigation();
 
-
+    const press = () => {
+        navigation.goBack();
+        navigation.navigate('Home');
+    }
 
     return (
         <SafeAreaView style={styles.container}>
-            <BackButton style={styles.back}/>
-            <View style={styles.container1}>
-                <Image style={styles.logo} 
-                    source={require('../assets/logo.png')} />
-            </View>
-
-            <View style={styles.container2}>
-                <Text style={styles.header}>
-                    Mission 1:
-                </Text>
-                
-                <View style={styles.box}>
-                    <Text>asdadzxcdcqwecq</Text>
+            <View style = {styles.top}>
+                <BackButton style={styles.back} onPress={press}/>
+                <View style={styles.container1}>
+                    <Image style={styles.logo} 
+                        source={require('../assets/logo.png')} />
                 </View>
-            </View>
 
-            <View style={styles.button}>
-                <CustomButton text= "Embak"/>
+                <View style={styles.container2}>
+                    <Text style={styles.header}>
+                        Mission 1:
+                    </Text>
+                    
+                    <View style={styles.box}>
+                        <Text>asdadzxcdcqwecq</Text>
+                    </View>
+                </View>
+
+                <View style={styles.button}>
+                    <CustomButton text= "Embak"/>
+                </View>
             </View>
 
             <TaskBar style={styles.taskbar}/>
@@ -45,9 +52,16 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
 
+    top: {
+        width: '100%',
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+
     container1: {
         flex: 2,
-        width: '90%',
+        width: '50%',
         alignItems: 'center',
         justifyContent: 'center',
     },  
@@ -68,8 +82,9 @@ const styles = StyleSheet.create({
     },
 
     logo: {
-        width: 250,
-        height: 250,
+        width: 280,
+        height: 280,
+        top: 30,
     },
 
     back: {

@@ -10,23 +10,24 @@ function ShopPage() {
     return (
         
         <SafeAreaView style={styles.container}>
+            <View style = {styles.top}>
+                <View style={styles.container1}>
+                    <SidePanelButton/>
 
-            <View style={styles.container1}>
-                <SidePanelButton/>
-
-                <View style={styles.texts}>
-                    <Text style={styles.totalgold}>Total Gold:</Text>
-                    <Text style={styles.gold}>200g</Text>
+                    <View style={styles.texts}>
+                        <Text style={styles.totalgold}>Total Gold:</Text>
+                        <Text style={styles.gold}>200g</Text>
+                    </View>
                 </View>
-            </View>
 
-            <View style={styles.container2}>
-                <Text style={styles.header}>
-                    Shop
-                </Text>
+                <View style={styles.container2}>
+                    <Text style={styles.header}>
+                        Shop
+                    </Text>
 
-                <View style={styles.shop}>
-                    <Shop/>
+                    <View style={styles.shop}>
+                        <Shop/>
+                    </View>
                 </View>
             </View>
             
@@ -41,6 +42,11 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
+    },
+
+    top: {
+        flex: 1,
+        width: '100%',
     },
 
     container1: {

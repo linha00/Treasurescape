@@ -8,14 +8,11 @@ const windowWidth = Dimensions.get('window').width;
 const componentWidth = (windowWidth / 3) - 30;
 const componentHeight = componentWidth * 1.5;
 
-function Shop(props) {
+function Friends() {
     const [items, setItem] = useState([
-        {name: 'NUS Dri-fit Shirt', image:"placeholder", price: 1000, key: '1'},
-        {name: 'Starbucks gift Card', image:"placeholder", price: 2500, key: '2'},
-        {name: 'Maxx Coffee', image:"placeholder", price: 600, key: '3'},
-        {name: 'LiHo Milk Tea', image:"placeholder", price: 500, key: '4'},
-        {name: 'test 1', image:"placeholder", price: 2000, key: '5'},
-        {name: 'test 2', image:"placeholder", price: 3000, key: '6'},
+        {name: 'NUS Dri-fit Shirt', image:"placeholder", online: true, key: '1'},
+        {name: 'Starbucks gift Card', image:"placeholder", online: false, key: '2'},
+        {name: 'Maxx Coffee', image:"placeholder", online: true, key: '3'},
     ]);
 
     const buy = (name) => {
@@ -42,7 +39,7 @@ function Shop(props) {
                         </Text>
 
                         <Text style={styles.price}>
-                            ${item.price}
+                            {item.price}
                         </Text>
                     </View>
                     <View style = {styles.buy}>
@@ -104,4 +101,4 @@ const styles = StyleSheet.create({
 
 })
 
-export default Shop;
+export default Friends;

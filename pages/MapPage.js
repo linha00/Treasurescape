@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, SafeAreaView} from 'react-native';
+import {StyleSheet, SafeAreaView, View, Text} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import color from '../config/colors';
 
@@ -11,14 +11,16 @@ function MapPage() {
     const navigation = useNavigation();
 
     const pressHandler = () => {
-        // Auth.signOut();
         navigation.goBack();
     };
 
     return (
         <SafeAreaView style={styles.container}>
-            <SidePanelButton/>
-            <ProfileButton />
+            <View style = {styles.top}>
+                <SidePanelButton/>
+                <ProfileButton />
+                <Text>map</Text>
+            </View>
 
             <TaskBar style={styles.taskbar}/>
         </SafeAreaView>
@@ -28,6 +30,13 @@ function MapPage() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+
+    top: {
+        flex: 1,
+        width: '100%',
         alignItems: 'center',
         justifyContent: 'center',
     },
