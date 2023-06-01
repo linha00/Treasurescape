@@ -1,6 +1,7 @@
 {
   "expo": {
     "name": "TreasureScape",
+    "scheme": "TreasureScape",
     "slug": "TreasureScape",
     "version": "1.0.0",
     "orientation": "portrait",
