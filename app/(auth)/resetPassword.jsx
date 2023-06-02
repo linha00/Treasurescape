@@ -1,28 +1,22 @@
 import {StyleSheet, SafeAreaView, Text, TouchableWithoutFeedback, Keyboard, Alert} from 'react-native';
-import {useNavigation, useRoute} from '@react-navigation/native';
 import {useForm} from 'react-hook-form';
 
 import CustomInput from '../../components/customInput'
 import CustomButton from '../../components/customButton'
 import BackButton from '../../components/backButton';
+import { useRouter } from 'expo-router';
 
 const press = () => {
     Keyboard.dismiss();
 }
 
 function ResetPassword() {
-    const navigation = useNavigation();
+    const navigation = useRouter();
     // eslint-disable-next-line no-unused-vars
     const {control, handleSubmit, watch, formState: {errors}} = useForm();
-
     const pwd = watch("password");
-    const route = useRoute();
-    // eslint-disable-next-line no-unused-vars
-    const username = route?.params?.username;
 
-    const back = () => {
-        navigation.goBack();
-    };
+    const back = () => navigation.back();
 
     const PressReset = async data => {
         try {
@@ -31,7 +25,7 @@ function ResetPassword() {
             console.log(
                 "\nPassword Changed\nPassword: " + data.password 
             );
-            navigation.goBack();
+            navigation.back();
         } catch(e) {
             Alert.alert('Oops', e.message);
         }

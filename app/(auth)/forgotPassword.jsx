@@ -1,35 +1,31 @@
 import {StyleSheet, SafeAreaView, Text, TouchableWithoutFeedback, Keyboard, Alert, View} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
 import {useForm} from 'react-hook-form';
 import color from '../../config/colors';
 
 import CustomInput from '../../components/customInput';
 import CustomButton from '../../components/customButton';
 import BackButton from '../../components/backButton';
+import { useRouter } from 'expo-router';
+import { supabase } from '../../lib/supabase';
 
 function ForgotPasswordPage() {
-    const navigation = useNavigation();
+    const navigation = useRouter();
     const {control, handleSubmit} = useForm();
     
-    const press = () => {
-        Keyboard.dismiss();
-    }
+    const press = () => Keyboard.dismiss();
+    const back = () => navigation.back();
 
-    const pressedSubmit = (data) => {
-        const {username} = data;
-        try {
-            // const response = await Auth.forgotPassword(username);
-            console.log("\nVerification sent to\nUsername: " + username);
+    const pressedSubmit = async data => {
+        const { email } = data;
+        const { error } = await supabase.auth.resetPasswordForEmail(email);
+        if (error) {
+            Alert.alert('Oops', error.message);
+        } else {
+            console.log("\nVerification sent to\nEmail: " + email);
             Alert.alert("Verification code has been sent to your email", "");
-            navigation.goBack();
-            navigation.navigate('resetPassword', {username});
-        } catch(e) {
-            Alert.alert('Oops', e.message);
+            navigation.back();
+            navigation.push('resetPassword');
         }
-    };
-
-    const back = () => {
-        navigation.goBack();
     };
 
     return (
@@ -42,16 +38,19 @@ function ForgotPasswordPage() {
                 </Text>
 
                 <Text style = {styles.text}>
-                    Enter your Username below to reset your password        
+                    Enter your Email below to reset your password        
                 </Text>
                 <View style = {{marginBottom: 5, width: "100%", alignItems: "center"}}>
                     <CustomInput
-                        name = "username"
-                        placeholder = "Username"
+                        name = "email"
+                        placeholder = "Email"
                         control = {control}
                         rules = {{
-                            required: "Username is required",
-                            minLength: {value: 5, message: "Username should be minimum 5 characers long"},
+                            required: "Email is required",
+                            pattern: {
+                                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                message: "Invalid email address"
+                            },
                         }}
                     />
                 </View>

@@ -1,4 +1,3 @@
-import React from 'react';
 import { StyleSheet , View, TouchableOpacity , Text , Image } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import color from '../config/colors'
@@ -8,23 +7,27 @@ const TaskBar = () => {
     
     const home = () => {
         navigation.goBack();
-        navigation.navigate('Home');
+        navigation.navigate('index');
     }
     const missions = () => {
-        navigation.goBack();
-        navigation.navigate('Mission');
+        try {
+            navigation.goBack();
+            navigation.navigate('mission');
+        } catch (e) {
+            console.log(e);
+        }
     }
     const map = () => {
         navigation.goBack();
-        navigation.navigate('Map');
+        navigation.navigate('map');
     }
     const friends = () => {
         navigation.goBack();
-        navigation.navigate('Friends');
+        navigation.navigate('friends');
     }
     const shop = () => {
         navigation.goBack();
-        navigation.navigate('Shop');
+        navigation.navigate('shop');
     }
     return (
         <View style={styles.container}> 

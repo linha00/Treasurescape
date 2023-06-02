@@ -1,22 +1,22 @@
 import { useState } from 'react';
 import { Image, StyleSheet, View, SafeAreaView, Text, TouchableOpacity, TouchableWithoutFeedback, Keyboard, Alert } from 'react-native';
 import { useForm } from 'react-hook-form';
-import { useNavigation } from '@react-navigation/native';
 import { supabase } from '../../lib/supabase';
 
 import CustomButton from '../../components/customButton';
 import CustomInput from '../../components/customInput';
 import color from '../../config/colors';
+import { useRouter } from 'expo-router';
 
 export default function Login() {
     // eslint-disable-next-line no-unused-vars
     const {control, handleSubmit, formState: {errors}} = useForm();
-    const navigation = useNavigation();
+    const navigation = useRouter();
     const [loading, setLoading] = useState(false);
 
     const press = () => Keyboard.dismiss();
-    const forgotPressed = () => navigation.navigate('forgotPassword');
-    const signupPressed = () => navigation.navigate('signup');
+    const forgotPressed = () => navigation.push('forgotPassword');
+    const signupPressed = () => navigation.push('signup');
     
     const loginPressed = async data => {
         const {email, password} = data;
@@ -41,7 +41,6 @@ export default function Login() {
                 "\nemail: " + email 
             );
         }
-
         setLoading(false);
     };
 
@@ -51,14 +50,18 @@ export default function Login() {
                 <Image style={styles.logo} 
                     source={require('../../assets/logo.png')} />
                 
-                <CustomInput 
-                    name = "email"
-                    placeholder = "Email" 
-                    control = {control}
-                    rules = {{
-                        required: "Email is required",
-                    }}
-                />
+                <CustomInput
+                        name = "email"
+                        placeholder = "Email"
+                        control = {control}
+                        rules = {{
+                            required: "Email is required",
+                            pattern: {
+                                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                message: "Invalid email address"
+                            },
+                        }}
+                    />
                 <CustomInput 
                     name = "password"
                     placeholder = "Password" 

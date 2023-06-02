@@ -1,7 +1,6 @@
 import { StyleSheet , Text , View, SafeAreaView } from 'react-native';
 import color from '../../config/colors'
 
-import TaskBar from '../../components/taskBar';
 import SidePanelButton from '../../components/sidePanelButton';
 import Shop from '../../components/shop';
 
@@ -9,29 +8,24 @@ function ShopPage() {
     return (
         
         <SafeAreaView style={styles.container}>
-            <View style = {styles.top}>
-                <View style={styles.container1}>
-                    <SidePanelButton/>
+            <View style={styles.container1}>
+                <SidePanelButton/>
 
-                    <View style={styles.texts}>
-                        <Text style={styles.totalgold}>Total Gold:</Text>
-                        <Text style={styles.gold}>200g</Text>
-                    </View>
-                </View>
-
-                <View style={styles.container2}>
-                    <Text style={styles.header}>
-                        Shop
-                    </Text>
-
-                    <View style={styles.shop}>
-                        <Shop/>
-                    </View>
+                <View style={styles.texts}>
+                    <Text style={styles.totalgold}>Total Gold:</Text>
+                    <Text style={styles.gold}>200g</Text>
                 </View>
             </View>
-            
-            <TaskBar style={styles.taskbar}/>
 
+            <View style={styles.container2}>
+                <Text style={styles.header}>
+                    Shop
+                </Text>
+
+                <View style={styles.shop}>
+                    <Shop/>
+                </View>
+            </View>
         </SafeAreaView>
     ); 
 }
@@ -41,11 +35,6 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-    },
-
-    top: {
-        flex: 1,
-        width: '100%',
     },
 
     container1: {

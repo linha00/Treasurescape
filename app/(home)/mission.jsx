@@ -3,7 +3,6 @@ import color from '../../config/colors'
 
 import BackButton from '../../components/backButton';
 import CustomButton from '../../components/customButton';
-import TaskBar from '../../components/taskBar';
 import { useNavigation } from '@react-navigation/native';
 
 function MissionPage() {
@@ -16,43 +15,31 @@ function MissionPage() {
 
     return (
         <SafeAreaView style={styles.container}>
-            <View style = {styles.top}>
-                <BackButton style={styles.back} onPress={press}/>
-                <View style={styles.container1}>
-                    <Image style={styles.logo} 
-                        source={require('../../assets/logo.png')} />
-                </View>
+            <BackButton style={styles.back} onPress={press}/>
+            <View style={styles.container1}>
+                <Image style={styles.logo} 
+                    source={require('../../assets/logo.png')} />
+            </View>
 
-                <View style={styles.container2}>
-                    <Text style={styles.header}>
-                        Mission 1:
-                    </Text>
-                    
-                    <View style={styles.box}>
-                        <Text>asdadzxcdcqwecq</Text>
-                    </View>
-                </View>
-
-                <View style={styles.button}>
-                    <CustomButton text= "Embak"/>
+            <View style={styles.container2}>
+                <Text style={styles.header}>
+                    Mission 1:
+                </Text>
+                
+                <View style={styles.box}>
+                    <Text>asdadzxcdcqwecq</Text>
                 </View>
             </View>
 
-            <TaskBar style={styles.taskbar}/>
-
+            <View style={styles.button}>
+                <CustomButton text= "Embak"/>
+            </View>
         </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-
-    top: {
-        width: '100%',
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',

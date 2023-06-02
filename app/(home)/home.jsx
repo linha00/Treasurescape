@@ -1,79 +1,65 @@
 import { StyleSheet , Text , View, SafeAreaView, Button , Image} from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
 import color from '../../config/colors';
 
-import TaskBar from '../../components/taskBar';
 import SidePanelButton from '../../components/sidePanelButton';
 import ProfileButton from '../../components/profileButton';
+import { supabase } from '../../lib/supabase';
+import { useAuth } from '../../contexts/auth';
+import { useEffect, useState } from 'react';
 
-function StartScreen() {
-    const navigation = useNavigation();
-    const route = useRoute();
-    const temp = route?.params?.username;
-    const username = temp;
-    
-    const pressHandler = () => {
-        navigation.goBack();
-    };
+function HomePage() {
+    const { user } = useAuth();
+    const [name, setName] = useState("");
+
+    useEffect(() => {
+        setName(user.user_metadata.name);
+    }, [name]);
 
     return (
         <SafeAreaView style={styles.container}>
-            <View style = {styles.top}>
-                <View style={styles.container1}>
-                    <SidePanelButton/>
-                    <ProfileButton />
-                    <View style={styles.texts}>
-                        <Text style={styles.username}>{username}</Text>
-                        <Text style={styles.totalgold}>Total Gold:</Text>
-                        <Text style={styles.gold}>200g</Text>
-                    </View>
-
-                    <Image style={styles.avatar} source={require('../../assets/avatar1.png')}/>
+            <View style={styles.container1}>
+                <SidePanelButton/>
+                <ProfileButton />
+                <View style={styles.texts}>
+                    <Text style={styles.username}>{name}</Text>
+                    <Text style={styles.totalgold}>Total Gold:</Text>
+                    <Text style={styles.gold}>200g</Text>
                 </View>
 
-                <View style={styles.container2}>
-                    <View style={styles.section}>
-                        <Text style={styles.headers}>Misions</Text>
-                        <View style={[styles.box , styles.temp]}>
-                            <View style={styles.tempbuttom}>
-                                <Button onPress={pressHandler} title="temp signout button"/>
-                            </View>
-                        </View>
+                <Image style={styles.avatar} source={require('../../assets/avatar1.png')}/>
+            </View>
 
-                    </View>
-
-                    <View style={styles.section}>
-                        <Text style={styles.headers}>Map</Text>
-                        <View style={styles.box}>
-
+            <View style={styles.container2}>
+                <View style={styles.section}>
+                    <Text style={styles.headers}>Misions</Text>
+                    <View style={[styles.box , styles.temp]}>
+                        <View style={styles.tempbuttom}>
+                            <Button onPress={() => supabase.auth.signOut()} title="temp signout button"/>
                         </View>
                     </View>
 
-                    <View style={styles.section}>
-                        <Text style={styles.headers}>Leaderboard</Text>
-                        <View style={styles.box}>
+                </View>
 
-                        </View>
+                <View style={styles.section}>
+                    <Text style={styles.headers}>Map</Text>
+                    <View style={styles.box}>
+
+                    </View>
+                </View>
+
+                <View style={styles.section}>
+                    <Text style={styles.headers}>Leaderboard</Text>
+                    <View style={styles.box}>
+
                     </View>
                 </View>
             </View>
-
-            <TaskBar style={styles.taskbar}/>
-
-
         </SafeAreaView>
     ); 
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-
-    top: {
-        width: '100%',
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
@@ -148,4 +134,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default StartScreen;
+export default HomePage;

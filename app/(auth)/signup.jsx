@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Image, StyleSheet, Text, View, SafeAreaView, TouchableOpacity, TouchableWithoutFeedback, Keyboard, Alert} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
 import { useForm } from 'react-hook-form';
 import color from '../../config/colors'
 
@@ -8,18 +7,20 @@ import CustomInput from '../../components/customInput';
 import CustomButton from '../../components/customButton';
 import BackButton from '../../components/backButton';
 import { supabase } from '../../lib/supabase';
+import { useRouter } from 'expo-router';
 
-    const press = () => {
-        Keyboard.dismiss();
-    }
 
 function SignupPage() {
-    const navigation = useNavigation();
+    const navigation = useRouter();
     const [loading, setLoading] = useState(false);
     // eslint-disable-next-line no-unused-vars
     const {control, handleSubmit, watch, formState: {errors}} = useForm();
     const pwd = watch("password");
-
+    
+    const press = () => Keyboard.dismiss();
+    const termsPressed = console.warn("terms");
+    const loginPressed = () => navigation.backs();
+    
     const signupPressed = async (data) => {
         const {password, email, name} = data;
         console.log(
@@ -28,14 +29,22 @@ function SignupPage() {
             "\nEmail: " + email +
             "\nPassword: " + password 
         )
-        
         if (loading) {
             return;
         }
-
+        
         setLoading(true);
-
-        const {error} = await supabase.auth.signUp({email, password});
+        const {error} = await supabase.auth.signUp(
+            {
+                email, 
+                password,
+                options: {
+                    data: {
+                        name: name,
+                    }
+                }
+            }
+        );
         if (error) {
             Alert.alert('Oops', error.message);
         } else {
@@ -45,25 +54,15 @@ function SignupPage() {
                 "\nemail: " + email 
             );
         }
-
         setLoading(false);
     };
-
-    const termsPressed = () => {
-        console.warn("terms");
-    }
-    
-    const loginPressed = () => navigation.goBack();
-    
     
     return (
         <TouchableWithoutFeedback onPress = {press}>
             <SafeAreaView style = {styles.container}>
                 <BackButton onPress={loginPressed}/>
-
                 <Image style = {styles.logo} 
                     source = {require('../../assets/logo.png')} />
-
                 <View style = {styles.container1}>
                     <CustomInput
                         name = "name"
@@ -106,20 +105,16 @@ function SignupPage() {
                         }}
                     />
                 </View>
-                
                 <View style = {styles.lineContainer}>
                     <Text>By creating an account, you agree to our </Text>
-                    
                     <TouchableOpacity onPress = {termsPressed}>
                         <Text style = {styles.terms}>Terms of Use</Text>
                     </TouchableOpacity>
                 </View>
-
                 <CustomButton 
                     text= {loading ? "Loading" : "Sign up"} 
                     onPress = {handleSubmit(signupPressed)}
                 />
-
                 <View style = {styles.lineContainer}>
                     <Text>Already have an account? </Text>
                     
@@ -127,7 +122,6 @@ function SignupPage() {
                         <Text style = {styles.login}>Log In</Text>
                     </TouchableOpacity>
                 </View>
-                
             </SafeAreaView>
         </TouchableWithoutFeedback>
     );
