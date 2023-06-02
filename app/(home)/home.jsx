@@ -1,7 +1,6 @@
 import { StyleSheet , Text , View, SafeAreaView, Button , Image} from 'react-native';
 import color from '../../config/colors';
 
-import SidePanelButton from '../../components/sidePanelButton';
 import ProfileButton from '../../components/profileButton';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/auth';
@@ -10,20 +9,27 @@ import { useEffect, useState } from 'react';
 function HomePage() {
     const { user } = useAuth();
     const [name, setName] = useState("");
+    const [gold, setGold] = useState(0);
 
     useEffect(() => {
-        setName(user.user_metadata.name);
-    }, [name]);
+        async function getName() {
+            let {data} = await supabase.from('profiles').select().eq('id', user.id).single();
+            console.log(data);
+            setName(data.name);
+            setGold(data.gold)
+        }
+        getName();
+    }, []);
+
 
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.container1}>
-                <SidePanelButton/>
                 <ProfileButton />
                 <View style={styles.texts}>
                     <Text style={styles.username}>{name}</Text>
                     <Text style={styles.totalgold}>Total Gold:</Text>
-                    <Text style={styles.gold}>200g</Text>
+                    <Text style={styles.gold}>{gold}g</Text>
                 </View>
 
                 <Image style={styles.avatar} source={require('../../assets/avatar1.png')}/>

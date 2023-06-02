@@ -18,8 +18,8 @@ function SignupPage() {
     const pwd = watch("password");
     
     const press = () => Keyboard.dismiss();
-    const termsPressed = console.warn("terms");
-    const loginPressed = () => navigation.backs();
+    const termsPressed = () => null;
+    const loginPressed = () => navigation.back();
     
     const signupPressed = async (data) => {
         const {password, email, name} = data;

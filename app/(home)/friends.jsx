@@ -1,6 +1,5 @@
 import {StyleSheet, SafeAreaView, View, Image } from 'react-native';
 
-import SidePanelButton from '../../components/sidePanelButton';
 import ProfileButton from '../../components/profileButton';
 import Friends from '../../components/friends';
 
@@ -8,7 +7,6 @@ function FriendsPage() {
 
     return (
         <SafeAreaView style={styles.container}>
-            <SidePanelButton/>
             <ProfileButton />
             <View style = {styles.group}>
                 <View style = {styles.box}>

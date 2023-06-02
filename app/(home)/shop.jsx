@@ -1,7 +1,6 @@
 import { StyleSheet , Text , View, SafeAreaView } from 'react-native';
 import color from '../../config/colors'
 
-import SidePanelButton from '../../components/sidePanelButton';
 import Shop from '../../components/shop';
 
 function ShopPage() {
@@ -9,8 +8,6 @@ function ShopPage() {
         
         <SafeAreaView style={styles.container}>
             <View style={styles.container1}>
-                <SidePanelButton/>
-
                 <View style={styles.texts}>
                     <Text style={styles.totalgold}>Total Gold:</Text>
                     <Text style={styles.gold}>200g</Text>

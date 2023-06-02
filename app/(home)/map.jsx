@@ -1,13 +1,11 @@
-import {StyleSheet, SafeAreaView, View, Text} from 'react-native';
+import {StyleSheet, SafeAreaView, Text} from 'react-native';
 
-import SidePanelButton from '../../components/sidePanelButton';
 import ProfileButton from '../../components/profileButton';
 
 function MapPage() {
 
     return (
         <SafeAreaView style={styles.container}>
-            <SidePanelButton/>
             <ProfileButton />
             <Text>map</Text>
         </SafeAreaView>
