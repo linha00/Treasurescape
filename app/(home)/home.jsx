@@ -7,12 +7,10 @@ import { useAuth } from '../../contexts/auth';
 import { useEffect, useState } from 'react';
 
 function HomePage() {
-    const tempUrl = "https://vdrghbtuwukmnbuqvrlp.supabase.co/storage/v1/object/public/images/temp?t=2023-06-03T16%3A10%3A53.244Z";
-
     const { user } = useAuth();
     const [name, setName] = useState("");
     const [gold, setGold] = useState(0);
-    const [profile, setProfile] = useState(tempUrl);
+    const [profile, setProfile] = useState("temp");
 
     useEffect(() => {
         async function getName() {

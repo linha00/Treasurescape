@@ -10,10 +10,9 @@ const componentWidth = (windowWidth / 3) - 30;
 const componentHeight = componentWidth * 1.5;
 
 function Shop() {
-    const tempUrl = "https://vdrghbtuwukmnbuqvrlp.supabase.co/storage/v1/object/public/images/temp?t=2023-06-03T16%3A10%3A53.244Z";
 
     const [items, setItem] = useState([
-        {name: 'Temp', image:tempUrl, price: 1000, key: '1'},
+        {name: 'Temp', image:"tempUrl", price: 1000, key: '1'},
     ]);
 
     useEffect(() => {
