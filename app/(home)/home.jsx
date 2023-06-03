@@ -7,16 +7,19 @@ import { useAuth } from '../../contexts/auth';
 import { useEffect, useState } from 'react';
 
 function HomePage() {
+    const tempUrl = "https://vdrghbtuwukmnbuqvrlp.supabase.co/storage/v1/object/public/images/temp?t=2023-06-03T16%3A10%3A53.244Z";
+
     const { user } = useAuth();
     const [name, setName] = useState("");
     const [gold, setGold] = useState(0);
+    const [profile, setProfile] = useState(tempUrl);
 
     useEffect(() => {
         async function getName() {
             let {data} = await supabase.from('profiles').select().eq('id', user.id).single();
-            console.log(data);
             setName(data.name);
-            setGold(data.gold)
+            setGold(data.gold);
+            setProfile(data.imageUrl);
         }
         getName();
     }, []);
@@ -32,7 +35,7 @@ function HomePage() {
                     <Text style={styles.gold}>{gold}g</Text>
                 </View>
 
-                <Image style={styles.avatar} source={require('../../assets/avatar1.png')}/>
+                <Image style={styles.avatar} source={{uri: profile}}/>
             </View>
 
             <View style={styles.container2}>
@@ -133,10 +136,10 @@ const styles = StyleSheet.create({
     },
 
     avatar: {
-        width: 200,
-        height: 200,
+        width: 150,
+        height: 150,
         top: 15,
-        left: 20,
+        left: 0,
     },
 })
 

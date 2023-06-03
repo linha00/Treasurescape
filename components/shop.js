@@ -1,22 +1,28 @@
-import React, { useState } from 'react';
-import { StyleSheet , Text , View, FlatList , Dimensions } from 'react-native';
+import { useEffect, useState } from 'react';
+import { StyleSheet , Text , View, FlatList , Dimensions, Image } from 'react-native';
 import color from '../config/colors'
 
 import BuyButton from './buyButton';
+import { supabase } from '../lib/supabase';
 
 const windowWidth = Dimensions.get('window').width;
 const componentWidth = (windowWidth / 3) - 30;
 const componentHeight = componentWidth * 1.5;
 
-function Shop(props) {
+function Shop() {
+    const tempUrl = "https://vdrghbtuwukmnbuqvrlp.supabase.co/storage/v1/object/public/images/temp?t=2023-06-03T16%3A10%3A53.244Z";
+
     const [items, setItem] = useState([
-        {name: 'NUS Dri-fit Shirt', image:"placeholder", price: 1000, key: '1'},
-        {name: 'Starbucks gift Card', image:"placeholder", price: 2500, key: '2'},
-        {name: 'Maxx Coffee', image:"placeholder", price: 600, key: '3'},
-        {name: 'LiHo Milk Tea', image:"placeholder", price: 500, key: '4'},
-        {name: 'test 1', image:"placeholder", price: 2000, key: '5'},
-        {name: 'test 2', image:"placeholder", price: 3000, key: '6'},
+        {name: 'Temp', image:tempUrl, price: 1000, key: '1'},
     ]);
+
+    useEffect(() => {
+        async function getItems() {
+            let {data} = await supabase.from('shop').select();
+            setItem(data);
+        }
+        getItems();
+    }, []);
 
     const buy = (name) => {
         console.log('buy ' + name);
@@ -28,17 +34,11 @@ function Shop(props) {
                 data={items}
                 renderItem={({item}) => (
                 <View style={styles.box} key={item.key}>
-                    <Text style={styles.image}>
-                        {item.image}
-                    </Text>
+                    <Image style={styles.image} source = {{uri : item.imageUrl}} />
 
                     <View style={styles.text}>
                         <Text style={styles.name}>
                             {item.name}
-                        </Text>
-
-                        <Text style={styles.desc}>
-                            test
                         </Text>
 
                         <Text style={styles.price}>
@@ -75,7 +75,6 @@ const styles = StyleSheet.create({
     image: {
         width: componentWidth,
         height: componentHeight,
-        backgroundColor: color.gold,
         left: -10,
     },
 

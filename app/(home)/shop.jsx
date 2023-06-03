@@ -1,16 +1,30 @@
 import { StyleSheet , Text , View, SafeAreaView } from 'react-native';
 import color from '../../config/colors'
+import { useEffect, useState } from 'react';
 
+import { supabase } from '../../lib/supabase';
+import { useAuth } from '../../contexts/auth';
 import Shop from '../../components/shop';
 
 function ShopPage() {
+    const { user } = useAuth();
+    const [gold, setGold] = useState(0);
+
+    useEffect(() => {
+        async function getName() {
+            let {data} = await supabase.from('profiles').select().eq('id', user.id).single();
+            setGold(data.gold);
+        }
+        getName();
+    }, []);
+
     return (
         
         <SafeAreaView style={styles.container}>
             <View style={styles.container1}>
                 <View style={styles.texts}>
                     <Text style={styles.totalgold}>Total Gold:</Text>
-                    <Text style={styles.gold}>200g</Text>
+                    <Text style={styles.gold}>{gold}g</Text>
                 </View>
             </View>
 
@@ -69,7 +83,11 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         padding: 10,
         margin: 15,
-    }
+    },
+
+    gold: {
+        color: color.gold
+    },
 
 })
 

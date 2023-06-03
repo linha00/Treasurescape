@@ -9,6 +9,7 @@ export default function AuthLayout() {
             <Tabs.Screen name ="friends" />
             <Tabs.Screen name ="shop" />
         </Tabs>
+
     );
 }
 
