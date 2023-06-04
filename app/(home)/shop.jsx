@@ -16,6 +16,7 @@ function ShopPage() {
             setGold(data.gold);
         }
         getName();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (

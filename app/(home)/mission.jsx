@@ -1,21 +1,39 @@
+import { useEffect, useState } from 'react';
 import { Image, StyleSheet, View, SafeAreaView, Text } from 'react-native';
-import color from '../../config/colors'
+import { useRouter } from 'expo-router';
+import color from '../../config/colors';
+
+import { supabase } from '../../lib/supabase';
+import { useAuth } from '../../contexts/auth';
 
 import BackButton from '../../components/backButton';
 import CustomButton from '../../components/customButton';
-import { useNavigation } from '@react-navigation/native';
 
 function MissionPage() {
-    const navigation = useNavigation();
+    const navigation = useRouter();
 
-    const press = () => {
-        navigation.goBack();
-        navigation.navigate('Home');
-    }
+    const { user } = useAuth();
+    const [missionId, setMissionId] = useState(0);
+    const [text, setText] = useState("temp");
+
+
+    useEffect(() => {
+        async function getMission() {
+            let {data} = await supabase.from('profiles').select().eq('id', user.id).single();
+            let tempid = data.mission;
+            if (missionId != null) {
+                let {data} = await supabase.from('missions').select().eq('id', tempid).single();
+                setMissionId(data.id);
+                setText(data.description);
+            }
+        }
+        getMission();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <SafeAreaView style={styles.container}>
-            <BackButton style={styles.back} onPress={press}/>
+            <BackButton style={styles.back} onPress={() => navigation.back()}/>
             <View style={styles.container1}>
                 <Image style={styles.logo} 
                     source={require('../../assets/logo.png')} />
@@ -23,16 +41,16 @@ function MissionPage() {
 
             <View style={styles.container2}>
                 <Text style={styles.header}>
-                    Mission 1:
+                    Mission {missionId}:
                 </Text>
                 
                 <View style={styles.box}>
-                    <Text>asdadzxcdcqwecq</Text>
+                    <Text>{text}</Text>
                 </View>
             </View>
 
             <View style={styles.button}>
-                <CustomButton text= "Embak"/>
+                <CustomButton text= "Embak" onPress={() => navigation.push('/map')} />
             </View>
         </SafeAreaView>
     );

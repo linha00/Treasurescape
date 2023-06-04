@@ -45,7 +45,7 @@ function Shop() {
                         </Text>
                     </View>
                     <View style = {styles.buy}>
-                    <BuyButton text= "buy" onPress={() => buy("placeholder")} />
+                    <BuyButton text= "buy" onPress={() => buy(item.name)} />
                     </View>
                 </View>
                 )}/>

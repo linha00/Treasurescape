@@ -1,7 +1,9 @@
-import {StyleSheet, SafeAreaView, View, Image } from 'react-native';
+import {StyleSheet, SafeAreaView, View, Image, Dimensions } from 'react-native';
 
 import ProfileButton from '../../components/profileButton';
 import Friends from '../../components/friends';
+
+const windowWidth = Dimensions.get('window').width;
 
 function FriendsPage() {
 
@@ -23,10 +25,11 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
+        width: '100%',
     },
 
     box: {
-        width: '90%',
+        width: windowWidth * 0.8,
         height: '75%',
         padding: 5,
         borderWidth: 1,

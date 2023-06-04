@@ -1,23 +1,51 @@
-import React, { useState } from 'react';
-import { StyleSheet , Text , View, FlatList , Dimensions } from 'react-native';
+import { useEffect, useState } from 'react';
+import { StyleSheet , Text , View, FlatList , Dimensions, Image } from 'react-native';
 import color from '../config/colors'
 
-import BuyButton from './buyButton';
+import { supabase } from '../lib/supabase';
+import { useAuth } from '../contexts/auth';
+
 
 const windowWidth = Dimensions.get('window').width;
 const componentWidth = (windowWidth / 3) - 30;
 const componentHeight = componentWidth * 1.5;
 
 function Friends() {
-    const [items, setItem] = useState([
-        {name: 'NUS Dri-fit Shirt', image:"placeholder", online: true, key: '1'},
-        {name: 'Starbucks gift Card', image:"placeholder", online: false, key: '2'},
-        {name: 'Maxx Coffee', image:"placeholder", online: true, key: '3'},
+    const { user } = useAuth();
+    const [refresh, setRefresh] = useState(false);
+    
+    const [list, setList] = useState([]);
+    const [items, setItems] = useState([
+        {name: 'temp', image:"placeholder", online: true, key: '1'},
     ]);
 
-    const buy = (name) => {
-        console.log('buy ' + name);
+    async function getItems() {
+        let {data} = await supabase.from('profiles').select().eq('id', user.id).single();
+        setList(data.friends);
+        let out = [];
+        if (list != null) {
+            for (var i = 0; i < list.length; i++) {
+                let {data} = await supabase.from('profiles').select().eq('friend_id', list[i]).single();
+                let temp = out;
+                out = temp.concat([{name: data.name, image: data.imageUrl, online: data.online, key: i}]);
+            }
+        }
+        setItems(out);
+        setRefresh(false);
     }
+
+    useEffect(() => {
+        getItems();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    useEffect(() => {
+        if (refresh) {
+            getItems();
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [refresh])
+
 
     return (
         <View style={styles.container}>
@@ -25,28 +53,20 @@ function Friends() {
                 data={items}
                 renderItem={({item}) => (
                 <View style={styles.box} key={item.key}>
-                    <Text style={styles.image}>
-                        {item.image}
-                    </Text>
-
+                    <Image style={styles.image} source = {{ uri : item.image}} />
                     <View style={styles.text}>
                         <Text style={styles.name}>
                             {item.name}
                         </Text>
-
                         <Text style={styles.desc}>
-                            test
+                            {item.online}
                         </Text>
-
-                        <Text style={styles.price}>
-                            {item.price}
-                        </Text>
-                    </View>
-                    <View style = {styles.buy}>
-                    <BuyButton text= "buy" onPress={() => buy("placeholder")} />
                     </View>
                 </View>
-                )}/>
+                )}
+                refreshing = {refresh}
+                onRefresh = {() => setRefresh(true)}
+                />
         </View>        
     ); 
 }
@@ -62,7 +82,7 @@ const styles = StyleSheet.create({
         width: "100%",
         height: componentHeight + 20,
         alignItems: 'center',
-        justifyContent: 'space-between',
+        justifyContent: 'space-around',
         paddingHorizontal: 20,
         paddingBottom: 5,
         marginBottom: 10,
@@ -72,17 +92,13 @@ const styles = StyleSheet.create({
     image: {
         width: componentWidth,
         height: componentHeight,
-        backgroundColor: color.gold,
-        left: -10,
+        left: 0,
     },
 
     text: {
         width: componentWidth + 30,
         top: 15,
-    },
-
-    buy: {
-        top: 20,
+        left: 20,
     },
 
     name: {

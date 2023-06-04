@@ -1,10 +1,11 @@
+import { useEffect, useState } from 'react';
 import { StyleSheet , Text , View, SafeAreaView, Button , Image} from 'react-native';
 import color from '../../config/colors';
 
-import ProfileButton from '../../components/profileButton';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/auth';
-import { useEffect, useState } from 'react';
+
+import ProfileButton from '../../components/profileButton';
 
 function HomePage() {
     const { user } = useAuth();
@@ -21,7 +22,6 @@ function HomePage() {
         }
         getName();
     }, []);
-
 
     return (
         <SafeAreaView style={styles.container}>
