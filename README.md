@@ -58,22 +58,22 @@ Able to navigate from login group to home group.
 ### MileStone 2:
 1. fully functioning user Authentication
 
-able to login, signup and forget password
+able to login, signup and forget password (forget password WIP)
 
 2. functioning mission system
 
-able to retrieve data from the database 
+able to retrieve data from the database (done)
 able to update and awards player when mission is completed
 
 4. functioning friends system
 
-able to retrieve data from user's friend list
+able to retrieve data from user's friend list (done)
 able to request, add and remove friends from user's friend list
 updating of database from the performed actions
 
 5. functioning shop system
 
-able to retrieve data from the database
+able to retrieve data from the database (done)
 able to perform buying feature from the shop
 storing of item purchase
 updating of shop database and player database with each purchase
