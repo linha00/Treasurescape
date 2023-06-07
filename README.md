@@ -46,12 +46,16 @@ We hope to create a mobile application to help students get acquainted with the 
 #### 1. functioning user login and sign up 
 
 App is connected to the backend supabase data base.  
+
 Able to perform login and sign up on the app.
+
 
 #### 2. Basic navigation between pages 
 
 Able to navigate within the login group (login page, signup page, forget password page)
+
 Able to navigate within the home group (home page, mission page, map page, friends page, shop page)
+
 Able to navigate from login group to home group.
 
 
