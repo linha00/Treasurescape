@@ -21,6 +21,7 @@ function HomePage() {
             setProfile(data.imageUrl);
         }
         getName();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (

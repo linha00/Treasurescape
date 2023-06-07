@@ -40,6 +40,7 @@ function ForgotPasswordPage() {
                 <Text style = {styles.text}>
                     Enter your Email below to reset your password        
                 </Text>
+                <Text style = {{color : color.red}}>working in progress</Text>
                 <View style = {{marginBottom: 5, width: "100%", alignItems: "center"}}>
                     <CustomInput
                         name = "email"

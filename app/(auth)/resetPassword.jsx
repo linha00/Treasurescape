@@ -4,6 +4,7 @@ import {useForm} from 'react-hook-form';
 import CustomInput from '../../components/customInput'
 import CustomButton from '../../components/customButton'
 import BackButton from '../../components/backButton';
+import { supabase } from '../../lib/supabase';
 import { useRouter } from 'expo-router';
 
 const press = () => {
@@ -16,18 +17,23 @@ function ResetPassword() {
     const {control, handleSubmit, watch, formState: {errors}} = useForm();
     const pwd = watch("password");
 
-    const back = () => navigation.back();
-
     const PressReset = async data => {
+        const {email, password, code} = data;
+
         try {
-            // const response = await Auth.forgotPasswordSubmit(username, data.code, data.password);
+            const { data, error } = await supabase.auth.updateUser(code, {
+                email: email,
+                password: password,
+            });
+            console.log(data);
+            console.log(error);
             Alert.alert("Password changed successfully", "you can process to login with the new password.");
             console.log(
-                "\nPassword Changed\nPassword: " + data.password 
+                "\nPassword Changed\nPassword: " + password 
             );
             navigation.back();
-        } catch(e) {
-            Alert.alert('Oops', e.message);
+        } catch(error) {
+            Alert.alert('Oops', error.message);
         }
  
     };
@@ -35,11 +41,23 @@ function ResetPassword() {
     return (
         <TouchableWithoutFeedback onPress = {press}>
             <SafeAreaView style = {styles.container}>
-                <BackButton onPress = {back}/>
+                <BackButton onPress = {() => navigation.back()}/>
                 
                 <Text style = {styles.header}>
                     Reset Your Password
                 </Text>
+                <CustomInput
+                        name = "email"
+                        placeholder = "Email"
+                        control = {control}
+                        rules = {{
+                            required: "Email is required",
+                            pattern: {
+                                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                message: "Invalid email address"
+                            },
+                        }}
+                    />
                 <CustomInput
                     name = "code"
                     placeholder = "Verification Code"

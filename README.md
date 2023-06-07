@@ -76,6 +76,10 @@ able to update and awards player when mission is completed
 
 able to retrieve data from user's friend list (done)
 
+functioning online and offline indicator of friends
+
+popup menu of add friends 
+
 able to request, add and remove friends from user's friend list
 
 updating of database from the performed actions
@@ -109,6 +113,14 @@ display of AR on the app
 
 detection of the treasure in the AR 
 
+
+#### 7. Misc
+
+auto update of page after update to database
+
+pop up memu of profile photo 
+
+update of user profile pic using camera / gallery
 
 ## Quickstart
 1. Install [NodeJS](https://nodejs.org/en/download) for windows or 
