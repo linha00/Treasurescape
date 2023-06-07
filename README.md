@@ -43,12 +43,12 @@ We hope to create a mobile application to help students get acquainted with the 
 
 ## MileStone:
 ### MileStone 1:
-1. functioning user login and sign up 
+#### 1. functioning user login and sign up 
 
 App is connected to the backend supabase data base.  
 Able to perform login and sign up on the app.
 
-2. Basic navigation between pages 
+#### 2. Basic navigation between pages 
 
 Able to navigate within the login group (login page, signup page, forget password page)
 Able to navigate within the home group (home page, mission page, map page, friends page, shop page)
@@ -56,38 +56,55 @@ Able to navigate from login group to home group.
 
 
 ### MileStone 2:
-1. fully functioning user Authentication
+#### 1. fully functioning user Authentication
 
 able to login, signup and forget password (forget password WIP)
 
-2. functioning mission system
+
+#### 2. functioning mission system
 
 able to retrieve data from the database (done)
+
 able to update and awards player when mission is completed
 
-4. functioning friends system
+
+#### 3. functioning friends system
 
 able to retrieve data from user's friend list (done)
+
 able to request, add and remove friends from user's friend list
+
 updating of database from the performed actions
 
-5. functioning shop system
+
+#### 4. functioning shop system
 
 able to retrieve data from the database (done)
+
 able to perform buying feature from the shop
+
 storing of item purchase
+
 updating of shop database and player database with each purchase
 
-6. functioning map geolocation
+
+#### 5. functioning map geolocation
 
 working geolocation of the app
+
 display player geolocation on the app
+
 detection of treasure when near
 
-7. functioning AR feature
+
+#### 6. functioning AR feature
+
 working AR feature 
+
 display of AR on the app
+
 detection of the treasure in the AR 
+
 
 ## Quickstart
 1. Install [NodeJS](https://nodejs.org/en/download) for windows or 
