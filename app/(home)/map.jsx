@@ -1,9 +1,20 @@
-import {StyleSheet, SafeAreaView, Text, Button, View, Modal, Image, TouchableWithoutFeedback, Alert } from 'react-native';
+/* eslint-disable react/no-unescaped-entities */
+import {StyleSheet, SafeAreaView, Text, Button, View, Modal, Image, TouchableWithoutFeedback } from 'react-native';
 import { useState } from 'react';
 import { supabase } from '../../lib/supabase';
+import { Tabs } from "expo-router"
 import { useRouter } from 'expo-router';
 import { useAuth } from '../../contexts/auth';
 import color from '../../config/colors';
+
+function LogoTitle() {
+    return (
+      <Image
+        style={{ width: 30, height: 30, top: 2}}
+        source={require("../../assets/map.png")}
+      />
+    );
+  }
 
 function MapPage() {
     const navigation = useRouter();
@@ -52,25 +63,32 @@ function MapPage() {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
-            <View style = {styles.top}>
-                <Text>map</Text>
-                <Button title='temp button for mission complete' onPress={() => setVisible(true)}/>
-                <Modal
-                    visible = {visible}
-                >
-                    <TouchableWithoutFeedback style = {styles.temp} onPress={correctPressed}>
-                        <SafeAreaView style = {styles.correct}>
-                                <Image style = {styles.correctImage} source={require('../../assets/logo.png')} />
-                                <Text style = {styles.correctText}>That's Right!</Text>
-                        </SafeAreaView>
-                    </TouchableWithoutFeedback>
-                </Modal>
-            </View>
-            <View style = {styles.tab} >
-                <Text style = {{fontSize: 20, left: 10}}>Mission & Clues</Text>
-            </View>
-        </SafeAreaView>
+        <>
+            <Tabs.Screen 
+                options={{
+                    tabBarIcon: () => <LogoTitle />
+                }}
+            />
+            <SafeAreaView style={styles.container}>
+                <View style = {styles.top}>
+                    <Text>map</Text>
+                    <Button title='temp button for mission complete' onPress={() => setVisible(true)}/>
+                    <Modal
+                        visible = {visible}
+                    >
+                        <TouchableWithoutFeedback style = {styles.temp} onPress={correctPressed}>
+                            <SafeAreaView style = {styles.correct}>
+                                    <Image style = {styles.correctImage} source={require('../../assets/logo.png')} />
+                                    <Text style = {styles.correctText}>That's Right!</Text>
+                            </SafeAreaView>
+                        </TouchableWithoutFeedback>
+                    </Modal>
+                </View>
+                <View style = {styles.tab} >
+                    <Text style = {{fontSize: 20, left: 10}}>Mission & Clues</Text>
+                </View>
+            </SafeAreaView>
+        </>
     ); 
 }
 

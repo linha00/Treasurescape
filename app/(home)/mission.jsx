@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Image, StyleSheet, View, SafeAreaView, Text } from 'react-native';
+import { Tabs } from "expo-router"
 import { useRouter } from 'expo-router';
 import color from '../../config/colors';
 
@@ -8,6 +9,15 @@ import { useAuth } from '../../contexts/auth';
 
 import BackButton from '../../components/backButton';
 import CustomButton from '../../components/customButton';
+
+function LogoTitle() {
+    return (
+      <Image
+        style={{ width: 30, height: 30, top: 2}}
+        source={require("../../assets/missions.png")}
+      />
+    );
+  }
 
 function MissionPage() {
     const navigation = useRouter();
@@ -32,27 +42,34 @@ function MissionPage() {
     }, []);
 
     return (
-        <SafeAreaView style={styles.container}>
-            <BackButton style={styles.back} onPress={() => navigation.back()}/>
-            <View style={styles.container1}>
-                <Image style={styles.logo} 
-                    source={require('../../assets/logo.png')} />
-            </View>
-
-            <View style={styles.container2}>
-                <Text style={styles.header}>
-                    Mission {missionId}:
-                </Text>
-                
-                <View style={styles.box}>
-                    <Text>{text}</Text>
+        <>
+            <Tabs.Screen 
+                options={{
+                    tabBarIcon: () => <LogoTitle />
+                }}
+            />
+            <SafeAreaView style={styles.container}>
+                <BackButton style={styles.back} onPress={() => navigation.back()}/>
+                <View style={styles.container1}>
+                    <Image style={styles.logo} 
+                        source={require('../../assets/logo.png')} />
                 </View>
-            </View>
 
-            <View style={styles.button}>
-                <CustomButton text= "Embak" onPress={() => navigation.push('/map')} />
-            </View>
-        </SafeAreaView>
+                <View style={styles.container2}>
+                    <Text style={styles.header}>
+                        Mission {missionId}:
+                    </Text>
+                    
+                    <View style={styles.box}>
+                        <Text>{text}</Text>
+                    </View>
+                </View>
+
+                <View style={styles.button}>
+                    <CustomButton text= "Embak" onPress={() => navigation.push('/map')} />
+                </View>
+            </SafeAreaView>
+        </>
     );
 }
 

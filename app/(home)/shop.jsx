@@ -1,10 +1,20 @@
-import { StyleSheet , Text , View, SafeAreaView } from 'react-native';
+import { StyleSheet , Text , View, SafeAreaView, Image } from 'react-native';
 import color from '../../config/colors'
 import { useEffect, useState } from 'react';
+import { Tabs } from "expo-router"
 
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/auth';
 import Shop from '../../components/shop';
+
+function LogoTitle() {
+    return (
+      <Image
+        style={{ width: 30, height: 30, top: 2}}
+        source={require("../../assets/shop.png")}
+      />
+    );
+}
 
 function ShopPage() {
     const { user } = useAuth();
@@ -20,25 +30,31 @@ function ShopPage() {
     }, []);
 
     return (
-        
-        <SafeAreaView style={styles.container}>
-            <View style={styles.container1}>
-                <View style={styles.texts}>
-                    <Text style={styles.totalgold}>Total Gold:</Text>
-                    <Text style={styles.gold}>{gold}g</Text>
+        <>
+            <Tabs.Screen 
+                options={{
+                    tabBarIcon: () => <LogoTitle />
+                }}
+            />
+            <SafeAreaView style={styles.container}>
+                <View style={styles.container1}>
+                    <View style={styles.texts}>
+                        <Text style={styles.totalgold}>Total Gold:</Text>
+                        <Text style={styles.gold}>{gold}g</Text>
+                    </View>
                 </View>
-            </View>
 
-            <View style={styles.container2}>
-                <Text style={styles.header}>
-                    Shop
-                </Text>
+                <View style={styles.container2}>
+                    <Text style={styles.header}>
+                        Shop
+                    </Text>
 
-                <View style={styles.shop}>
-                    <Shop/>
+                    <View style={styles.shop}>
+                        <Shop/>
+                    </View>
                 </View>
-            </View>
-        </SafeAreaView>
+            </SafeAreaView>
+        </>
     ); 
 }
 

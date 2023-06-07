@@ -1,22 +1,39 @@
 import {StyleSheet, SafeAreaView, View, Image, Dimensions } from 'react-native';
+import { Tabs } from "expo-router"
 
 import ProfileButton from '../../components/profileButton';
 import Friends from '../../components/friends';
 
 const windowWidth = Dimensions.get('window').width;
 
+function LogoTitle() {
+    return (
+      <Image
+        style={{ width: 30, height: 30, top: 2}}
+        source={require("../../assets/friends.png")}
+      />
+    );
+}
+
 function FriendsPage() {
 
     return (
-        <SafeAreaView style={styles.container}>
-            <ProfileButton />
-            <View style = {styles.group}>
-                <View style = {styles.box}>
-                    <Friends/>
+        <>
+            <Tabs.Screen 
+                options={{
+                    tabBarIcon: () => <LogoTitle />
+                }}
+            />
+            <SafeAreaView style={styles.container}>
+                <ProfileButton />
+                <View style = {styles.group}>
+                    <View style = {styles.box}>
+                        <Friends/>
+                    </View>
+                    <Image style = {styles.image} source = {require('../../assets/logo.png')}/>
                 </View>
-                <Image style = {styles.image} source = {require('../../assets/logo.png')}/>
-            </View>
-        </SafeAreaView>
+            </SafeAreaView>
+        </>
     ); 
 }
 

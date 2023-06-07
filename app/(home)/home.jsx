@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { StyleSheet , Text , View, SafeAreaView, Button , Image} from 'react-native';
+import { StyleSheet , Text , View, SafeAreaView, Button , Image, TouchableWithoutFeedback, Modal} from 'react-native';
+import { Tabs, useRouter } from "expo-router"
 import color from '../../config/colors';
 
 import { supabase } from '../../lib/supabase';
@@ -7,62 +8,99 @@ import { useAuth } from '../../contexts/auth';
 
 import ProfileButton from '../../components/profileButton';
 
+function LogoTitle() {
+    return <Image style={{ width: 30, height: 30, top: 2}} source={require("../../assets/home.png")} />
+}
+
 function HomePage() {
+    const navigation = useRouter();
     const { user } = useAuth();
+
     const [name, setName] = useState("");
     const [gold, setGold] = useState(0);
     const [profile, setProfile] = useState("temp");
+    const [missionId, setMissionId] = useState(0);
+    const [missionText, setMissionText] = useState("temp");
+
+    const [visible, setVisible] = useState(false);
 
     useEffect(() => {
-        async function getName() {
+        async function getStuff() {
             let {data} = await supabase.from('profiles').select().eq('id', user.id).single();
             setName(data.name);
             setGold(data.gold);
             setProfile(data.imageUrl);
+            setMissionId(data.mission);
+
+            if (missionId != null) {
+                let {data} = await supabase.from('missions').select().eq('id', missionId).single();
+                setMissionText(data.description);
+            }
         }
-        getName();
+        getStuff();
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
-        <SafeAreaView style={styles.container}>
-            <View style={styles.container1}>
-                <ProfileButton />
-                <View style={styles.texts}>
-                    <Text style={styles.username}>{name}</Text>
-                    <Text style={styles.totalgold}>Total Gold:</Text>
-                    <Text style={styles.gold}>{gold}g</Text>
+        <>
+            <Tabs.Screen options={{tabBarIcon: () => <LogoTitle />}} />
+            <SafeAreaView style={styles.container}>
+                <View style={styles.container1}>
+                    <ProfileButton onPress={() => setVisible(true)}/>
+                    <Modal
+                        visible = {visible}
+                        transparent = {true}
+                    >
+                        <TouchableWithoutFeedback style = {{alignItems: 'center', justifyContent: 'center'}} onPress={() => setVisible(false)}>
+                            <SafeAreaView style = {styles.profile}>
+                                    <Text style = {styles.profileText}>Temp</Text>
+                            </SafeAreaView>
+                        </TouchableWithoutFeedback>
+                    </Modal>
+                    <View style={styles.texts}>
+                        <Text style={styles.username}>{name}</Text>
+                        <TouchableWithoutFeedback onPress={() => navigation.push('/shop')}>
+                            <View>
+                                <Text style={styles.totalgold}>Total Gold:</Text>
+                                <Text style={styles.gold}>{gold}g</Text>
+                            </View>
+                        </TouchableWithoutFeedback>
+                    </View>
+                    <Image style={styles.avatar} source={{uri: profile}}/>
                 </View>
 
-                <Image style={styles.avatar} source={{uri: profile}}/>
-            </View>
-
-            <View style={styles.container2}>
-                <View style={styles.section}>
-                    <Text style={styles.headers}>Misions</Text>
-                    <View style={[styles.box , styles.temp]}>
-                        <View style={styles.tempbuttom}>
-                            <Button onPress={() => supabase.auth.signOut()} title="temp signout button"/>
-                        </View>
+                <View style={styles.container2}>
+                    <View style={styles.section}>
+                        <Text style={styles.headers}>Misions</Text>
+                        <TouchableWithoutFeedback onPress={() => navigation.push('/mission')}>
+                            <View style={styles.box}>
+                                <Text style = { styles.missionHeader}>Mission {missionId}:</Text>
+                                <Text style = {styles.missionText}>{missionText}</Text>
+                            </View>
+                        </TouchableWithoutFeedback>
                     </View>
 
-                </View>
+                    <View style={styles.section}>
+                        <Text style={styles.headers}>Map</Text>
+                        <TouchableWithoutFeedback onPress={() =>navigation.push('/map')}>
+                            <View style={[styles.box , styles.temp]}>
+                                    <View style={styles.tempbuttom}>
+                                        <Button onPress={() => supabase.auth.signOut()} title="temp signout button"/>
+                                    </View>
+                            </View>
+                        </TouchableWithoutFeedback>
+                    </View>
 
-                <View style={styles.section}>
-                    <Text style={styles.headers}>Map</Text>
-                    <View style={styles.box}>
-
+                    <View style={styles.section}>
+                        <Text style={styles.headers}>Leaderboard</Text>
+                        <TouchableWithoutFeedback onPress={() => navigation.push('/friends')}>
+                            <View style={styles.box}>
+                            </View>
+                        </TouchableWithoutFeedback>
                     </View>
                 </View>
-
-                <View style={styles.section}>
-                    <Text style={styles.headers}>Leaderboard</Text>
-                    <View style={styles.box}>
-
-                    </View>
-                </View>
-            </View>
-        </SafeAreaView>
+            </SafeAreaView>
+        </>
     ); 
 }
 
@@ -100,6 +138,7 @@ const styles = StyleSheet.create({
 
     headers: {
         fontSize: 20,
+        fontWeight: 'bold',
     },
 
     box: {
@@ -107,6 +146,8 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '85%',
         borderRadius: 20,
+        paddingHorizontal: 15,
+        paddingVertical: 10,
     },
 
     username: {
@@ -139,6 +180,19 @@ const styles = StyleSheet.create({
         height: 150,
         top: 15,
         left: 0,
+    },
+
+    missionHeader: {
+        fontSize: 17,
+    },
+
+    profile: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 100,
+        height: 100,
+        backgroundColor: color.primary,
     },
 })
 
