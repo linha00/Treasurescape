@@ -1,11 +1,12 @@
 /* eslint-disable react/no-unescaped-entities */
 import {StyleSheet, SafeAreaView, Text, Button, View, Modal, Image, TouchableWithoutFeedback } from 'react-native';
 import { useState } from 'react';
-import { supabase } from '../../lib/supabase';
 import { Tabs } from "expo-router"
 import { useRouter } from 'expo-router';
-import { useAuth } from '../../contexts/auth';
 import color from '../../config/colors';
+
+import { supabase } from '../../lib/supabase';
+import { useAuth } from '../../contexts/auth';
 
 function LogoTitle() {
     return (
@@ -20,9 +21,6 @@ function MapPage() {
     const navigation = useRouter();
     const { user } = useAuth();
     const [visible, setVisible] = useState(false);
-    const [gold, setGold] = useState(0);
-    const [mission, setMission] = useState(0);
-    const [reward, setReward] = useState(0);
 
     const correctPressed = async () => {
         setVisible(false);
@@ -30,36 +28,41 @@ function MapPage() {
             const { data } = await supabase
                 .from('profiles')
                 .select('*')
-                .eq('id', user.id);
-            setGold(data[0].gold);
-            setMission(data[0].mission);
-        } catch(error) {
-            console.log(error.message);
-        }
-
-        try {
-            const { data } = await supabase
+                .eq('id', user.id)
+                .single();
+            let balance = data.gold;
+            let mission = data.mission;
+            if (mission != 0) {
+                const { data } = await supabase
                 .from('missions')
                 .select('*')
-                .eq('id', mission);
-            setReward(data[0].award);
+                .eq('id', mission)
+                .single();
+                let reward = data.award;
+                if (reward != 0 && mission != 3) {
+                    await supabase
+                    .from('profiles')
+                    .update({ 
+                        gold: balance + reward,
+                        mission: mission + 1
+                    })
+                    .eq('id', user.id);
+                    navigation.push('/mission');
+                } else {
+                    //temp solution for hiting the last mission
+                    await supabase
+                    .from('profiles')
+                    .update({ 
+                        gold: balance + reward,
+                        mission: 1
+                    })
+                    .eq('id', user.id);
+                    navigation.push('/mission');
+                }
+            }
         } catch(error) {
             console.log(error.message);
         }
-
-        try {
-            await supabase
-                .from('profiles')
-                .update({ 
-                    gold: gold + reward,
-                    mission: mission + 1
-                })
-                .eq('id', user.id);
-            navigation.push('/mission');
-        } catch(error) {
-            console.log(error.message);
-        }
-
     };
 
     return (

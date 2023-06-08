@@ -9,6 +9,8 @@ import { useAuth } from '../../contexts/auth';
 
 import BackButton from '../../components/backButton';
 import CustomButton from '../../components/customButton';
+import AppLoader from '../../components/AppLoader';
+
 
 function LogoTitle() {
     return (
@@ -25,17 +27,22 @@ function MissionPage() {
     const { user } = useAuth();
     const [missionId, setMissionId] = useState(0);
     const [text, setText] = useState("temp");
+    const [loading, setLoading] = useState(false);
+    const [gold, setGold] = useState(0);
 
 
     useEffect(() => {
         async function getMission() {
+            setLoading(true);
             let {data} = await supabase.from('profiles').select().eq('id', user.id).single();
             let tempid = data.mission;
-            if (missionId != null) {
+            if (tempid != null) {
                 let {data} = await supabase.from('missions').select().eq('id', tempid).single();
+                setGold(data.award);
                 setMissionId(data.id);
                 setText(data.description);
             }
+            setLoading(false);
         }
         getMission();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -56,9 +63,12 @@ function MissionPage() {
                 </View>
 
                 <View style={styles.container2}>
-                    <Text style={styles.header}>
-                        Mission {missionId}:
-                    </Text>
+                    <View style = {styles.headertab}>
+                        <Text style={styles.header}>
+                            Mission {missionId}:
+                        </Text>
+                        <Text style = {styles.gold}>{gold}g</Text>
+                    </View>
                     
                     <View style={styles.box}>
                         <Text>{text}</Text>
@@ -69,6 +79,7 @@ function MissionPage() {
                     <CustomButton text= "Embak" onPress={() => navigation.push('/map')} />
                 </View>
             </SafeAreaView>
+            {loading ? <AppLoader /> : null}
         </>
     );
 }
@@ -113,9 +124,23 @@ const styles = StyleSheet.create({
         top: 10,
         left: 10,
     },
+    
+    headertab: {
+        flexDirection: 'row',
+        width: '95%',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        bottom: 10,
+    },
 
     header: {
         fontSize: 25,
+    },
+
+    gold: {
+        fontSize: 20,
+        // color: color.gold,
+        top: 5,
     },
 
     box: {
@@ -126,7 +151,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 30,
         borderRadius: 30,
     },
-
 })
 
 export default MissionPage;

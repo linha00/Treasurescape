@@ -69,7 +69,7 @@ able to login, signup and forget password (forget password WIP)
 
 able to retrieve data from the database (done)
 
-able to update and awards player when mission is completed
+able to update and awards player when mission is completed (done)
 
 
 #### 3. functioning friends system
@@ -115,6 +115,8 @@ detection of the treasure in the AR
 
 
 #### 7. Misc
+
+loading page (done)
 
 auto update of page after update to database
 

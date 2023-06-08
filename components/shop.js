@@ -4,21 +4,24 @@ import color from '../config/colors'
 
 import BuyButton from './buyButton';
 import { supabase } from '../lib/supabase';
+import AppLoader from './AppLoader';
 
 const windowWidth = Dimensions.get('window').width;
 const componentWidth = (windowWidth / 3) - 30;
 const componentHeight = componentWidth * 1.5;
 
 function Shop() {
-
+    const [loading, setLoading] = useState(false);
     const [items, setItem] = useState([
         {name: 'Temp', image:"tempUrl", price: 1000, key: '1'},
     ]);
-
+    
     useEffect(() => {
         async function getItems() {
+            setLoading(true);
             let {data} = await supabase.from('shop').select();
             setItem(data);
+            setLoading(false);
         }
         getItems();
     }, []);
@@ -28,28 +31,31 @@ function Shop() {
     }
 
     return (
-        <View style={styles.container}>
-            <FlatList
-                data={items}
-                renderItem={({item}) => (
-                <View style={styles.box} key={item.key}>
-                    <Image style={styles.image} source = {{uri : item.imageUrl}} />
+        <>
+            <View style={styles.container}>
+                <FlatList
+                    data={items}
+                    renderItem={({item}) => (
+                    <View style={styles.box} key={item.key}>
+                        <Image style={styles.image} source = {{uri : item.imageUrl}} />
 
-                    <View style={styles.text}>
-                        <Text style={styles.name}>
-                            {item.name}
-                        </Text>
+                        <View style={styles.text}>
+                            <Text style={styles.name}>
+                                {item.name}
+                            </Text>
 
-                        <Text style={styles.price}>
-                            ${item.price}
-                        </Text>
+                            <Text style={styles.price}>
+                                ${item.price}
+                            </Text>
+                        </View>
+                        <View style = {styles.buy}>
+                        <BuyButton text= "buy" onPress={() => buy(item.name)} />
+                        </View>
                     </View>
-                    <View style = {styles.buy}>
-                    <BuyButton text= "buy" onPress={() => buy(item.name)} />
-                    </View>
-                </View>
-                )}/>
-        </View>        
+                    )}/>
+            </View>
+            {loading ? <AppLoader /> : null }
+        </>
     ); 
 }
 

@@ -1,5 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+import React from 'react';
 import { useEffect, useState } from 'react';
-import { StyleSheet , Text , View, SafeAreaView, Button , Image, TouchableWithoutFeedback, Modal} from 'react-native';
+import { StyleSheet , Text , View, SafeAreaView, Button , Image, TouchableWithoutFeedback } from 'react-native';
 import { Tabs, useRouter } from "expo-router"
 import color from '../../config/colors';
 
@@ -7,14 +9,17 @@ import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/auth';
 
 import ProfileButton from '../../components/profileButton';
+import { ProfileMenu } from '../../components/profileMenu';
+import AppLoader from '../../components/AppLoader';
 
 function LogoTitle() {
     return <Image style={{ width: 30, height: 30, top: 2}} source={require("../../assets/home.png")} />
 }
 
 function HomePage() {
-    const navigation = useRouter();
+    const nav = useRouter();
     const { user } = useAuth();
+    const [loading, setLoading] = useState(false);
 
     const [name, setName] = useState("");
     const [gold, setGold] = useState(0);
@@ -22,44 +27,52 @@ function HomePage() {
     const [missionId, setMissionId] = useState(0);
     const [missionText, setMissionText] = useState("temp");
 
-    const [visible, setVisible] = useState(false);
+    let popupRef = React.createRef()
 
-    useEffect(() => {
-        async function getStuff() {
-            let {data} = await supabase.from('profiles').select().eq('id', user.id).single();
-            setName(data.name);
-            setGold(data.gold);
-            setProfile(data.imageUrl);
-            setMissionId(data.mission);
+    const onShowPopup = () => {
+        popupRef.show()   
+    }
 
-            if (missionId != null) {
-                let {data} = await supabase.from('missions').select().eq('id', missionId).single();
-                setMissionText(data.description);
-            }
+    const onClosePopup = () => {
+        popupRef.close() 
+    }
+
+    async function getStuff() {
+        setLoading(true);
+        let {data} = await supabase.from('profiles').select().eq('id', user.id).single();
+        setName(data.name);
+        setGold(data.gold);
+        setProfile(data.imageUrl);
+        setMissionId(data.mission);
+
+        if (missionId != null) {
+            let {data} = await supabase.from('missions').select().eq('id', missionId).single();
+            setMissionText(data.description);
         }
+        setLoading(false);
+    }
+    
+    //on first load
+    useEffect(() => {
         getStuff();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
 
     return (
         <>
             <Tabs.Screen options={{tabBarIcon: () => <LogoTitle />}} />
             <SafeAreaView style={styles.container}>
                 <View style={styles.container1}>
-                    <ProfileButton onPress={() => setVisible(true)}/>
-                    <Modal
-                        visible = {visible}
-                        transparent = {true}
-                    >
-                        <TouchableWithoutFeedback style = {{alignItems: 'center', justifyContent: 'center'}} onPress={() => setVisible(false)}>
-                            <SafeAreaView style = {styles.profile}>
-                                    <Text style = {styles.profileText}>Temp</Text>
-                            </SafeAreaView>
-                        </TouchableWithoutFeedback>
-                    </Modal>
+                    <ProfileButton onPress={onShowPopup}/>
+
+                    <ProfileMenu 
+                        ref= {(target) => popupRef = target}
+                        onTouchOutside = {onClosePopup}
+                    />
+
                     <View style={styles.texts}>
                         <Text style={styles.username}>{name}</Text>
-                        <TouchableWithoutFeedback onPress={() => navigation.push('/shop')}>
+                        <TouchableWithoutFeedback onPress={() => nav.push('/shop')}>
                             <View>
                                 <Text style={styles.totalgold}>Total Gold:</Text>
                                 <Text style={styles.gold}>{gold}g</Text>
@@ -72,7 +85,7 @@ function HomePage() {
                 <View style={styles.container2}>
                     <View style={styles.section}>
                         <Text style={styles.headers}>Misions</Text>
-                        <TouchableWithoutFeedback onPress={() => navigation.push('/mission')}>
+                        <TouchableWithoutFeedback onPress={() => nav.push('/mission')}>
                             <View style={styles.box}>
                                 <Text style = { styles.missionHeader}>Mission {missionId}:</Text>
                                 <Text style = {styles.missionText}>{missionText}</Text>
@@ -82,7 +95,7 @@ function HomePage() {
 
                     <View style={styles.section}>
                         <Text style={styles.headers}>Map</Text>
-                        <TouchableWithoutFeedback onPress={() =>navigation.push('/map')}>
+                        <TouchableWithoutFeedback onPress={() =>nav.push('/map')}>
                             <View style={[styles.box , styles.temp]}>
                                     <View style={styles.tempbuttom}>
                                         <Button onPress={() => supabase.auth.signOut()} title="temp signout button"/>
@@ -93,13 +106,14 @@ function HomePage() {
 
                     <View style={styles.section}>
                         <Text style={styles.headers}>Leaderboard</Text>
-                        <TouchableWithoutFeedback onPress={() => navigation.push('/friends')}>
+                        <TouchableWithoutFeedback onPress={() => nav.push('/friends')}>
                             <View style={styles.box}>
                             </View>
                         </TouchableWithoutFeedback>
                     </View>
                 </View>
             </SafeAreaView>
+            {loading ? <AppLoader /> : null}
         </>
     ); 
 }
@@ -194,6 +208,7 @@ const styles = StyleSheet.create({
         height: 100,
         backgroundColor: color.primary,
     },
+
 })
 
 export default HomePage;
