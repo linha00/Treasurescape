@@ -7,6 +7,7 @@ import color from '../../config/colors';
 
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/auth';
+import CustomButton from '../../components/customButton';
 
 function LogoTitle() {
     return (
@@ -74,6 +75,8 @@ function MapPage() {
             />
             <SafeAreaView style={styles.container}>
                 <View style = {styles.top}>
+                <CustomButton type="back" style={styles.back} onPress={() => navigation.back()}/>
+
                     <Text>map</Text>
                     <Button title='temp button for mission complete' onPress={() => setVisible(true)}/>
                     <Modal

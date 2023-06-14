@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import { StyleSheet , Text , View, FlatList , Dimensions, Image } from 'react-native';
 import color from '../config/colors'
 
-import BuyButton from './buyButton';
 import { supabase } from '../lib/supabase';
 import AppLoader from './AppLoader';
+import CustomButton from './customButton';
 
 const windowWidth = Dimensions.get('window').width;
 const componentWidth = (windowWidth / 3) - 30;
@@ -49,7 +49,7 @@ function Shop() {
                             </Text>
                         </View>
                         <View style = {styles.buy}>
-                        <BuyButton text= "buy" onPress={() => buy(item.name)} />
+                        <CustomButton type="buy" text= "buy" onPress={() => buy(item.name)} />
                         </View>
                     </View>
                     )}/>

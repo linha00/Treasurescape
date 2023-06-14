@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React from 'react';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet , Text , View, SafeAreaView, Button , Image, TouchableWithoutFeedback } from 'react-native';
 import { Tabs, useRouter } from "expo-router"
 import color from '../../config/colors';
@@ -8,9 +7,9 @@ import color from '../../config/colors';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/auth';
 
-import ProfileButton from '../../components/profileButton';
 import { ProfileMenu } from '../../components/profileMenu';
 import AppLoader from '../../components/AppLoader';
+import CustomButton from '../../components/customButton';
 
 function LogoTitle() {
     return <Image style={{ width: 30, height: 30, top: 2}} source={require("../../assets/home.png")} />
@@ -27,15 +26,10 @@ function HomePage() {
     const [missionId, setMissionId] = useState(0);
     const [missionText, setMissionText] = useState("temp");
 
-    let popupRef = React.createRef()
+    let popupRef = React.createRef();
 
-    const onShowPopup = () => {
-        popupRef.show()   
-    }
-
-    const onClosePopup = () => {
-        popupRef.close() 
-    }
+    const onShowPopup = () => popupRef.show();
+    const onClosePopup = () => popupRef.close(); 
 
     async function getStuff() {
         setLoading(true);
@@ -52,19 +46,16 @@ function HomePage() {
         setLoading(false);
     }
     
-    //on first load
     useEffect(() => {
         getStuff();
     }, []);
-
 
     return (
         <>
             <Tabs.Screen options={{tabBarIcon: () => <LogoTitle />}} />
             <SafeAreaView style={styles.container}>
                 <View style={styles.container1}>
-                    <ProfileButton onPress={onShowPopup}/>
-
+                    <CustomButton type="profile" onPress={onShowPopup}/>
                     <ProfileMenu 
                         ref= {(target) => popupRef = target}
                         onTouchOutside = {onClosePopup}

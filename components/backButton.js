@@ -1,4 +1,3 @@
-import React from 'react';
 import { StyleSheet , TouchableOpacity , Text , Image} from 'react-native';
 import color from '../config/colors'
 
@@ -10,7 +9,7 @@ const BackButton = ({onPress}) => {
             <Text style={styles.text}>
                 Back
             </Text>
-    </TouchableOpacity>
+        </TouchableOpacity>
     );
 }
 

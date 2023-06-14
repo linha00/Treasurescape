@@ -1,4 +1,3 @@
-import React from 'react';
 import {StyleSheet, View, TextInput, Text} from 'react-native';
 import {Controller} from 'react-hook-form';
 import color from '../config/colors.js';

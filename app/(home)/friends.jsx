@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState } from 'react';
 import {StyleSheet, SafeAreaView, View, Image, Dimensions, FlatList, Text } from 'react-native';
 import { Tabs } from "expo-router"
 import color from '../../config/colors';
@@ -6,9 +7,9 @@ import color from '../../config/colors';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/auth';
 
-import ProfileButton from '../../components/profileButton';
 import AppLoader from '../../components/AppLoader';
-
+import CustomButton from '../../components/customButton';
+import { AddFriendMenu } from '../../components/addFriendMenu';
 
 const windowWidth = Dimensions.get('window').width;
 const componentWidth = (windowWidth / 3) - 30;
@@ -29,6 +30,11 @@ function FriendsPage() {
     const [loading, setLoading] = useState(false);
     const [items, setItems] = useState([{name: 'temp', image:"placeholder", online: true, key: '1'},]);
 
+    let popupRef = React.createRef();
+
+    const onShowPopup = () => popupRef.show();
+    const onClosePopup = () => popupRef.close(); 
+
     async function getItems() {
         setLoading(true);
         let {data} = await supabase.from('profiles').select().eq('id', user.id).single();
@@ -48,14 +54,12 @@ function FriendsPage() {
 
     useEffect(() => {
         getItems();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     useEffect(() => {
         if (refresh) {
             getItems();
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [refresh])
 
     return (
@@ -66,7 +70,11 @@ function FriendsPage() {
                 }}
             />
             <SafeAreaView style={styles.container}>
-                <ProfileButton />
+                <CustomButton type='addFriend' onPress={onShowPopup}/>
+                <AddFriendMenu  
+                        ref= {(target) => popupRef = target}
+                        onTouchOutside = {onClosePopup}
+                    />
                 <View style = {styles.group}>
                     <View style = {styles.box}>
                     <View style={styles.container2}>
