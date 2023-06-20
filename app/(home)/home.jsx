@@ -41,12 +41,6 @@ function HomePage() {
         setProfile(data.imageUrl);
         setMissionId(data.mission);
 
-        let count = 0;
-        while (count != 100000){
-            count++
-            null
-        }
-
         if (missionId != temp) {
             let {data} = await supabase.from('missions').select().eq('id', temp).single();
             setMissionText(data.description);
