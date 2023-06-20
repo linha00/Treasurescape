@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState } from 'react';
-import { StyleSheet , Text , View, SafeAreaView, Button , Image, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet , Text , View, SafeAreaView, Button , Image, TouchableWithoutFeedback, Dimensions} from 'react-native';
 import { Tabs, useRouter } from "expo-router"
 import { useFocusEffect } from '@react-navigation/native';
 import color from '../../config/colors';
@@ -12,8 +12,15 @@ import { ProfileMenu } from '../../components/profileMenu';
 import AppLoader from '../../components/AppLoader';
 import CustomButton from '../../components/customButton';
 
+const logo = Dimensions.get('window').width / 16;
+
 function LogoTitle() {
-    return <Image style={{ width: 30, height: 30, top: 2}} source={require("../../assets/home.png")} />
+    return (
+        <Image 
+            style={{ width: logo, height: logo}} 
+            source={require("../../assets/home.png")} 
+        />
+    );
 }
 
 function HomePage() {

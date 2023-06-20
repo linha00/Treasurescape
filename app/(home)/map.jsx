@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
-import {StyleSheet, SafeAreaView, Text, Button, View, Modal, Image, TouchableWithoutFeedback } from 'react-native';
+import {StyleSheet, SafeAreaView, Text, Button, View, Modal, Image, TouchableWithoutFeedback, Dimensions } from 'react-native';
 import { useState } from 'react';
 import { Tabs } from "expo-router"
 import { useRouter } from 'expo-router';
@@ -9,10 +9,12 @@ import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/auth';
 import CustomButton from '../../components/customButton';
 
+const logo = Dimensions.get('window').width / 16;
+
 function LogoTitle() {
     return (
       <Image
-        style={{ width: 30, height: 30, top: 2}}
+        style={{ width: logo, height: logo}}
         source={require("../../assets/map.png")}
       />
     );

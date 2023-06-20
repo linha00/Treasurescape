@@ -12,13 +12,14 @@ import { useAuth } from '../../contexts/auth';
 import CustomButton from '../../components/customButton';
 
 const windowWidth = Dimensions.get('window').width;
+const logo = Dimensions.get('window').width / 16;
 const componentWidth = (windowWidth / 3) - 30;
 const componentHeight = componentWidth * 1.5;
 
 function LogoTitle() {
     return (
       <Image
-        style={{ width: 30, height: 30, top: 2}}
+        style={{ width: logo, height: logo}}
         source={require("../../assets/shop.png")}
       />
     );

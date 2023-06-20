@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState } from 'react';
-import { Image, StyleSheet, View, SafeAreaView, Text } from 'react-native';
+import { Image, StyleSheet, View, SafeAreaView, Text, Dimensions } from 'react-native';
 import { useRouter, Tabs } from 'expo-router';
 import { useFocusEffect } from '@react-navigation/native';
 import color from '../../config/colors';
@@ -12,13 +12,14 @@ import BackButton from '../../components/backButton';
 import CustomButton from '../../components/customButton';
 import AppLoader from '../../components/AppLoader';
 
+const logo = Dimensions.get('window').width / 16;
 
 function LogoTitle() {
     return (
-      <Image
-        style={{ width: 30, height: 30, top: 2}}
-        source={require("../../assets/missions.png")}
-      />
+        <Image
+            style={{ width: logo, height: logo}}
+            source={require("../../assets/missions.png")}
+        />
     );
   }
 
