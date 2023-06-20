@@ -1,7 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet , Text , View, SafeAreaView, Button , Image, TouchableWithoutFeedback } from 'react-native';
 import { Tabs, useRouter } from "expo-router"
+import { useFocusEffect } from '@react-navigation/native';
 import color from '../../config/colors';
 
 import { supabase } from '../../lib/supabase';
@@ -34,21 +35,30 @@ function HomePage() {
     async function getStuff() {
         setLoading(true);
         let {data} = await supabase.from('profiles').select().eq('id', user.id).single();
+        let temp = data.mission;
         setName(data.name);
         setGold(data.gold);
         setProfile(data.imageUrl);
         setMissionId(data.mission);
 
-        if (missionId != null) {
-            let {data} = await supabase.from('missions').select().eq('id', missionId).single();
+        let count = 0;
+        while (count != 100000){
+            count++
+            null
+        }
+
+        if (missionId != temp) {
+            let {data} = await supabase.from('missions').select().eq('id', temp).single();
             setMissionText(data.description);
         }
         setLoading(false);
     }
     
-    useEffect(() => {
-        getStuff();
-    }, []);
+    useFocusEffect(
+        React.useCallback(() => {
+            getStuff();
+        }, [])
+    );
 
     return (
         <>

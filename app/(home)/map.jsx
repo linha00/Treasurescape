@@ -19,7 +19,7 @@ function LogoTitle() {
   }
 
 function MapPage() {
-    const navigation = useRouter();
+    const nav = useRouter();
     const { user } = useAuth();
     const [visible, setVisible] = useState(false);
 
@@ -48,7 +48,7 @@ function MapPage() {
                         mission: mission + 1
                     })
                     .eq('id', user.id);
-                    navigation.push('/mission');
+                    nav.push('/mission');
                 } else {
                     //temp solution for hiting the last mission
                     await supabase
@@ -58,7 +58,7 @@ function MapPage() {
                         mission: 1
                     })
                     .eq('id', user.id);
-                    navigation.push('/mission');
+                    nav.push('/mission');
                 }
             }
         } catch(error) {
@@ -75,7 +75,7 @@ function MapPage() {
             />
             <SafeAreaView style={styles.container}>
                 <View style = {styles.top}>
-                <CustomButton type="back" style={styles.back} onPress={() => navigation.back()}/>
+                <CustomButton type="back" style={styles.back} onPress={() => nav.back()}/>
 
                     <Text>map</Text>
                     <Button title='temp button for mission complete' onPress={() => setVisible(true)}/>

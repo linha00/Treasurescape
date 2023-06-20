@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState } from 'react';
 import { Image, StyleSheet, View, SafeAreaView, Text } from 'react-native';
-import { Tabs } from "expo-router"
-import { useRouter } from 'expo-router';
+import { useRouter, Tabs } from 'expo-router';
+import { useFocusEffect } from '@react-navigation/native';
 import color from '../../config/colors';
 
 import { supabase } from '../../lib/supabase';
@@ -22,31 +23,31 @@ function LogoTitle() {
   }
 
 function MissionPage() {
-    const navigation = useRouter();
-
+    const nav = useRouter();
     const { user } = useAuth();
     const [missionId, setMissionId] = useState(0);
     const [text, setText] = useState("temp");
     const [loading, setLoading] = useState(false);
     const [gold, setGold] = useState(0);
 
-
-    useEffect(() => {
-        async function getMission() {
-            setLoading(true);
-            let {data} = await supabase.from('profiles').select().eq('id', user.id).single();
-            let tempid = data.mission;
-            if (tempid != null) {
-                let {data} = await supabase.from('missions').select().eq('id', tempid).single();
-                setGold(data.award);
-                setMissionId(data.id);
-                setText(data.description);
-            }
-            setLoading(false);
+    async function getMission() {
+        setLoading(true);
+        let {data} = await supabase.from('profiles').select().eq('id', user.id).single();
+        let tempid = data.mission;
+        if (tempid != null) {
+            let {data} = await supabase.from('missions').select().eq('id', tempid).single();
+            setGold(data.award);
+            setMissionId(data.id);
+            setText(data.description);
         }
-        getMission();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+        setLoading(false);
+    }
+
+    useFocusEffect(
+        React.useCallback(() => {
+            getMission();
+        }, [])
+    );
 
     return (
         <>
@@ -56,7 +57,7 @@ function MissionPage() {
                 }}
             />
             <SafeAreaView style={styles.container}>
-                <BackButton style={styles.back} onPress={() => navigation.back()}/>
+                <BackButton style={styles.back} onPress={() => nav.back()}/>
                 <View style={styles.container1}>
                     <Image style={styles.logo} 
                         source={require('../../assets/logo.png')} />
@@ -76,7 +77,7 @@ function MissionPage() {
                 </View>
 
                 <View style={styles.button}>
-                    <CustomButton text= "Embak" onPress={() => navigation.push('/map')} />
+                    <CustomButton text= "Embak" onPress={() => nav.push('/map')} />
                 </View>
             </SafeAreaView>
             {loading ? <AppLoader /> : null}

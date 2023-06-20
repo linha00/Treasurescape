@@ -1,7 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {StyleSheet, SafeAreaView, View, Image, Dimensions, FlatList, Text } from 'react-native';
 import { Tabs } from "expo-router"
+import { useFocusEffect } from '@react-navigation/native';
 import color from '../../config/colors';
 
 import { supabase } from '../../lib/supabase';
@@ -52,9 +53,11 @@ function FriendsPage() {
         setRefresh(false);
     }
 
-    useEffect(() => {
-        getItems();
-    }, [])
+    useFocusEffect(
+        React.useCallback(() => {
+            getItems();
+        }, [])
+    );
 
     useEffect(() => {
         if (refresh) {

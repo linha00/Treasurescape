@@ -54,7 +54,7 @@ Able to perform login and sign up on the app.
 
 Able to navigate within the login group (login page, signup page, forget password page)
 
-Able to navigate within the home group (home page, mission page, map page, friends page, shop page)
+Able to navigate within the home group (home page, mission page, map page, friends page, shop page) 
 
 Able to navigate from login group to home group.
 
@@ -65,7 +65,7 @@ Able to navigate from login group to home group.
 able to login, signup and forget password (forget password WIP)
 
 
-#### 2. functioning mission system
+#### 2. functioning mission system (done)
 
 able to retrieve data from the database (done)
 
@@ -78,7 +78,7 @@ able to retrieve data from user's friend list (done)
 
 functioning online and offline indicator of friends
 
-popup menu of add friends 
+popup menu of add friends (done)
 
 able to request, add and remove friends from user's friend list
 
@@ -105,24 +105,20 @@ display player geolocation on the app
 detection of treasure when near
 
 
-#### 6. functioning AR feature
+#### 6. object detection
 
-working AR feature 
-
-display of AR on the app
-
-detection of the treasure in the AR 
+detection of the treasure 
 
 
 #### 7. Misc
 
 loading page (done)
 
-auto update of page after update to database
+auto update of page after update to database (done)
 
-pop up memu of profile photo 
+pop up memu of profile photo (done)
 
-update of user profile pic using camera / gallery
+update of user profile pic using camera / gallery in the profile popup
 
 ## Quickstart
 1. Install [NodeJS](https://nodejs.org/en/download) for windows or 

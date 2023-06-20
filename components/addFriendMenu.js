@@ -1,14 +1,16 @@
 import React from 'react';
 import { Modal, TouchableWithoutFeedback, StyleSheet, View, Text } from 'react-native';
 import { useForm } from 'react-hook-form';
-
 import color from '../config/colors';
+
+import { supabase } from '../lib/supabase';
+import { useAuth } from '../contexts/auth';
+
 import CustomButton from './customButton';
 import CustomInput from './customInput';
 
-
 export class AddFriendMenu extends React.Component {
-    
+
     constructor(props) {
         super(props)
         this.state = {
