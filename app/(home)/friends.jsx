@@ -1,7 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
-import {StyleSheet, SafeAreaView, View, Image, Dimensions, FlatList, Text } from 'react-native';
+import {StyleSheet, SafeAreaView, View, Image, Dimensions, FlatList, Text, Modal } from 'react-native';
 import { Tabs } from "expo-router"
+import { useForm } from 'react-hook-form';
 import { useFocusEffect } from '@react-navigation/native';
 import color from '../../config/colors';
 
@@ -10,7 +11,7 @@ import { useAuth } from '../../contexts/auth';
 
 import AppLoader from '../../components/AppLoader';
 import CustomButton from '../../components/customButton';
-import { AddFriendMenu } from '../../components/addFriendMenu';
+import CustomInput from '../../components/customInput';
 
 const windowWidth = Dimensions.get('window').width;
 const logo = Dimensions.get('window').width / 16;
@@ -30,16 +31,17 @@ function FriendsPage() {
     const { user } = useAuth();
     const [refresh, setRefresh] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [friend_id, setFriend_id] = useState('placeholder');
     const [items, setItems] = useState([{name: 'temp', image:"placeholder", online: true, key: '1'},]);
-
-    let popupRef = React.createRef();
-
-    const onShowPopup = () => popupRef.show();
-    const onClosePopup = () => popupRef.close(); 
+    const [modalVisible, setModalVisible] = useState(false);
+    // eslint-disable-next-line no-unused-vars
+    const {control, handleSubmit, formState: {errors}} = useForm();
+    const [addLoading, setAddLoading] = useState(false);
 
     async function getItems() {
         setLoading(true);
         let {data} = await supabase.from('profiles').select().eq('id', user.id).single();
+        setFriend_id(data.friend_id);
         let templist = data.friends;
         let out = [];
         if (templist != null) {
@@ -66,6 +68,31 @@ function FriendsPage() {
         }
     }, [refresh])
 
+    const addPressed = async data => {
+        const {id} = data;
+
+        console.log(
+            "\nAdd friend attempt:" +
+            "\nID: " + id
+        );
+
+        if (addLoading) {
+            return;
+        }
+        setAddLoading(true);
+
+        // const {error} = await supabase.auth.signInWithPassword({email, password});
+        // if (error) {
+        //     Alert.alert('Oops', error.message);
+        // } else {
+        //     console.log(
+        //         "\nLogin successful" +
+        //         "\nemail: " + email 
+        //     );
+        // }
+        setAddLoading(false);
+    };
+
     return (
         <>
             <Tabs.Screen 
@@ -74,11 +101,49 @@ function FriendsPage() {
                 }}
             />
             <SafeAreaView style={styles.container}>
-                <CustomButton type='addFriend' onPress={onShowPopup}/>
-                <AddFriendMenu  
-                        ref= {(target) => popupRef = target}
-                        onTouchOutside = {onClosePopup}
-                    />
+                <CustomButton type='addFriend' onPress={() => setModalVisible(true)}/>
+                <Modal
+                    animationType = {'fade'}
+                    transparent = {true}
+                    visible = {modalVisible}
+                >
+                    <View style = {styles.menuContainer}>
+                        <View style = {styles.menu}>
+                            <View style = {styles.top}>
+                                <Text style = {styles.header}>Add Friend</Text>
+                                <CustomButton 
+                                    style = {styles.cross} 
+                                    type='cross' 
+                                    onPress={() => setModalVisible(false)}
+                                />
+                            </View>
+                            <View style = {styles.id}>
+                                <Text style = {styles.ownID}>your ID: {friend_id}</Text>
+                                <View style = {styles.addID}>
+                                    <CustomInput 
+                                        name = "id"
+                                        placeholder = "Friend's ID" 
+                                        control = {control}
+                                        rules = {{
+                                            required: "Friend's ID is required",
+                                            minLength: {value: 8, message: "ID should be 8 characers long"},
+                                        }}
+                                    />
+                                    <CustomButton
+                                        text = {addLoading ? "Loading" : "Add"} 
+                                        onPress = {handleSubmit(addPressed)}
+                                    />
+                                </View>
+                            </View>
+                            <View style = {styles.nearby}>
+                                <Text style = {styles.nearbyHeader}>nearby</Text>
+                                <View style = {styles.nearbyBox}>
+                                    <Text>placeholder</Text>
+                                </View>
+                            </View>
+                        </View>
+                    </View>
+                </Modal>
                 <View style = {styles.group}>
                     <View style = {styles.box}>
                     <View style={styles.container2}>
@@ -180,6 +245,72 @@ const styles = StyleSheet.create({
 
     desc: {
         fontSize: 11,
+    },
+
+    menuContainer: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: "#000000aa",
+    },
+
+    menu: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'column',
+        borderRadius: 20,
+        width: '90%',
+        height: '80%',
+        padding: 20,
+        backgroundColor: color.primary,
+    },
+
+    top: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+    },
+
+    header: {
+        flex: 1,
+        fontSize: 25,
+        left: 135,
+    },
+
+    id: {
+        flex: 2,
+        width: '85%',
+    },
+
+    ownID: {
+        fontSize: 20,
+        fontWeight: 'bold',
+    },
+
+    addID: {
+        flexDirection: "row",
+        justifyContent: 'space-between',
+    },
+    
+    nearby: {
+        flex: 9,
+        width: '90%',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        marginTop: -15,
+    },
+
+    nearbyHeader: {
+        fontSize: 30,
+        fontWeight: 'bold',
+        paddingBottom: 5,
+    },
+
+    nearbyBox: {
+        width: '100%',
+        height: '90%',
+        margin: 2,
+        backgroundColor: color.gold,
     },
     
 })

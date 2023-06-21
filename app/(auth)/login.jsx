@@ -51,17 +51,17 @@ export default function Login() {
                     source={require('../../assets/logo.png')} />
                 
                 <CustomInput
-                        name = "email"
-                        placeholder = "Email"
-                        control = {control}
-                        rules = {{
-                            required: "Email is required",
-                            pattern: {
-                                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                                message: "Invalid email address"
-                            },
-                        }}
-                    />
+                    name = "email"
+                    placeholder = "Email"
+                    control = {control}
+                    rules = {{
+                        required: "Email is required",
+                        pattern: {
+                            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                            message: "Invalid email address"
+                        },
+                    }}
+                />
                 <CustomInput 
                     name = "password"
                     placeholder = "Password" 
