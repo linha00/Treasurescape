@@ -1,27 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState } from 'react';
-import { Image, StyleSheet, View, SafeAreaView, Text, Dimensions } from 'react-native';
-import { useRouter, Tabs } from 'expo-router';
+import { Image, StyleSheet, View, SafeAreaView, Text } from 'react-native';
+import { useRouter } from 'expo-router';
 import { useFocusEffect } from '@react-navigation/native';
-import color from '../../config/colors';
+import color from '../../../config/colors';
 
-import { supabase } from '../../lib/supabase';
-import { useAuth } from '../../contexts/auth';
+import { supabase } from '../../../lib/supabase';
+import { useAuth } from '../../../contexts/auth';
 
-import BackButton from '../../components/backButton';
-import CustomButton from '../../components/customButton';
-import AppLoader from '../../components/AppLoader';
-
-const logo = Dimensions.get('window').width / 16;
-
-function LogoTitle() {
-    return (
-        <Image
-            style={{ width: logo, height: logo}}
-            source={require("../../assets/missions.png")}
-        />
-    );
-  }
+import BackButton from '../../../components/backButton';
+import CustomButton from '../../../components/customButton';
+import AppLoader from '../../../components/AppLoader';
 
 function MissionPage() {
     const nav = useRouter();
@@ -52,16 +41,11 @@ function MissionPage() {
 
     return (
         <>
-            <Tabs.Screen 
-                options={{
-                    tabBarIcon: () => <LogoTitle />
-                }}
-            />
             <SafeAreaView style={styles.container}>
                 <BackButton style={styles.back} onPress={() => nav.back()}/>
                 <View style={styles.container1}>
                     <Image style={styles.logo} 
-                        source={require('../../assets/logo.png')} />
+                        source={require('../../../assets/logo.png')} />
                 </View>
 
                 <View style={styles.container2}>
@@ -78,7 +62,7 @@ function MissionPage() {
                 </View>
 
                 <View style={styles.button}>
-                    <CustomButton text= "Embak" onPress={() => nav.push('/map')} />
+                    <CustomButton text= "scan" onPress={() => nav.push('./cameraScreen')} />
                 </View>
             </SafeAreaView>
             {loading ? <AppLoader /> : null}

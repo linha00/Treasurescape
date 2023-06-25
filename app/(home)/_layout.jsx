@@ -1,7 +1,7 @@
 import { Tabs } from "expo-router"
 import color from "../../config/colors";
 
-export default function AuthLayout() {
+export default function HomeLayout() {
     return (
         <Tabs 
             initialRouteName="home"
