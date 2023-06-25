@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
-import {StyleSheet, SafeAreaView, Text, Button, View, Modal, Image, TouchableWithoutFeedback, Dimensions } from 'react-native';
+import {StyleSheet, SafeAreaView, Text, Button, View, Modal, Image, TouchableWithoutFeedback } from 'react-native';
 import { useState } from 'react';
 import { Tabs } from "expo-router"
 import { useRouter } from 'expo-router';
@@ -7,21 +7,18 @@ import color from '../../config/colors';
 
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/auth';
-import CustomButton from '../../components/customButton';
-
-const logo = Dimensions.get('window').width / 16;
 
 function LogoTitle() {
     return (
       <Image
-        style={{ width: logo, height: logo}}
+        style={{ width: 30, height: 30, top: 2}}
         source={require("../../assets/map.png")}
       />
     );
   }
 
 function MapPage() {
-    const nav = useRouter();
+    const navigation = useRouter();
     const { user } = useAuth();
     const [visible, setVisible] = useState(false);
 
@@ -50,7 +47,7 @@ function MapPage() {
                         mission: mission + 1
                     })
                     .eq('id', user.id);
-                    nav.push('/mission');
+                    navigation.push('/mission');
                 } else {
                     //temp solution for hiting the last mission
                     await supabase
@@ -60,7 +57,7 @@ function MapPage() {
                         mission: 1
                     })
                     .eq('id', user.id);
-                    nav.push('/mission');
+                    navigation.push('/mission');
                 }
             }
         } catch(error) {
@@ -77,8 +74,6 @@ function MapPage() {
             />
             <SafeAreaView style={styles.container}>
                 <View style = {styles.top}>
-                <CustomButton type="back" style={styles.back} onPress={() => nav.back()}/>
-
                     <Text>map</Text>
                     <Button title='temp button for mission complete' onPress={() => setVisible(true)}/>
                     <Modal
