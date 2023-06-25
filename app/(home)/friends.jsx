@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import {StyleSheet, SafeAreaView, View, Image, Dimensions, FlatList, Text, Modal, Alert } from 'react-native';
-import { Tabs, useRouter } from "expo-router"
+import { Tabs } from "expo-router"
 import { useForm } from 'react-hook-form';
 import { useFocusEffect } from '@react-navigation/native';
 import color from '../../config/colors';
@@ -28,7 +28,6 @@ function LogoTitle() {
 }
 
 function FriendsPage() {
-    const nav = useRouter();
     const { user } = useAuth();
     const [refresh, setRefresh] = useState(false);
     const [loading, setLoading] = useState(false);
