@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
-import {StyleSheet, SafeAreaView, View, Image, Dimensions, FlatList, Text, Modal } from 'react-native';
-import { Tabs } from "expo-router"
+import {StyleSheet, SafeAreaView, View, Image, Dimensions, FlatList, Text, Modal, Alert } from 'react-native';
+import { Tabs, useRouter } from "expo-router"
 import { useForm } from 'react-hook-form';
 import { useFocusEffect } from '@react-navigation/native';
 import color from '../../config/colors';
@@ -28,15 +28,19 @@ function LogoTitle() {
 }
 
 function FriendsPage() {
+    const nav = useRouter();
     const { user } = useAuth();
     const [refresh, setRefresh] = useState(false);
     const [loading, setLoading] = useState(false);
     const [friend_id, setFriend_id] = useState('placeholder');
-    const [items, setItems] = useState([{name: 'temp', image:"placeholder", online: true, key: '1'},]);
     const [modalVisible, setModalVisible] = useState(false);
     // eslint-disable-next-line no-unused-vars
     const {control, handleSubmit, formState: {errors}} = useForm();
     const [addLoading, setAddLoading] = useState(false);
+    
+    const [items, setItems] = useState([
+        {name: 'temp', image:"placeholder", online: true, key: '1'},
+    ]);
 
     async function getItems() {
         setLoading(true);
@@ -68,28 +72,75 @@ function FriendsPage() {
         }
     }, [refresh])
 
-    const addPressed = async data => {
-        const {id} = data;
+    const addPressed = async input => {
+        const keyed_id = input.id;
+        const user_id = friend_id;
 
         console.log(
             "\nAdd friend attempt:" +
-            "\nID: " + id
+            "\nID: " + keyed_id
         );
 
         if (addLoading) {
             return;
         }
         setAddLoading(true);
+        if (keyed_id != user_id) {
+            const userData = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('friend_id', user_id)
+            .single();
 
-        // const {error} = await supabase.auth.signInWithPassword({email, password});
-        // if (error) {
-        //     Alert.alert('Oops', error.message);
-        // } else {
-        //     console.log(
-        //         "\nLogin successful" +
-        //         "\nemail: " + email 
-        //     );
-        // }
+            const friendData = await supabase
+                .from('profiles')
+                .select('*')
+                .eq('friend_id', keyed_id)
+                .single();
+
+            if (friendData.error) {
+                Alert.alert("ID does not exisit")
+            } else if (userData.data.friends.includes(keyed_id)) {
+                Alert.alert("user already in your friend list")
+            } else {
+
+                let friend_list = [];
+                if (friendData.data.friends.length == 0) {
+                    friend_list = [user_id];
+                } else {
+                    friend_list = friendData.data.friends;
+                    let temp = [user_id];
+                    friend_list = friend_list.concat(temp);
+                }
+                await supabase
+                    .from('profiles')
+                    .update({ 
+                        friends: friend_list,
+                    })
+                    .eq('friend_id', keyed_id);
+
+                let user_list = [];
+                if (userData.data.friends.length == 0) {
+                    user_list = [keyed_id];
+                } else {
+                    user_list = userData.data.friends;
+                    let temp = [keyed_id];
+                    user_list = user_list.concat(temp);
+                }
+                await supabase
+                    .from('profiles')
+                    .update({ 
+                        friends: user_list,
+                    })
+                    .eq('friend_id', user_id);
+
+                Alert.alert("friends added successfully");
+                setRefresh(true);
+            }
+
+        } else {
+            Alert.alert("Please enter your friend's IDs");
+        }
         setAddLoading(false);
     };
 
@@ -102,6 +153,7 @@ function FriendsPage() {
             />
             <SafeAreaView style={styles.container}>
                 <CustomButton type='addFriend' onPress={() => setModalVisible(true)}/>
+
                 <Modal
                     animationType = {'fade'}
                     transparent = {true}
@@ -144,27 +196,28 @@ function FriendsPage() {
                         </View>
                     </View>
                 </Modal>
+
                 <View style = {styles.group}>
                     <View style = {styles.box}>
-                    <View style={styles.container2}>
-                        <FlatList
-                            data={items}
-                            renderItem={({item}) => (
-                            <View style={styles.box2} key={item.key}>
-                                <Image style={styles.image2} source = {{ uri : item.image}} />
-                                <View style={styles.text}>
-                                    <Text style={styles.name}>
-                                        {item.name}
-                                    </Text>
-                                    <Text style={styles.desc}>
-                                        {item.online}
-                                    </Text>
+                        <View style={styles.container2}>
+                            <FlatList
+                                data={items}
+                                renderItem={({item}) => (
+                                <View style={styles.box2} key={item.key}>
+                                    <Image style={styles.image2} source = {{ uri : item.image}} />
+                                    <View style={styles.text}>
+                                        <Text style={styles.name}>
+                                            {item.name}
+                                        </Text>
+                                        <Text style={styles.desc}>
+                                            {item.online}
+                                        </Text>
+                                    </View>
                                 </View>
-                            </View>
-                            )}
-                            extraData={loading}
-                            refreshing = {refresh}
-                            onRefresh = {() => {setRefresh(true); setLoading(true);}}
+                                )}
+                                extraData={loading}
+                                refreshing = {refresh}
+                                onRefresh = {() => {setRefresh(true); setLoading(true);}}
                             />
                         </View>
                     </View>

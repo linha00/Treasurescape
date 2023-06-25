@@ -76,24 +76,22 @@ able to update and awards player when mission is completed (done)
 
 able to retrieve data from user's friend list (done)
 
-functioning online and offline indicator of friends
-
 popup menu of add friends (done)
 
-able to request, add and remove friends from user's friend list
+able to add friends to their friendlist (done)
 
-updating of database from the performed actions
+updating of database from the performed actions (done)
 
 
 #### 4. functioning shop system
 
 able to retrieve data from the database (done)
 
-able to perform buying feature from the shop
+able to perform buying feature from the shop (done)
 
-storing of item purchase
+storing of item purchase (done)
 
-updating of shop database and player database with each purchase
+updating of shop database and player database with each purchase (done)
 
 
 #### 5. functioning map geolocation

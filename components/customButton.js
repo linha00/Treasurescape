@@ -20,6 +20,12 @@ const CustomButton = ({type = "input", text , onPress}) => {
                 <Image style={styles.image_cross} source={require('../assets/cross.png')}/>
             </TouchableOpacity>
         );
+    } else if (type == "inv") {
+        return (
+            <TouchableOpacity onPress={onPress} style={styles.container_cross}> 
+                <Image style={styles.image_backpack} source={require('../assets/backpack.png')}/>
+            </TouchableOpacity>
+        );
     } else {
         return (
             <TouchableOpacity onPress={onPress} style={styles[`container_${type}`]}> 
@@ -81,9 +87,32 @@ const styles = StyleSheet.create({
         // right: 20,
     },
 
+    image_backpack: {
+        width: 50,
+        height: 50,
+        left: 20,
+    },
+
     image_cross: {
         width: 30,
         height: 30,
+    },
+
+    container_show_code: {
+        borderRadius: 30,
+        paddingHorizontal: 15,
+        paddingVertical: 10,
+        backgroundColor: color.lightBlue,
+        margin: 3,
+        alignContent: "center",
+    },
+
+    text_show_code: {
+        fontSize: 15,
+        color: color.black,
+        fontWeight: "bold",
+        alignSelf: "center",
+        textTransform: "uppercase"
     },
 
 })
