@@ -133,7 +133,7 @@ function MissionPage() {
                 </View>
 
                 <View style={styles.button}>
-                    <CustomButton text= "key" onPress={() => setenter_prompt(true)} />
+                    <CustomButton text= "Let's go! I got it!" onPress={() => setenter_prompt(true)} />
                     <Modal
                         animationType = {'fade'}
                         transparent = {true}
@@ -142,7 +142,7 @@ function MissionPage() {
                         <View style = {styles.passcode_container}>
                             <View style = {styles.passcode}>
                                 <View style = {styles.top}>
-                                    <Text style = {styles.passcode_header}>passcode</Text>
+                                    <Text style = {styles.passcode_header}>Passcode</Text>
                                     <CustomButton 
                                         style = {styles.cross} 
                                         type='cross' 
@@ -150,14 +150,14 @@ function MissionPage() {
                                     />
                                 </View>
                                 <View style={styles.bottom}>
-                                    <View style={styles.passcode_input}>
+                                    <View style={[styles.passcode_input,{marginBottom:10}]}>
                                         <CustomInput 
                                             name = "passcode"
-                                            placeholder = "passcode" 
+                                            placeholder = "Passcode" 
                                             control = {control}
                                             rules = {{
-                                                required: "enter the passcode",
-                                                minLength: {value: 8, message: "passcode should be 8 characers long"},
+                                                required: "Enter the passcode",
+                                                minLength: {value: 8, message: "Passcode should be 8 characers long"},
                                             }}
                                         />
                                     </View>
@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
         flex: 0.8,
         top: -50,
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'center'
     },
 
     logo: {
@@ -285,7 +285,7 @@ const styles = StyleSheet.create({
         width: '70%',
         height: '25%',
         padding: 20,
-        backgroundColor: color.primary,
+        backgroundColor: color.white,
     },
 
     top: {
@@ -303,6 +303,7 @@ const styles = StyleSheet.create({
 
     passcode_input: {
         width: '140%',
+        topMargin: 20
     },
 
     passcode_button: {
@@ -313,7 +314,12 @@ const styles = StyleSheet.create({
     passcode_header: {
         flex: 1,
         fontSize: 25,
-        left: 95,
+        justifyContent: 'center',
+        left:65,
+        fontStyle: 'italic',
+        fontWeight: 'bold',
+        color: "grey"
+
     },
 
     correct: {
