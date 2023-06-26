@@ -78,7 +78,7 @@ function MissionPage() {
                 let reward = data.award;
                 let passcod = data.passcode;
                 if (passcod == keyed) {
-                    if (reward != 0 && mission != 3) {
+                    if (reward != 0 && mission != 4) {
                         await supabase
                         .from('profiles')
                         .update({ 
@@ -187,7 +187,7 @@ function MissionPage() {
                                         <TouchableWithoutFeedback style = {styles.temp} onPress={() => {setWrong(false)}}>
                                             <SafeAreaView style = {styles.wrong}>
                                                     <Image style = {styles.correctImage} source={require('../../../assets/logo.png')} />
-                                                    <Text style = {styles.correctText}>That's Wrong!</Text>
+                                                    <Text style = {styles.correctText}>Try again!</Text>
                                             </SafeAreaView>
                                         </TouchableWithoutFeedback>
                                     </Modal>
