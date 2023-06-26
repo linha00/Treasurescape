@@ -165,6 +165,7 @@ function MissionPage() {
                                         <CustomButton 
                                             text = {enter_loading ? "Loading" : "enter"} 
                                             onPress = {handleSubmit(enter_pressed)}
+                                            style = {{fontSize:10}}
                                         />
                                     </View>
                                     <Modal
@@ -175,7 +176,7 @@ function MissionPage() {
                                         <TouchableWithoutFeedback style = {styles.temp} onPress={() => {setCorrect(false); setenter_prompt(false);}}>
                                             <SafeAreaView style = {styles.correct}>
                                                     <Image style = {styles.correctImage} source={require('../../../assets/logo.png')} />
-                                                    <Text style = {styles.correctText}>That's Right!</Text>
+                                                    <Text style = {[styles.correctText,{fontWeight:"bold"}]}>That's Right!</Text>
                                             </SafeAreaView>
                                         </TouchableWithoutFeedback>
                                     </Modal>
@@ -187,7 +188,7 @@ function MissionPage() {
                                         <TouchableWithoutFeedback style = {styles.temp} onPress={() => {setWrong(false)}}>
                                             <SafeAreaView style = {styles.wrong}>
                                                     <Image style = {styles.correctImage} source={require('../../../assets/logo.png')} />
-                                                    <Text style = {styles.correctText}>Try again!</Text>
+                                                    <Text style = {[styles.correctText,{fontWeight:"bold"}]}>Try again!</Text>
                                             </SafeAreaView>
                                         </TouchableWithoutFeedback>
                                     </Modal>
@@ -307,8 +308,8 @@ const styles = StyleSheet.create({
     },
 
     passcode_button: {
-        width: '80%',
-        left: 30,
+        width: '100%',
+        left: 5,
     },
 
     passcode_header: {
@@ -327,6 +328,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: color.gold,
+        fontWeight: 'bold',
+        fontStyle: 'italic',
     },
 
     wrong: {
@@ -334,6 +337,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: color.red,
+        fontWeight: 'bold',
+        fontStyle: 'italic',
     },
 
     correctImage: {
