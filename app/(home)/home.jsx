@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet , Text , View, SafeAreaView, Button , Image, TouchableWithoutFeedback, Dimensions, Modal } from 'react-native';
 import { Tabs, useRouter } from "expo-router"
 import { useFocusEffect } from '@react-navigation/native';
@@ -9,6 +9,7 @@ import color from '../../config/colors';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/auth';
 
+import { ProfileMenu } from '../../components/profileMenu';
 import AppLoader from '../../components/AppLoader';
 import CustomButton from '../../components/customButton';
 
@@ -33,6 +34,7 @@ function HomePage() {
     const [profile, setProfile] = useState("temp");
     const [missionId, setMissionId] = useState(0);
     const [missionText, setMissionText] = useState("temp");
+
     const [modalVisible, setModalVisible] = useState(false);
     // eslint-disable-next-line no-unused-vars
     const {control, handleSubmit, formState: {errors}} = useForm();
@@ -64,6 +66,7 @@ function HomePage() {
             <Tabs.Screen options={{tabBarIcon: () => <LogoTitle />}} />
             <SafeAreaView style={styles.container}>
                 <View style={styles.container1}>
+                  
                     <CustomButton type='profile' onPress={() => setModalVisible(true)}/>
                     <Modal
                         animationType = {'fade'}

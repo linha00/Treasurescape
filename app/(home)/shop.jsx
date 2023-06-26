@@ -68,9 +68,9 @@ function ShopPage() {
 
     const buy = async (name, stock, price, image_url) => {
         if (stock == 0) {
-            Alert.alert("item out of stock");
+            Alert.alert("Item out of stock");
         } else if (price > gold) {
-            Alert.alert("not enough gold");
+            Alert.alert("Not enough gold");
         } else {
             const userData = await supabase
             .from('profiles')
@@ -122,6 +122,7 @@ function ShopPage() {
 
             setRefresh(true);
             Alert.alert(name + " purchase successfully");
+            console.log(out)
         }
 
     }
@@ -238,6 +239,7 @@ const styles = StyleSheet.create({
         fontSize: 35,
         color: color.quaternary,
         paddingTop: 30,
+        fontWeight: 'bold'
     },
 
     shop: {
@@ -326,7 +328,8 @@ const styles = StyleSheet.create({
     inv_header: {
         flex: 1,
         fontSize: 25,
-        left: 145,
+        left: 110,
+        fontWeight: 'bold'
     },
 
     inv_bottom: {
@@ -336,5 +339,6 @@ const styles = StyleSheet.create({
         bottom: 10,
     },
 })
+
 
 export default ShopPage;

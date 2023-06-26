@@ -54,7 +54,7 @@ function CodeVerification() {
                 </Text>
 
                 <Text style={styles.text}>
-                    please enter the verification code we sent to your email address
+                    Please enter the verification code we sent to your email address
                 </Text>
                 <View style={styles.code}>
                     <CustomInput version='code' maxLength={1} setValue={setcode1}/>

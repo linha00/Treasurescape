@@ -133,7 +133,7 @@ function MissionPage() {
                 </View>
 
                 <View style={styles.button}>
-                    <CustomButton text= "key" onPress={() => setenter_prompt(true)} />
+                    <CustomButton text= "Let's go! I got it!" onPress={() => setenter_prompt(true)} />
                     <Modal
                         animationType = {'fade'}
                         transparent = {true}
@@ -142,7 +142,7 @@ function MissionPage() {
                         <View style = {styles.passcode_container}>
                             <View style = {styles.passcode}>
                                 <View style = {styles.top}>
-                                    <Text style = {styles.passcode_header}>passcode</Text>
+                                    <Text style = {styles.passcode_header}>Passcode</Text>
                                     <CustomButton 
                                         style = {styles.cross} 
                                         type='cross' 
@@ -150,14 +150,14 @@ function MissionPage() {
                                     />
                                 </View>
                                 <View style={styles.bottom}>
-                                    <View style={styles.passcode_input}>
+                                    <View style={[styles.passcode_input,{marginBottom:10}]}>
                                         <CustomInput 
                                             name = "passcode"
-                                            placeholder = "passcode" 
+                                            placeholder = "Passcode" 
                                             control = {control}
                                             rules = {{
-                                                required: "enter the passcode",
-                                                minLength: {value: 8, message: "passcode should be 8 characers long"},
+                                                required: "Enter the passcode",
+                                                minLength: {value: 8, message: "Passcode should be 8 characers long"},
                                             }}
                                         />
                                     </View>
@@ -165,6 +165,7 @@ function MissionPage() {
                                         <CustomButton 
                                             text = {enter_loading ? "Loading" : "enter"} 
                                             onPress = {handleSubmit(enter_pressed)}
+                                            style = {{fontSize:10}}
                                         />
                                     </View>
                                     <Modal
@@ -175,7 +176,7 @@ function MissionPage() {
                                         <TouchableWithoutFeedback style = {styles.temp} onPress={() => {setCorrect(false); setenter_prompt(false);}}>
                                             <SafeAreaView style = {styles.correct}>
                                                     <Image style = {styles.correctImage} source={require('../../../assets/logo.png')} />
-                                                    <Text style = {styles.correctText}>That's Right!</Text>
+                                                    <Text style = {[styles.correctText,{fontWeight:"bold"}]}>That's Right!</Text>
                                             </SafeAreaView>
                                         </TouchableWithoutFeedback>
                                     </Modal>
@@ -187,7 +188,7 @@ function MissionPage() {
                                         <TouchableWithoutFeedback style = {styles.temp} onPress={() => {setWrong(false)}}>
                                             <SafeAreaView style = {styles.wrong}>
                                                     <Image style = {styles.correctImage} source={require('../../../assets/logo.png')} />
-                                                    <Text style = {styles.correctText}>Try again!</Text>
+                                                    <Text style = {[styles.correctText,{fontWeight:"bold"}]}>Try again!</Text>
                                             </SafeAreaView>
                                         </TouchableWithoutFeedback>
                                     </Modal>
@@ -228,7 +229,7 @@ const styles = StyleSheet.create({
         flex: 0.8,
         top: -50,
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'center'
     },
 
     logo: {
@@ -285,7 +286,7 @@ const styles = StyleSheet.create({
         width: '70%',
         height: '25%',
         padding: 20,
-        backgroundColor: color.primary,
+        backgroundColor: color.white,
     },
 
     top: {
@@ -303,17 +304,23 @@ const styles = StyleSheet.create({
 
     passcode_input: {
         width: '140%',
+        topMargin: 20
     },
 
     passcode_button: {
-        width: '80%',
-        left: 30,
+        width: '100%',
+        left: 5,
     },
 
     passcode_header: {
         flex: 1,
         fontSize: 25,
-        left: 95,
+        justifyContent: 'center',
+        left:65,
+        fontStyle: 'italic',
+        fontWeight: 'bold',
+        color: "grey"
+
     },
 
     correct: {
@@ -321,6 +328,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: color.gold,
+        fontWeight: 'bold',
+        fontStyle: 'italic',
     },
 
     wrong: {
@@ -328,6 +337,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: color.red,
+        fontWeight: 'bold',
+        fontStyle: 'italic',
     },
 
     correctImage: {
