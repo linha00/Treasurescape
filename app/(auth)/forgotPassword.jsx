@@ -1,4 +1,4 @@
-import {StyleSheet, SafeAreaView, Text, TouchableWithoutFeedback, Keyboard, Alert, View} from 'react-native';
+import {StyleSheet, SafeAreaView, Text, TouchableWithoutFeedback, Keyboard, Alert, View, Image} from 'react-native';
 import {useForm} from 'react-hook-form';
 import color from '../../config/colors';
 
@@ -7,6 +7,10 @@ import CustomButton from '../../components/customButton';
 import BackButton from '../../components/backButton';
 import { useRouter } from 'expo-router';
 import { supabase } from '../../lib/supabase';
+import PropTypes from 'prop-types';
+
+//for font
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 function ForgotPasswordPage() {
     const navigation = useRouter();
@@ -31,16 +35,20 @@ function ForgotPasswordPage() {
     return (
         <TouchableWithoutFeedback onPress = {press}>
             <SafeAreaView style = {styles.container}>
+                <Image style={{width: 200, height: 200}}
+                    source={require('../../assets/logo.png')} 
+                />
+
                 <BackButton onPress = {back}/>
 
-                <Text style = {styles.header}>
-                    Forgot your Password?
+                <Text style = {{fontSize: 20, fontStyle: 'italic', fontWeight: 'bold'}}>
+                    Find your account
                 </Text>
 
-                <Text style = {styles.text}>
-                    Enter your Email below to reset your password        
+                <Text style={[styles.text, { marginTop: 10 }]}>
+                    Enter your email below to reset your password
                 </Text>
-                <Text style = {{color : color.red}}>working in progress</Text>
+
                 <View style = {{marginBottom: 5, width: "100%", alignItems: "center"}}>
                     <CustomInput
                         name = "email"
@@ -56,7 +64,8 @@ function ForgotPasswordPage() {
                     />
                 </View>
                 <CustomButton 
-                    text= "Submit" 
+                    style = {{backgroundColor:"red"}}
+                    text= "Find Account" 
                     onPress = {handleSubmit(pressedSubmit)}
                 />
             </SafeAreaView>
@@ -81,6 +90,11 @@ const styles = StyleSheet.create({
         fontSize: 15,
         color: color.tertiary,
         marginBottom: 10,
+},
+    buttonText: {
+        fontSize: 15,
+        color: 'blue',
+        fontWeight: 'bold',
 },
 })
 

@@ -96,16 +96,17 @@ function SignupPage() {
                     />
                     <CustomInput
                         name = "repeatPassword"
-                        placeholder = "Repeat Password"
+                        placeholder = "Re-enter Password"
                         control = {control}
                         rules = {{
                             required: "Password is required",
                             minLength: {value: 5, message: "Password should be minimum 6 characers long"},
                             validate: value => value == pwd || "Password do not match"
                         }}
+                        style = {{marginBottom: 50}}
                     />
                 </View>
-                <View style = {styles.lineContainer}>
+                <View style = {[styles.lineContainer, {marginBottom: 20, marginTop: 20}]}>
                     <Text>By creating an account, you agree to our </Text>
                     <TouchableOpacity onPress = {termsPressed}>
                         <Text style = {styles.terms}>Terms of Use</Text>
