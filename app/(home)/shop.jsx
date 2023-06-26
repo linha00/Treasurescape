@@ -122,7 +122,6 @@ function ShopPage() {
 
             setRefresh(true);
             Alert.alert(name + " purchase successfully");
-            console.log(out)
         }
 
     }
