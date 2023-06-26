@@ -40,6 +40,9 @@ function FriendsPage() {
     const [items, setItems] = useState([
         {name: 'temp', image:"placeholder", online: true, key: '1'},
     ]);
+    const [nearby, setNearby] = useState([
+        {name: 'temp', image:"placeholder", code: "code", key: '1'},
+    ])
 
     async function getItems() {
         setLoading(true);
@@ -59,15 +62,30 @@ function FriendsPage() {
         setRefresh(false);
     }
 
+    async function getNearby() {
+        setLoading(true);
+        let {data} = await supabase.from('profiles').select('*').limit(5);
+        let out = [];
+        for (var i = 0; i < data.length; i++) {
+            let temp = out;
+            out = temp.concat([{name: data[i].name, image: data[i].imageUrl, code: data[i].friend_id, key: i}]);
+        }
+        setNearby(out);
+        setLoading(false);
+        setRefresh(false);
+    }
+
     useFocusEffect(
         React.useCallback(() => {
             getItems();
+            getNearby();
         }, [])
     );
 
     useEffect(() => {
         if (refresh) {
             getItems();
+            getNearby();
         }
     }, [refresh])
 
@@ -189,7 +207,27 @@ function FriendsPage() {
                             <View style = {styles.nearby}>
                                 <Text style = {styles.nearbyHeader}>nearby</Text>
                                 <View style = {styles.nearbyBox}>
-                                    <Text>placeholder</Text>
+                                <FlatList
+                                    data={nearby}
+                                    renderItem={({item}) => (
+                                        <View style={styles.box2} key={item.key}>
+                                            <Image style={styles.image2} source = {{uri : item.image}} />
+
+                                            <View style={styles.text}>
+                                                <Text style={styles.name}>
+                                                    {item.name}
+                                                </Text>
+
+                                                <Text style={styles.code}>
+                                                    {item.code}
+                                                </Text>
+                                            </View>
+                                        </View>
+                                    )}
+                                    extraData={loading}
+                                    refreshing = {refresh}
+                                    onRefresh = {() => {setRefresh(true); setLoading(true);}}
+                                />
                                 </View>
                             </View>
                         </View>
@@ -362,7 +400,8 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '90%',
         margin: 2,
-        backgroundColor: color.gold,
+        borderRadius: 10,
+        borderWidth: 1,
     },
     
 })
