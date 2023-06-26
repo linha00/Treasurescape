@@ -9,7 +9,7 @@ import color from '../../config/colors';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/auth';
 
-import { ProfileMenu } from '../../components/profileMenu';
+// import { ProfileMenu } from '../../components/profileMenu';
 import AppLoader from '../../components/AppLoader';
 import CustomButton from '../../components/customButton';
 

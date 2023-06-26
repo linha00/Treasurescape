@@ -1,21 +1,9 @@
 /* eslint-disable react/no-unescaped-entities */
 
-import {StyleSheet, SafeAreaView, Text, Button, View, Modal, Image, TouchableWithoutFeedback } from 'react-native';
-
-import { useState } from 'react';
+// import React from 'react';
+import {StyleSheet, View, Image, Dimensions } from 'react-native';
 import { Tabs } from "expo-router"
-import { useRouter } from 'expo-router';
-import color from '../../config/colors';
-
-import { supabase } from '../../lib/supabase';
-import { useAuth } from '../../contexts/auth';
-import CustomButton from '../../components/customButton';
-
-
-//import map components 
-import React, {useEffect} from 'react';
-import MapView, { Callout, Marker } from 'react-native-maps';
-import * as location from 'expo-location';
+import MapView, { Marker } from 'react-native-maps';
 
 const logo = Dimensions.get('window').width / 16;
 
@@ -30,10 +18,10 @@ function LogoTitle() {
 
 function MapPage() {
 
-    const [pin, setPin] = React.useState({
-        latitude: 1.2966, 
-        longitude: 103.7764
-    });
+    // const [pin, setPin] = React.useState({
+    //     latitude: 1.2966, 
+    //     longitude: 103.7764
+    // });
 
     return (
       <>
