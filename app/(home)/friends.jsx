@@ -46,15 +46,17 @@ function FriendsPage() {
 
     async function getItems() {
         setLoading(true);
-        let {data} = await supabase.from('profiles').select().eq('id', user.id).single();
-        setFriend_id(data.friend_id);
-        let templist = data.friends;
+        let userdata = await supabase.from('profiles').select().eq('id', user.id).single();
+        setFriend_id(userdata.data.friend_id);
+        let templist = userdata.data.friends;
         let out = [];
         if (templist != null) {
             for (var i = 0; i < templist.length; i++) {
                 let {data} = await supabase.from('profiles').select().eq('friend_id', templist[i]).single();
-                let temp = out;
-                out = temp.concat([{name: data.name, image: data.imageUrl, online: data.online, key: i}]);
+                if (data != null) {
+                    let temp = out;
+                    out = temp.concat([{name: data.name, image: data.imageUrl, online: data.online, key: i}]);
+                }
             }
         }
         setItems(out);
