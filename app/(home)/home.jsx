@@ -1,15 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet , Text , View, SafeAreaView, Button , Image, TouchableWithoutFeedback, Dimensions, Modal } from 'react-native';
 import { Tabs, useRouter } from "expo-router"
 import { useFocusEffect } from '@react-navigation/native';
 import { useForm } from 'react-hook-form';
+import * as ImagePicker from 'expo-image-picker';
 import color from '../../config/colors';
 
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/auth';
 
-// import { ProfileMenu } from '../../components/profileMenu';
 import AppLoader from '../../components/AppLoader';
 import CustomButton from '../../components/customButton';
 
@@ -34,8 +34,9 @@ function HomePage() {
     const [profile, setProfile] = useState("temp");
     const [missionId, setMissionId] = useState(0);
     const [missionText, setMissionText] = useState("temp");
+    const [image, setimage] = useState(null);
 
-    const [modalVisible, setModalVisible] = useState(false);
+    const [profileMenu, setProfileMenu] = useState(false);
     // eslint-disable-next-line no-unused-vars
     const {control, handleSubmit, formState: {errors}} = useForm();
 
@@ -55,6 +56,29 @@ function HomePage() {
         setLoading(false);
     }
     
+    const handle_profile_upload = async () => {
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images
+        })
+        if (!result.canceled) {
+            let upload_image = result.assets[0].uri
+            console.log(upload_image)
+
+            // const {data, error} = await supabase.storage.from('images').upload(`${new Date().getTime()}`,
+            //     {
+            //         uri: result.assets[0].uri,
+            //         type: 'jpg',
+            //         name: 'name'
+            //     })
+            
+            //     if (error) {
+            //     setLoading(false);
+            //     return;
+            // }
+        }
+
+    }
+
     useFocusEffect(
         React.useCallback(() => {
             getStuff();
@@ -66,41 +90,57 @@ function HomePage() {
             <Tabs.Screen options={{tabBarIcon: () => <LogoTitle />}} />
             <SafeAreaView style={styles.container}>
                 <View style={styles.container1}>
-                  
-                    <CustomButton type='profile' onPress={() => setModalVisible(true)}/>
+                    {/* profile menu  */}
+                    <CustomButton type='profile' onPress={() => setProfileMenu(true)}/>
                     <Modal
                         animationType = {'fade'}
                         transparent = {true}
-                        visible = {modalVisible}
+                        visible = {profileMenu}
                     >
                         <View style = {styles.menuContainer}>
                             <View style = {styles.menu}>
-                                <View style = {styles.top}>
-                                    <Text style = {styles.header}>Profile</Text>
-                                    <CustomButton 
-                                        style = {styles.cross} 
-                                        type='cross' 
-                                        onPress={() => setModalVisible(false)}
-                                    />
+                                <View style = {styles.profile_menu_top}>
+                                    <Text style = {styles.profile_menu_header}>Profile</Text>
+                                    <View style = {styles.cross}>
+                                        <CustomButton 
+                                            type='cross' 
+                                            onPress={() => setProfileMenu(false)}
+                                        />
+                                    </View>
                                 </View>
-                                <Text>placeholder</Text>
+                                <View style = {styles.profile_menu_bottom}>
+                                    <Image style={styles.profile_menu_avatar} source={{uri: profile}}/>
+                                    <View style = {styles.profile_menu_button_group}>
+                                        <View style = {styles.profile_menu_button}>
+                                            <CustomButton text= "camera" />
+                                        </View>
+                                        <View style = {styles.profile_menu_button}>
+                                            <CustomButton text ="upload" onPress={handle_profile_upload}/>
+                                        </View>
+                                    </View>
+                                </View>
                             </View>
                         </View>
                     </Modal>
 
-                    <View style={styles.texts}>
+                    {/* top box */}
+                    <View>
                         <Text style={styles.username}>{name}</Text>
                         <TouchableWithoutFeedback onPress={() => nav.push('/shop')}>
                             <View>
-                                <Text style={styles.totalgold}>Total Gold:</Text>
+                                <Text style={styles.totalgoldText}>Total Gold:</Text>
                                 <Text style={styles.gold}>{gold}g</Text>
                             </View>
                         </TouchableWithoutFeedback>
                     </View>
-                    <Image style={styles.avatar} source={{uri: profile}}/>
+                    <TouchableWithoutFeedback onPress={() => setProfileMenu(true)}>
+                        <Image style={styles.avatar} source={{uri: profile}}/>
+                    </TouchableWithoutFeedback>
+
                 </View>
 
-                <View style={styles.container2}>
+                <View style={styles.middleScreen}>
+                    {/* missions */}
                     <View style={styles.section}>
                         <Text style={styles.headers}>Misions</Text>
                         <TouchableWithoutFeedback onPress={() => nav.push('/mission')}>
@@ -111,17 +151,19 @@ function HomePage() {
                         </TouchableWithoutFeedback>
                     </View>
 
+                    {/* map */}
                     <View style={styles.section}>
                         <Text style={styles.headers}>Map</Text>
                         <TouchableWithoutFeedback onPress={() =>nav.push('/map')}>
-                            <View style={[styles.box , styles.temp]}>
-                                    <View style={styles.tempbuttom}>
+                            <View style={[styles.box , styles.temp_signup]}>
+                                    <View style={styles.temp_signup_buttom}>
                                         <Button onPress={() => supabase.auth.signOut()} title="temp signout button"/>
                                     </View>
                             </View>
                         </TouchableWithoutFeedback>
                     </View>
-
+                    
+                    {/* Leaderboard */}
                     <View style={styles.section}>
                         <Text style={styles.headers}>Leaderboard</Text>
                         <TouchableWithoutFeedback onPress={() => nav.push('/friends')}>
@@ -157,7 +199,7 @@ const styles = StyleSheet.create({
         borderBottomRightRadius: 40,
     },
 
-    container2: {
+    middleScreen: {
         flex: 9,
         width: "85%",
         marginVertical: 20,
@@ -187,7 +229,7 @@ const styles = StyleSheet.create({
         color: color.quaternary,
     },
 
-    totalgold: {
+    totalgoldText: {
         fontSize: 15,
         paddingLeft: 3,
     },
@@ -198,18 +240,18 @@ const styles = StyleSheet.create({
         paddingLeft: 30,
     },
 
-    tempbuttom: {
+    temp_signup_buttom: {
         width: '50%',
     },
 
-    temp: {
+    temp_signup: {
         alignItems: 'center',
         justifyContent: 'center',
     },
 
     avatar: {
-        width: 150,
-        height: 150,
+        width: Dimensions.get('window').width / 4 + 10,
+        height: (Dimensions.get('window').width / 4 + 10) * 1.1,
         top: 15,
         left: 0,
     },
@@ -237,24 +279,52 @@ const styles = StyleSheet.create({
     menu: {
         alignItems: 'center',
         justifyContent: 'center',
-        flexDirection: 'column',
         borderRadius: 20,
-        width: '90%',
-        height: '80%',
+        width: '80%',
+        height: '70%',
         padding: 20,
         backgroundColor: color.primary,
     },
 
-    top: {
+    profile_menu_top: {
         flex: 1,
         flexDirection: 'row',
         alignItems: 'flex-start',
     },
 
-    header: {
-        flex: 1,
+    profile_menu_header: {
         fontSize: 25,
-        left: 135,
+    },
+
+    cross: {
+        position: 'absolute',
+        left:  (Dimensions.get('window').width / 2) * 7.5 / 10
+    },
+
+    profile_menu_bottom: {
+        flex: 13,
+        alignItems: 'center',
+        justifyContent: 'space-evenly',
+        width: '100%',
+        // backgroundColor: color.lightBlue,
+    },
+
+    profile_menu_avatar: {
+        width: Dimensions.get('window').width / 3 * 2,
+        height: (Dimensions.get('window').width / 3 * 2) * 1.1,
+        top: 15,
+    },
+
+    profile_menu_button_group: {
+        flexDirection: 'row',
+        width: '100%',
+        // backgroundColor: color.black,
+        alignItems: 'center',
+        justifyContent: 'space-evenly',
+    },
+
+    profile_menu_button: {
+        width: '45%',
     },
 })
 
