@@ -26,6 +26,12 @@ const CustomButton = ({type = "input", text , onPress}) => {
                 <Image style={styles.image_backpack} source={require('../assets/backpack.png')}/>
             </TouchableOpacity>
         );
+    } else if (type == "profileButton") {
+        return (
+            <TouchableOpacity onPress={onPress} style={styles[`container_${type}`]}> 
+                <Text style={styles[`text_${type}`]}>{text}</Text>
+            </TouchableOpacity>
+        );
     } else {
         return (
             <TouchableOpacity onPress={onPress} style={styles[`container_${type}`]}> 
@@ -109,6 +115,23 @@ const styles = StyleSheet.create({
 
     text_show_code: {
         fontSize: 15,
+        color: color.black,
+        fontWeight: "bold",
+        alignSelf: "center",
+        textTransform: "uppercase"
+    },
+
+    container_profileButton: {
+        borderRadius: 15,
+        paddingHorizontal: 35,
+        paddingVertical: 10,
+        backgroundColor: color.tertiary,
+        margin: 3,
+        alignContent: "center",
+    },
+
+    text_profileButton: {
+        fontSize: 19,
         color: color.black,
         fontWeight: "bold",
         alignSelf: "center",

@@ -3,7 +3,6 @@ import React, { useState, useEffect} from 'react';
 import { StyleSheet , Text , View, SafeAreaView, Image, FlatList, Dimensions, Modal, Alert } from 'react-native';
 import color from '../../config/colors'
 import { useFocusEffect } from '@react-navigation/native';
-import { Tabs } from "expo-router"
 
 import AppLoader from '../../components/AppLoader';
 import { supabase } from '../../lib/supabase';
@@ -13,18 +12,8 @@ import CustomButton from '../../components/customButton';
 import Inventory from '../../components/inventory';
 
 const windowWidth = Dimensions.get('window').width;
-const logo = Dimensions.get('window').width / 16;
 const componentWidth = (windowWidth / 3) - 30;
 const componentHeight = componentWidth * 1.5;
-
-function LogoTitle() {
-    return (
-      <Image
-        style={{ width: logo, height: logo}}
-        source={require("../../assets/shop.png")}
-      />
-    );
-}
 
 function ShopPage() {
     const { user } = useAuth();
@@ -129,11 +118,6 @@ function ShopPage() {
 
     return (
         <>
-            <Tabs.Screen 
-                options={{
-                    tabBarIcon: () => <LogoTitle />
-                }}
-            />
             <SafeAreaView style={styles.container}>
                 <View style={styles.container1}>
                     <View>

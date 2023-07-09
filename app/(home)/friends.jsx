@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import {StyleSheet, SafeAreaView, View, Image, Dimensions, FlatList, Text, Modal, Alert } from 'react-native';
-import { Tabs } from "expo-router"
 import { useForm } from 'react-hook-form';
 import { useFocusEffect } from '@react-navigation/native';
 import color from '../../config/colors';
@@ -14,18 +13,8 @@ import CustomButton from '../../components/customButton';
 import CustomInput from '../../components/customInput';
 
 const windowWidth = Dimensions.get('window').width;
-const logo = Dimensions.get('window').width / 16;
 const componentWidth = (windowWidth / 3) - 30;
 const componentHeight = componentWidth * 1.5;
-
-function LogoTitle() {
-    return (
-      <Image
-        style={{ width: logo, height: logo}}
-        source={require("../../assets/friends.png")}
-      />
-    );
-}
 
 function FriendsPage() {
     const { user } = useAuth();
@@ -165,11 +154,6 @@ function FriendsPage() {
 
     return (
         <>
-            <Tabs.Screen 
-                options={{
-                    tabBarIcon: () => <LogoTitle />
-                }}
-            />
             <SafeAreaView style={styles.container}>
                 <CustomButton type='addFriend' onPress={() => setModalVisible(true)}/>
 

@@ -134,6 +134,7 @@ function MissionPage() {
 
                 <View style={styles.button}>
                     <CustomButton text= "let's go! i got it" onPress={() => setenter_prompt(true)} />
+                    {/* <CustomButton text= "let's go! i got it" onPress={() => nav.push('/')} /> */}
                     <Modal
                         animationType = {'fade'}
                         transparent = {true}

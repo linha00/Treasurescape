@@ -33,6 +33,12 @@
         {
           "photosPermission": "The app accesses your photos"
         }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
+        }
       ]
     ]
   }

@@ -1,9 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet , Text , View, SafeAreaView, Button , Image, TouchableWithoutFeedback, Dimensions, Modal } from 'react-native';
 import { Tabs, useRouter } from "expo-router"
 import { useFocusEffect } from '@react-navigation/native';
-import { useForm } from 'react-hook-form';
 import * as ImagePicker from 'expo-image-picker';
 import color from '../../config/colors';
 
@@ -12,34 +11,20 @@ import { useAuth } from '../../contexts/auth';
 
 import AppLoader from '../../components/AppLoader';
 import CustomButton from '../../components/customButton';
-
-const logo = Dimensions.get('window').width / 16;
-
-function LogoTitle() {
-    return (
-        <Image 
-            style={{ width: logo, height: logo}} 
-            source={require("../../assets/home.png")} 
-        />
-    );
-}
+import { Camera } from 'expo-camera';
 
 function HomePage() {
     const nav = useRouter();
     const { user } = useAuth();
     const [loading, setLoading] = useState(false);
 
+    // general
     const [name, setName] = useState("");
     const [gold, setGold] = useState(0);
     const [profile, setProfile] = useState("temp");
     const [missionId, setMissionId] = useState(0);
     const [missionText, setMissionText] = useState("temp");
-    const [image, setimage] = useState(null);
-
-    const [profileMenu, setProfileMenu] = useState(false);
-    // eslint-disable-next-line no-unused-vars
-    const {control, handleSubmit, formState: {errors}} = useForm();
-
+    
     async function getStuff() {
         setLoading(true);
         let {data} = await supabase.from('profiles').select().eq('id', user.id).single();
@@ -48,13 +33,25 @@ function HomePage() {
         setGold(data.gold);
         setProfile(data.imageUrl);
         setMissionId(data.mission);
-
         if (missionId != temp) {
             let {data} = await supabase.from('missions').select().eq('id', temp).single();
             setMissionText(data.description);
         }
         setLoading(false);
-    }
+    };
+    
+    useFocusEffect(
+        React.useCallback(() => {
+            getStuff();
+        }, [])
+    );
+
+    //profile 
+    const [image, setimage] = useState(null);
+    const [profileMenu, setProfileMenu] = useState(false);
+
+    const [hasPermission, setPermission] = useState(null);
+    const [type, setType] = useState(Camera.Constants.Type.back);
     
     const handle_profile_upload = async () => {
         const result = await ImagePicker.launchImageLibraryAsync({
@@ -76,18 +73,23 @@ function HomePage() {
             //     return;
             // }
         }
-
     }
 
-    useFocusEffect(
-        React.useCallback(() => {
-            getStuff();
-        }, [])
-    );
+    useEffect(() => {
+        (async () => {
+            const { status } = await Camera.requestCameraPermissionsAsync();
+            setPermission(status == 'granted');
+        })();
+    }, []);
+
+    if (hasPermission == null) {
+        return <View />;
+    } else if (hasPermission == false) {
+        return <Text>No access to camera</Text>;
+    }
 
     return (
         <>
-            <Tabs.Screen options={{tabBarIcon: () => <LogoTitle />}} />
             <SafeAreaView style={styles.container}>
                 <View style={styles.container1}>
                     {/* profile menu  */}
@@ -112,10 +114,10 @@ function HomePage() {
                                     <Image style={styles.profile_menu_avatar} source={{uri: profile}}/>
                                     <View style = {styles.profile_menu_button_group}>
                                         <View style = {styles.profile_menu_button}>
-                                            <CustomButton text= "camera" />
+                                            <CustomButton text= "camera" type='profileButton'/>
                                         </View>
                                         <View style = {styles.profile_menu_button}>
-                                            <CustomButton text ="upload" onPress={handle_profile_upload}/>
+                                            <CustomButton text ="upload" type= 'profileButton' onPress={handle_profile_upload}/>
                                         </View>
                                     </View>
                                 </View>
