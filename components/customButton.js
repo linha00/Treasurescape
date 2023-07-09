@@ -1,5 +1,7 @@
-import { StyleSheet , TouchableOpacity , Text, Image } from 'react-native';
+import { StyleSheet , TouchableOpacity , Text, Image, Dimensions } from 'react-native';
 import color from '../config/colors'
+
+const temp_size = Dimensions.get('window').height / 50;
 
 const CustomButton = ({type = "input", text , onPress}) => {
     if (type == "addFriend") {
@@ -123,15 +125,13 @@ const styles = StyleSheet.create({
 
     container_profileButton: {
         borderRadius: 15,
-        paddingHorizontal: 35,
-        paddingVertical: 10,
+        padding: temp_size * 0.5, 
         backgroundColor: color.tertiary,
-        margin: 3,
         alignContent: "center",
     },
 
     text_profileButton: {
-        fontSize: 19,
+        fontSize: temp_size * 1.6,
         color: color.black,
         fontWeight: "bold",
         alignSelf: "center",
