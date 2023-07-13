@@ -128,6 +128,39 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         bottom: Dimensions.get('window').height / 15,
     },
+
+    profile_menu_photo_taken: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 20,
+        width: '75%',
+        height: '52%',
+        padding: 20,
+        backgroundColor: color.primary,
+    },
+
+    profile_photo_taken: {
+        margin: 15,
+        width: temp_size * 14,
+        height: temp_size * 14 * 1.1,
+    },
+
+    profile_photo_taken_button_group: {
+        flex: 1, 
+        flexDirection: 'row',
+        alignItems: 'center',
+    }, 
+
+    photo_taken_button: {
+        marginHorizontal: temp_size * 0.7,
+        backgroundColor: color.tertiary,
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: temp_size * 6,
+        height: temp_size * 4,
+        borderRadius: 10,
+    },
+
 })
 
 export default styles;
