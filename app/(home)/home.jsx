@@ -252,6 +252,9 @@ function HomePage() {
                                         </View>
                                     </View>
                                 </View>
+                                <View style = {styles.log_out_button}>
+                                                <CustomButton text ="logout" type= 'profileButton' onPress={() => supabase.auth.signOut()}/>
+                                        </View>
                             </View>
                         </View>
                     </Modal>
@@ -289,9 +292,6 @@ function HomePage() {
                         <Text style={styles.headers}>Map</Text>
                         <TouchableWithoutFeedback onPress={() =>nav.push('/map')}>
                             <View style={[styles.home_box , styles.temp_signout]}>
-                                    <View style={styles.temp_signout_buttom}>
-                                        <Button onPress={() => supabase.auth.signOut()} title="temp signout button"/>
-                                    </View>
                             </View>
                         </TouchableWithoutFeedback>
                     </View>
