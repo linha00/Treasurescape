@@ -6,7 +6,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 
 import color from '../../config/colors';
-import styles from '../../config/style';
+import styles from '../../config/homepageStyle';
 
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/auth';
