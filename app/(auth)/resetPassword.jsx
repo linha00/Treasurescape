@@ -1,4 +1,4 @@
-import {StyleSheet, SafeAreaView, Text, TouchableWithoutFeedback, Keyboard, Alert} from 'react-native';
+import {StyleSheet, SafeAreaView, Text, TouchableWithoutFeedback, Keyboard, Alert, KeyboardAvoidingView,Image} from 'react-native';
 import {useForm} from 'react-hook-form';
 
 import CustomInput from '../../components/customInput'
@@ -39,8 +39,16 @@ function ResetPassword() {
     };
 
     return (
+        <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
+        >
         <TouchableWithoutFeedback onPress = {press}>
             <SafeAreaView style = {styles.container}>
+                <Image style={{width: 200, height: 200}}
+                    source={require('../../assets/logo.png')} 
+                />
                 <BackButton onPress = {() => navigation.back()}/>
                 
                 <Text style = {styles.header}>
@@ -93,6 +101,7 @@ function ResetPassword() {
                 />
             </SafeAreaView>
         </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
     );
 }
 
@@ -102,6 +111,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column', 
         alignItems: 'center',
         justifyContent: 'center',
+        width: '100%',
 },
 
     header: {
