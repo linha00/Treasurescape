@@ -1,10 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from 'react';
-import { StyleSheet , Text , View, SafeAreaView, Button , Image, TouchableWithoutFeedback, Dimensions, Modal } from 'react-native';
-import { Tabs, useRouter } from "expo-router"
+import React, { useEffect, useState, useRef } from 'react';
+import { Text , View, SafeAreaView, Button , Image, TouchableWithoutFeedback, Dimensions, Modal, TouchableOpacity } from 'react-native';
+import { useRouter } from "expo-router"
 import { useFocusEffect } from '@react-navigation/native';
-import { useForm } from 'react-hook-form';
+import * as ImagePicker from 'expo-image-picker';
+
 import color from '../../config/colors';
+import styles from '../../config/style';
 
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/auth';
@@ -12,32 +14,21 @@ import { useAuth } from '../../contexts/auth';
 import { ProfileMenu } from '../../components/profileMenu';
 import AppLoader from '../../components/AppLoader';
 import CustomButton from '../../components/customButton';
+import { Camera } from 'expo-camera';
 
-const logo = Dimensions.get('window').width / 16;
-
-function LogoTitle() {
-    return (
-        <Image 
-            style={{ width: logo, height: logo}} 
-            source={require("../../assets/home.png")} 
-        />
-    );
-}
+const temp_size = Dimensions.get('window').height / 50;
 
 function HomePage() {
     const nav = useRouter();
     const { user } = useAuth();
     const [loading, setLoading] = useState(false);
 
+    // general
     const [name, setName] = useState("");
     const [gold, setGold] = useState(0);
     const [profile, setProfile] = useState("temp");
     const [missionId, setMissionId] = useState(0);
     const [missionText, setMissionText] = useState("temp");
-
-    const [modalVisible, setModalVisible] = useState(false);
-    // eslint-disable-next-line no-unused-vars
-    const {control, handleSubmit, formState: {errors}} = useForm();
 
     async function getStuff() {
         setLoading(true);
@@ -47,7 +38,6 @@ function HomePage() {
         setGold(data.gold);
         setProfile(data.imageUrl);
         setMissionId(data.mission);
-
         if (missionId != temp) {
             let {data} = await supabase.from('missions').select().eq('id', temp).single();
             setMissionText(data.description);
@@ -59,73 +49,261 @@ function HomePage() {
         React.useCallback(() => {
             getStuff();
         }, [])
-    );
+    )
+
+    useEffect(() => {
+        if (loading) {
+            getStuff();
+        }
+    }, [loading])
+
+    //profile 
+    const [image, setimage] = useState(null);
+    const [profileMenu, setProfileMenu] = useState(false);
+    
+    const [hasPermission, setPermission] = useState(null);
+    const [cameraDirection, setCameraDirection] = useState(Camera.Constants.Type.front);
+    
+    const handle_profile_upload = async () => {
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images
+        })
+        if (!result.canceled) {
+            let photo = result.assets[0];
+            let fileName = photo.uri.replace(/^.*[\\/]/,"");
+            setimage(photo.uri);
+            let formData = new FormData();
+            formData.append("files", {
+                uri: photo.uri,
+                name: fileName,
+                type: `image/jpg`,
+            })
+            let {data, error} = await supabase.storage
+                .from("images")
+                .upload(fileName, formData);
+
+            if (error) {
+                console.log("error: " + error.message)
+            }
+
+            await supabase
+            .from('profiles')
+            .update({ 
+                imageUrl: supabase.storage.from('images').getPublicUrl(data.path).data.publicUrl,
+            })
+            .eq('id', user.id);
+            setLoading(true);
+        }
+    }
+        
+    //camera
+    const [camera, setCamera] = useState(false);
+    const [photoTaken, setPhotoTaken] = useState(false);
+    const [publicurltemp, setPublicurl] = useState(false);
+    const cameraRef = useRef(null);
+
+    const takePicture = async () => {
+        if (cameraRef) {
+            try {
+                let photo = await cameraRef.current.takePictureAsync({
+                    allowsEditing: true,
+                    aspect: [4, 3],
+                    quality: 1,
+                });
+                if (!photo.canceled){
+                    setPhotoTaken(true);
+                    let fileName = photo.uri.replace(/^.*[\\/]/,"");
+                    setimage(photo.uri);
+                    let formData = new FormData();
+                    formData.append("files", {
+                        uri: photo.uri,
+                        name: fileName,
+                        type: `image/jpg`,
+                    })
+                    let {data, error} = await supabase.storage
+                        .from("images")
+                        .upload(fileName, formData);
+    
+                    if (error) {
+                        console.log("error: " + error.message)
+                    }
+                    setPublicurl(supabase.storage.from('images').getPublicUrl(data.path).data.publicUrl);
+                }
+            } catch (e) {
+                console.log("Error: profile camera " + e);
+            }
+        }
+    };
+
+    useEffect(() => {
+        (async () => {
+            const { status } = await Camera.requestCameraPermissionsAsync();
+            setPermission(status == 'granted');
+        })();
+    }, []);
+
+    if (hasPermission == null) {
+        return <View />;
+    } else if (hasPermission == false) {
+        return <Text>No access to camera</Text>;
+    }
 
     return (
         <>
-            <Tabs.Screen options={{tabBarIcon: () => <LogoTitle />}} />
             <SafeAreaView style={styles.container}>
-                <View style={styles.container1}>
-                  
-                    <CustomButton type='profile' onPress={() => setModalVisible(true)}/>
+
+                <View style={styles.home_topbar}>
+                    {/* profile menu  */}
+                    <CustomButton type='profile' onPress={() => setProfileMenu(true)}/>
+
                     <Modal
                         animationType = {'fade'}
                         transparent = {true}
-                        visible = {modalVisible}
+                        visible = {profileMenu}
                     >
-                        <View style = {styles.menuContainer}>
-                            <View style = {styles.menu}>
-                                <View style = {styles.top}>
-                                    <Text style = {styles.header}>Profile</Text>
-                                    <CustomButton 
-                                        style = {styles.cross} 
-                                        type='cross' 
-                                        onPress={() => setModalVisible(false)}
-                                    />
+                        <View style = {styles.profile_container}>
+                            <View style = {styles.profile_menu}>
+                                <View style = {styles.profile_menu_top}>
+                                    <Text style = {styles.profile_menu_header}>Profile</Text>
+                                    <View style = {styles.cross}>
+                                        <CustomButton 
+                                            type='cross' 
+                                            onPress={() => setProfileMenu(false)}
+                                        />
+                                    </View>
                                 </View>
-                                <Text>placeholder</Text>
+                                <View style = {styles.profile_menu_bottom}>
+                                    <Image style={styles.profile_menu_avatar} source={{uri: profile}}/>
+                                    <View style = {styles.profile_menu_button_group}>
+                                        <View style = {styles.profile_menu_button}>
+                                            <CustomButton text= "camera" type='profileButton' onPress={() => {setCamera(true); setPhotoTaken(false)}}/>
+                                            <Modal
+                                                animationType = {'fade'}
+                                                transparent = {true}
+                                                visible = {camera}
+                                            >
+                                                {photoTaken ? 
+                                                    <View style = {styles.profile_container}>
+                                                        <View style = {styles.profile_menu_photo_taken}>
+                                                            <Text style = {styles.profile_menu_header}>Use this as Profile?</Text>
+                                                            <Image
+                                                                source = {{uri: image}}
+                                                                style = {styles.profile_photo_taken}
+                                                            />
+                                                            <View style={styles.profile_photo_taken_button_group}>
+                                                                <TouchableOpacity
+                                                                    style={styles.photo_taken_button}
+                                                                    onPress={async () => {
+                                                                        await supabase
+                                                                            .from('profiles')
+                                                                            .update({ 
+                                                                                imageUrl: publicurltemp,
+                                                                            })
+                                                                            .eq('id', user.id);
+                                                                        setLoading(true);
+                                                                        setCamera(false)
+                                                                    }}
+                                                                >
+                                                                    <Text style = {{color: color.white, fontSize: temp_size * 3}}>Yes</Text>
+                                                                </TouchableOpacity>
+                                                                <TouchableOpacity
+                                                                    style={styles.photo_taken_button}
+                                                                    onPress={async () => setPhotoTaken(false)}
+                                                                >
+                                                                    <Text style = {{color: color.white, fontSize: temp_size * 3}}>No</Text>
+                                                                </TouchableOpacity>
+                                                            </View>
+                                                            
+
+                                                        </View>
+                                                    </View>
+                                                    : <Camera style = {{flex: 1}} type={cameraDirection} ref={cameraRef}>
+                                                        <View style={{flex: 1}}>
+                                                            <View style = {styles.camera_cross}>
+                                                                <CustomButton 
+                                                                    type='cross' 
+                                                                    onPress={() => setCamera(false)}
+                                                                />
+                                                            </View>
+                                                        </View>
+                                                        <View style={{flex: 1, justifyContent: 'flex-end'}}>
+                                                            <TouchableOpacity
+                                                                style={styles.camera_button}
+                                                                onPress={() => {
+                                                                    setCameraDirection(
+                                                                        cameraDirection === Camera.Constants.Type.back
+                                                                            ? Camera.Constants.Type.front
+                                                                            : Camera.Constants.Type.back
+                                                                    );
+                                                                }}
+                                                            >
+                                                                <Text style = {{color: color.white, fontSize: temp_size * 1.5}}>Flip</Text>
+                                                            </TouchableOpacity>
+                                                            <TouchableOpacity
+                                                                style={styles.camera_button}
+                                                                onPress={async () => takePicture()}
+                                                            >
+                                                                <Text style = {{color: color.white, fontSize: temp_size * 3}}>Photo</Text>
+                                                            </TouchableOpacity>
+                                                        </View>
+                                                    </Camera>
+                                                }
+                                            </Modal>
+                                        </View>
+                                        <View style = {styles.profile_menu_button}>
+                                            <CustomButton text ="upload" type= 'profileButton' onPress={handle_profile_upload}/>
+                                        </View>
+                                    </View>
+                                </View>
                             </View>
                         </View>
                     </Modal>
 
-                    <View style={styles.texts}>
-                        <Text style={styles.username}>{name}</Text>
+                    {/* top box */}
+                    <TouchableWithoutFeedback onPress={() => setProfileMenu(true)}>
+                        <Image style={styles.home_avatar} source={{uri: profile}}/>
+                    </TouchableWithoutFeedback>
+                    <View style={{marginLeft: temp_size}}>
+                        <Text style={styles.home_username}>{name}</Text>
                         <TouchableWithoutFeedback onPress={() => nav.push('/shop')}>
                             <View>
-                                <Text style={styles.totalgold}>Total Gold:</Text>
-                                <Text style={styles.gold}>{gold}g</Text>
+                                <Text style={styles.home_totalgoldText}>Total Gold:</Text>
+                                <Text style={styles.home_gold}>{gold}g</Text>
                             </View>
                         </TouchableWithoutFeedback>
                     </View>
-                    <Image style={styles.avatar} source={{uri: profile}}/>
+
                 </View>
 
-                <View style={styles.container2}>
-                    <View style={styles.section}>
+                <View style={styles.home_middleScreen}>
+                    {/* missions */}
+                    <View style={styles.home_section}>
                         <Text style={styles.headers}>Misions</Text>
                         <TouchableWithoutFeedback onPress={() => nav.push('/mission')}>
-                            <View style={styles.box}>
-                                <Text style = { styles.missionHeader}>Mission {missionId}:</Text>
-                                <Text style = {styles.missionText}>{missionText}</Text>
+                            <View style={styles.home_box}>
+                                <Text style = {{fontSize: temp_size * 1.1}}>Mission {missionId}:</Text>
+                                <Text style = {{fontSize: temp_size}}>{missionText}</Text>
                             </View>
                         </TouchableWithoutFeedback>
                     </View>
 
-                    <View style={styles.section}>
+                    {/* map */}
+                    <View style={styles.home_section}>
                         <Text style={styles.headers}>Map</Text>
                         <TouchableWithoutFeedback onPress={() =>nav.push('/map')}>
-                            <View style={[styles.box , styles.temp]}>
-                                    <View style={styles.tempbuttom}>
+                            <View style={[styles.home_box , styles.temp_signout]}>
+                                    <View style={styles.temp_signout_buttom}>
                                         <Button onPress={() => supabase.auth.signOut()} title="temp signout button"/>
                                     </View>
                             </View>
                         </TouchableWithoutFeedback>
                     </View>
-
-                    <View style={styles.section}>
+                    
+                    {/* Leaderboard */}
+                    <View style={styles.home_section}>
                         <Text style={styles.headers}>Leaderboard</Text>
                         <TouchableWithoutFeedback onPress={() => nav.push('/friends')}>
-                            <View style={styles.box}>
+                            <View style={styles.home_box}>
                             </View>
                         </TouchableWithoutFeedback>
                     </View>
@@ -135,127 +313,5 @@ function HomePage() {
         </>
     ); 
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    
-    container1: {
-        flex: 3,
-        width: "100%",
-        flexDirection: 'row',
-        backgroundColor: color.secondary,
-        alignItems: 'flex-end',
-        justifyContent: 'space-between',
-        paddingLeft: 30,
-        paddingRight: 50,
-        paddingBottom: 20,
-        borderBottomLeftRadius: 40,
-        borderBottomRightRadius: 40,
-    },
-
-    container2: {
-        flex: 9,
-        width: "85%",
-        marginVertical: 20,
-    },
-
-    section: {
-        flex: 3,
-        marginVertical: 5,        
-    },
-
-    headers: {
-        fontSize: 20,
-        fontWeight: 'bold',
-    },
-
-    box: {
-        backgroundColor: color.primary,
-        width: '100%',
-        height: '85%',
-        borderRadius: 20,
-        paddingHorizontal: 15,
-        paddingVertical: 10,
-    },
-
-    username: {
-        fontSize: 30,
-        color: color.quaternary,
-    },
-
-    totalgold: {
-        fontSize: 15,
-        paddingLeft: 3,
-    },
-
-    gold: {
-        fontSize: 35,
-        color: color.gold,
-        paddingLeft: 30,
-    },
-
-    tempbuttom: {
-        width: '50%',
-    },
-
-    temp: {
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-
-    avatar: {
-        width: 150,
-        height: 150,
-        top: 15,
-        left: 0,
-    },
-
-    missionHeader: {
-        fontSize: 17,
-    },
-
-    profile: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: 100,
-        height: 100,
-        backgroundColor: color.primary,
-    },
-
-    menuContainer: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: "#000000aa",
-    },
-
-    menu: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexDirection: 'column',
-        borderRadius: 20,
-        width: '90%',
-        height: '80%',
-        padding: 20,
-        backgroundColor: color.primary,
-    },
-
-    top: {
-        flex: 1,
-        flexDirection: 'row',
-        alignItems: 'flex-start',
-    },
-
-    header: {
-        flex: 1,
-        fontSize: 25,
-        left: 135,
-    },
-})
 
 export default HomePage;

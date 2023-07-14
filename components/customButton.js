@@ -1,5 +1,7 @@
-import { StyleSheet , TouchableOpacity , Text, Image } from 'react-native';
+import { StyleSheet , TouchableOpacity , Text, Image, Dimensions } from 'react-native';
 import color from '../config/colors'
+
+const temp_size = Dimensions.get('window').height / 50;
 
 const CustomButton = ({type = "input", text , onPress}) => {
     if (type == "addFriend") {
@@ -24,6 +26,12 @@ const CustomButton = ({type = "input", text , onPress}) => {
         return (
             <TouchableOpacity onPress={onPress} style={styles.container_cross}> 
                 <Image style={styles.image_backpack} source={require('../assets/backpack.png')}/>
+            </TouchableOpacity>
+        );
+    } else if (type == "profileButton") {
+        return (
+            <TouchableOpacity onPress={onPress} style={styles[`container_${type}`]}> 
+                <Text style={styles[`text_${type}`]}>{text}</Text>
             </TouchableOpacity>
         );
     } else {
@@ -109,6 +117,21 @@ const styles = StyleSheet.create({
 
     text_show_code: {
         fontSize: 15,
+        color: color.black,
+        fontWeight: "bold",
+        alignSelf: "center",
+        textTransform: "uppercase"
+    },
+
+    container_profileButton: {
+        borderRadius: 15,
+        padding: temp_size * 0.5, 
+        backgroundColor: color.tertiary,
+        alignContent: "center",
+    },
+
+    text_profileButton: {
+        fontSize: temp_size * 1.6,
         color: color.black,
         fontWeight: "bold",
         alignSelf: "center",
