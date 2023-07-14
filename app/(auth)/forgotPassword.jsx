@@ -1,4 +1,4 @@
-import {StyleSheet, SafeAreaView, Text, TouchableWithoutFeedback, Keyboard, Alert, View, Image} from 'react-native';
+import {StyleSheet, SafeAreaView, Text, TouchableWithoutFeedback, Keyboard, Alert, View, Image, KeyboardAvoidingView} from 'react-native';
 import {useForm} from 'react-hook-form';
 import color from '../../config/colors';
 
@@ -33,6 +33,11 @@ function ForgotPasswordPage() {
     };
 
     return (
+        <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
+        >
         <TouchableWithoutFeedback onPress = {press}>
             <SafeAreaView style = {styles.container}>
                 <Image style={{width: 200, height: 200}}
@@ -70,6 +75,7 @@ function ForgotPasswordPage() {
                 />
             </SafeAreaView>
         </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
     );
 }
 
@@ -79,6 +85,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column', 
         alignItems: 'center',
         justifyContent: 'center',
+        width: '100%',
 },
     
     header: {
