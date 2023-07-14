@@ -28,16 +28,19 @@ function FriendsPage() {
     const [addLoading, setAddLoading] = useState(false);
     
     const [items, setItems] = useState([
-        {name: 'temp', image:"placeholder", online: true, key: '1'},
+        {name: 'temp', image:"placeholder", online: true, mission: '1', key: '1'},
     ]);
     const [nearby, setNearby] = useState([
-        {name: 'temp', image:"placeholder", code: "code", key: '1'},
+        {name: 'temp', image:"placeholder", code: "code", mission: '1', key: '1'},
     ]);
     const [friendRequestlist, setFriendRequestlist] = useState([
-        {name: 'temp', image:"placeholder", key: '1'},
+        {name: 'temp', image:"placeholder", code: "code", mission: '1', key: '1'},
     ])
+
     async function getItems() {
         setLoading(true);
+
+        //get friend list
         let userdata = await supabase.from('profiles').select().eq('id', user.id).single();
         setFriend_id(userdata.data.friend_id);
         let tempfriendlist = userdata.data.friends;
@@ -47,11 +50,13 @@ function FriendsPage() {
                 let {data} = await supabase.from('profiles').select().eq('friend_id', tempfriendlist[i]).single();
                 if (data != null) {
                     let temp = friendlistout;
-                    friendlistout = temp.concat([{name: data.name, image: data.imageUrl, online: data.online, key: i}]);
+                    friendlistout = temp.concat([{name: data.name, image: data.imageUrl, online: data.online, mission: data.mission, key: i}]);
                 }
             }
         }
+        setItems(friendlistout);
 
+        //get friend requests
         let tempfriendrequestlist = userdata.data.friendsRequest;
         let friendrequestlistout = [];
         if (tempfriendrequestlist != null) {
@@ -59,49 +64,53 @@ function FriendsPage() {
                 let {data} = await supabase.from('profiles').select().eq('friend_id', tempfriendrequestlist[j]).single();
                 if (data != null) {
                     let temp = friendrequestlistout;
-                    friendrequestlistout = temp.concat([{name: data.name, image: data.imageUrl, key: j}]);
+                    friendrequestlistout = temp.concat([{name: data.name, image: data.imageUrl, code: data.friend_id, mission: data.mission, key: j}]);
                 }
             }
         }
-        setItems(friendlistout);
         setFriendRequestlist(friendrequestlistout);
-        setLoading(false);
-        setRefresh(false);
-    }
 
-    async function getNearby() {
-        setLoading(true);
-        let {data} = await supabase.from('profiles').select('*').limit(5);
+        //get nearby list
+        let {data} = await supabase.from('profiles').select('*');
         let out = [];
-        for (var i = 0; i < data.length; i++) {
-            let temp = out;
-            out = temp.concat([{name: data[i].name, image: data[i].imageUrl, code: data[i].friend_id, key: i}]);
+        for (var k = 0; k < data.length; k++) {
+            if (out.length == 8) {
+                break;
+            } else if (userdata.data.friend_id == data[k].friend_id || userdata.data.friendsRequest.includes(data[k].friend_id) 
+                || userdata.data.friends.includes(data[k].friend_id)) {
+                continue;
+            } else {
+                let temp = out;
+                out = temp.concat([{name: data[k].name, image: data[k].imageUrl, code: data[k].friend_id, mission: data[k].mission, key: k}]);
+            }
         }
         setNearby(out);
+
         setLoading(false);
         setRefresh(false);
     }
 
+    //get item when first enter the page 
     useFocusEffect(
         React.useCallback(() => {
             getItems();
-            getNearby();
         }, [])
     );
 
+    //get item when refreshing the page
     useEffect(() => {
         if (refresh) {
             getItems();
-            getNearby();
         }
     }, [refresh])
 
+    //send friend request for text input
     const addPressed = async input => {
         const keyed_id = input.id;
         const user_id = friend_id;
 
         console.log(
-            "\nAdd friend attempt:" +
+            "Add friend attempt:" +
             "\nID: " + keyed_id
         );
         if (addLoading) {
@@ -143,7 +152,6 @@ function FriendsPage() {
                     .eq('friend_id', keyed_id);
 
                 Alert.alert("friend Request sent");
-                setRefresh(true);
             }
 
         } else {
@@ -152,40 +160,141 @@ function FriendsPage() {
         setAddLoading(false);
     };
 
-    // const accept_friendRequest = async input => {
-    //     let friend_list = [];
-    //     if (friendData.data.friends.length == 0) {
-    //         friend_list = [user_id];
-    //     } else {
-    //         friend_list = friendData.data.friends;
-    //         let temp = [user_id];
-    //         friend_list = friend_list.concat(temp);
-    //     }
-    //     await supabase
-    //         .from('profiles')
-    //         .update({ 
-    //             friends: friend_list,
-    //         })
-    //         .eq('friend_id', keyed_id);
+    //send friend request for nearby
+    const addPressed_nearby = async (key) => {
+        const keyed_id = key;
+        const user_id = friend_id;
 
-    //     let user_list = [];
-    //     if (userData.data.friends.length == 0) {
-    //         user_list = [keyed_id];
-    //     } else {
-    //         user_list = userData.data.friends;
-    //         let temp = [keyed_id];
-    //         user_list = user_list.concat(temp);
-    //     }
-    //     await supabase
-    //         .from('profiles')
-    //         .update({ 
-    //             friends: user_list,
-    //         })
-    //         .eq('friend_id', user_id);
-    // }
+        console.log(
+            "Add friend attempt:" +
+            "\nID: " + keyed_id
+        );
+        if (addLoading) {
+            return;
+        }
+        setAddLoading(true);
+        if (keyed_id != user_id) {
+            const userData = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('friend_id', user_id)
+            .single();
+            const friendData = await supabase
+                .from('profiles')
+                .select('*')
+                .eq('friend_id', keyed_id)
+                .single();
+            if (friendData.error) {
+                Alert.alert("ID does not exisit")
+            } else if (userData.data.friends.includes(keyed_id)) {
+                Alert.alert("user already in your friend list")
+            } else if (friendData.data.friendsRequest.includes(user_id)) {
+                Alert.alert("Friend request has already been sent to the player")
+            } else {
+                console.log()
+                let friend_list = [];
+                if (friendData.data.friendsRequest.length == 0) {
+                    friend_list = [user_id];
+                } else {
+                    friend_list = friendData.data.friendsRequest;
+                    let temp = [user_id];
+                    friend_list = friend_list.concat(temp);
+                }
+                await supabase
+                    .from('profiles')
+                    .update({ 
+                        friendsRequest: friend_list,
+                    })
+                    .eq('friend_id', keyed_id);
+
+                Alert.alert("friend Request sent");
+            }
+
+        } else {
+            Alert.alert("Please enter your friend's IDs");
+        }
+        setAddLoading(false);
+    };
+
+    const accept_friendRequest = async (input) => {
+        const user_id = friend_id;
+        const keyed_id = input;
+
+        setRefresh(true);
+        setLoading(true);
+        let userData = await supabase.from('profiles').select().eq('id', user.id).single();
+        let friendData = await supabase.from('profiles').select().eq('friend_id', input).single();
+
+        let friend_list = [];
+        if (friendData.data.friends.length == 0) {
+            friend_list = [user_id];
+        } else {
+            friend_list = friendData.data.friends;
+            let temp = [user_id];
+            friend_list = friend_list.concat(temp);
+        }
+        await supabase
+            .from('profiles')
+            .update({ 
+                friends: friend_list,
+            })
+            .eq('friend_id', keyed_id);
+
+        let user_list = [];
+        if (userData.data.friends.length == 0) {
+            user_list = [keyed_id];
+        } else {
+            user_list = userData.data.friends;
+            let temp = [keyed_id];
+            user_list = user_list.concat(temp);
+        }
+        let user_friendsrequest_list = [];
+        for (var i = 0; i < userData.data.friendsRequest.length; i++) {
+            if (userData.data.friendsRequest[i] != keyed_id) {
+                let temp = [userData.data.friendsRequest[i]];
+                user_friendsrequest_list = user_friendsrequest_list.concat(temp);
+            }
+        }
+        await supabase
+            .from('profiles')
+            .update({ 
+                friends: user_list,
+                friendsRequest: user_friendsrequest_list,
+            })
+            .eq('friend_id', user_id);
+    
+        setLoading(false);
+        setRefresh(false);
+    }
+
+    const reject_friendRequest = async (input) => {
+        const user_id = friend_id;
+        const keyed_id = input;
+        setRefresh(true);
+        setLoading(true);
+        let userData = await supabase.from('profiles').select().eq('id', user.id).single();
+        let user_friendsrequest_list = [];
+        for (var i = 0; i < userData.data.friendsRequest.length; i++) {
+            if (userData.data.friendsRequest[i] != keyed_id) {
+                let temp = [userData.data.friendsRequest[i]];
+                user_friendsrequest_list = user_friendsrequest_list.concat(temp);
+            }
+        }
+        await supabase
+            .from('profiles')
+            .update({ 
+                friendsRequest: user_friendsrequest_list,
+            })
+            .eq('friend_id', user_id);
+
+        getItems();
+        setLoading(false);
+        setRefresh(false);
+    }
 
     return (
         <>
+        {loading ? <AppLoader /> : 
             <SafeAreaView style={styles.container}>
                 <CustomButton type='addFriend' onPress={() => setModalVisible(true)}/>
 
@@ -238,10 +347,17 @@ function FriendsPage() {
                                                     <Text style={styles.name}>
                                                         {item.name}
                                                     </Text>
-
-                                                    <Text style={styles.code}>
-                                                        {item.code}
+                                                    <Text style={styles.mission}>
+                                                        mission {item.mission}
                                                     </Text>
+                                                </View>
+                                                <View style={{right: temp_size}}>
+                                                    <TouchableOpacity
+                                                        style={styles.friendRequest_button_nearby}
+                                                        onPress= {() => addPressed_nearby(item.code)}
+                                                    >
+                                                        <Text style = {{color: color.white, fontSize: temp_size * 1.5}}>Add</Text>
+                                                    </TouchableOpacity>
                                                 </View>
                                             </View>
                                         )}
@@ -264,18 +380,19 @@ function FriendsPage() {
                                                     <Text style={styles.name}>
                                                         {item.name}
                                                     </Text>
+                                                    <Text style={styles.mission}>mission {item.mission}</Text>
                                                     <View style={styles.friendRequest_button_group}>
                                                     <TouchableOpacity
-                                                        style={styles.menu_add_button}
-                                                        onPress= {handleSubmit(addPressed)}
+                                                        style={styles.friendRequest_button}
+                                                        onPress= {() => accept_friendRequest(item.code)}
                                                     >
-                                                        <Text style = {{color: color.white, fontSize: temp_size * 1.5}}>Add</Text>
+                                                        <Text style = {{color: color.white, fontSize: temp_size}}>accept</Text>
                                                     </TouchableOpacity>
                                                     <TouchableOpacity
-                                                        style={styles.menu_add_button}
-                                                        onPress= {handleSubmit(addPressed)}
+                                                        style={styles.friendRequest_button}
+                                                        onPress= {() => reject_friendRequest(item.code)}
                                                     >
-                                                        <Text style = {{color: color.white, fontSize: temp_size * 1.5}}>Add</Text>
+                                                        <Text style = {{color: color.white, fontSize: temp_size}}>reject</Text>
                                                     </TouchableOpacity>
                                                     </View>
                                                 </View>
@@ -303,6 +420,7 @@ function FriendsPage() {
                                         <Text style={styles.name}>
                                             {item.name}
                                         </Text>
+                                        <Text style={styles.mission}>mission {item.mission}</Text>
                                     </View>
                                 </View>
                                 )}
@@ -315,7 +433,7 @@ function FriendsPage() {
                     <Image style = {styles.main_logo} source = {require('../../assets/logo.png')}/>
                 </View>
             </SafeAreaView>
-            {loading ? <AppLoader /> : null}
+        }
         </>
     ); 
 }

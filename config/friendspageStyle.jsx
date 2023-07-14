@@ -63,8 +63,12 @@ const styles = StyleSheet.create({
     },
 
     name: {
-        fontSize: 14,
+        fontSize: temp_size * 1.2,
         fontWeight: 'bold',
+    },
+
+    mission: {
+        fontSize: temp_size * 0.8,
     },
 
     menuContainer: {
@@ -149,7 +153,6 @@ const styles = StyleSheet.create({
         width: "100%",
         height: componentWidth,
         alignItems: 'center',
-        justifyContent: 'space-around',
         paddingHorizontal: 20,
         paddingBottom: 5,
         marginBottom: 10,
@@ -159,7 +162,6 @@ const styles = StyleSheet.create({
     menu_friend_profile: {
         width: componentWidth * 0.65,
         height: componentHeight * 0.65,
-        left: 0,
     },
 
     friendRequest: {
@@ -172,8 +174,21 @@ const styles = StyleSheet.create({
     friendRequest_button_group: {
         flexDirection: 'row',
         justifyContent: 'space-between', 
-        backgroundColor: color.black,
+        margin: 5,
     },
+
+    friendRequest_button: {
+        padding: temp_size * 0.4,
+        backgroundColor: color.tertiary,
+        borderRadius: 10,
+    },
+    
+    friendRequest_button_nearby: {
+        padding: temp_size * 0.5,
+        backgroundColor: color.tertiary,
+        borderRadius: 10,
+    },
+    
 })
 
 export default styles;
