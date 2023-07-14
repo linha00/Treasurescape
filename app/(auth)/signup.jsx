@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Image, StyleSheet, Text, View, SafeAreaView, TouchableOpacity, TouchableWithoutFeedback, Keyboard, Alert} from 'react-native';
+import { Image, StyleSheet, Text, View, SafeAreaView, TouchableOpacity, TouchableWithoutFeedback, Keyboard, Alert, KeyboardAvoidingView} from 'react-native';
 import { useForm } from 'react-hook-form';
 import color from '../../config/colors'
 
@@ -58,6 +58,11 @@ function SignupPage() {
     };
     
     return (
+        <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
+        >
         <TouchableWithoutFeedback onPress = {press}>
             <SafeAreaView style = {styles.container}>
                 <BackButton onPress={loginPressed}/>
@@ -125,6 +130,7 @@ function SignupPage() {
                 </View>
             </SafeAreaView>
         </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
     );
 }
 
@@ -133,6 +139,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: "center",
         justifyContent: "center",
+        width: "100%",
     },
 
     logo: {
