@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState, useRef } from 'react';
-import { Text , View, SafeAreaView, Button , Image, TouchableWithoutFeedback, Dimensions, Modal, TouchableOpacity, Alert } from 'react-native';
+import { Text , View, SafeAreaView, Button , Image, TouchableWithoutFeedback, Dimensions, Modal, TouchableOpacity } from 'react-native';
 import { useRouter } from "expo-router"
 import { useFocusEffect } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
@@ -50,6 +50,12 @@ function HomePage() {
         }, [])
     )
 
+    useEffect(() => {
+        if (loading) {
+            getStuff();
+        }
+    }, [loading])
+
     //profile 
     const [image, setimage] = useState(null);
     const [profileMenu, setProfileMenu] = useState(false);
@@ -62,34 +68,41 @@ function HomePage() {
             mediaTypes: ImagePicker.MediaTypeOptions.Images
         })
         if (!result.canceled) {
-            let upload_image = result.assets[0].uri;
-            let fileName = result.assets[0].name;
-            let ext = upload_image.substring(upload_image.lastIndexOf('.') + 1)
-            let formDataa = new FormData();
-            formDataa.append("files", {
-                uri: upload_image,
+            let photo = result.assets[0];
+            let fileName = photo.uri.replace(/^.*[\\/]/,"");
+            setimage(photo.uri);
+            let formData = new FormData();
+            formData.append("files", {
+                uri: photo.uri,
                 name: fileName,
-                type: `image/${ext}`,
+                type: `image/jpg`,
             })
-            // console.log(formDataa)
-            // let {data, error} = await supabase.storage
-            //     .from("images")
-            //     .upload(fileName, formDataa);
+            let {data, error} = await supabase.storage
+                .from("images")
+                .upload(fileName, formData);
 
-            // if (error) {
-            //     console.log("error: " + error.message)
-            // }
+            if (error) {
+                console.log("error: " + error.message)
+            }
+
+            await supabase
+            .from('profiles')
+            .update({ 
+                imageUrl: supabase.storage.from('images').getPublicUrl(data.path).data.publicUrl,
+            })
+            .eq('id', user.id);
+            setLoading(true);
         }
     }
         
     //camera
     const [camera, setCamera] = useState(false);
     const [photoTaken, setPhotoTaken] = useState(false);
+    const [publicurltemp, setPublicurl] = useState(false);
     const cameraRef = useRef(null);
 
     const takePicture = async () => {
         if (cameraRef) {
-            console.log('picture taken');
             try {
                 let photo = await cameraRef.current.takePictureAsync({
                     allowsEditing: true,
@@ -97,6 +110,7 @@ function HomePage() {
                     quality: 1,
                 });
                 if (!photo.canceled){
+                    setPhotoTaken(true);
                     let fileName = photo.uri.replace(/^.*[\\/]/,"");
                     setimage(photo.uri);
                     let formData = new FormData();
@@ -105,27 +119,20 @@ function HomePage() {
                         name: fileName,
                         type: `image/jpg`,
                     })
-                    console.log(formData)
                     let {data, error} = await supabase.storage
                         .from("images")
                         .upload(fileName, formData);
-
+    
                     if (error) {
                         console.log("error: " + error.message)
                     }
-                    setPhotoTaken(true);
-                    
+                    setPublicurl(supabase.storage.from('images').getPublicUrl(data.path).data.publicUrl);
                 }
-                console.log("DEBUG", JSON.stringify(photo.uri))
             } catch (e) {
                 console.log("Error: profile camera " + e);
             }
         }
     };
-
-    const usePhotoTaken = () => {
-        setCamera(false);
-    }
 
     useEffect(() => {
         (async () => {
@@ -166,7 +173,7 @@ function HomePage() {
                                     <Image style={styles.profile_menu_avatar} source={{uri: profile}}/>
                                     <View style = {styles.profile_menu_button_group}>
                                         <View style = {styles.profile_menu_button}>
-                                            <CustomButton text= "camera" type='profileButton' onPress={() => setCamera(true)}/>
+                                            <CustomButton text= "camera" type='profileButton' onPress={() => {setCamera(true); setPhotoTaken(false)}}/>
                                             <Modal
                                                 animationType = {'fade'}
                                                 transparent = {true}
@@ -183,7 +190,16 @@ function HomePage() {
                                                             <View style={styles.profile_photo_taken_button_group}>
                                                                 <TouchableOpacity
                                                                     style={styles.photo_taken_button}
-                                                                    onPress={async () => setCamera(false)}
+                                                                    onPress={async () => {
+                                                                        await supabase
+                                                                            .from('profiles')
+                                                                            .update({ 
+                                                                                imageUrl: publicurltemp,
+                                                                            })
+                                                                            .eq('id', user.id);
+                                                                        setLoading(true);
+                                                                        setCamera(false)
+                                                                    }}
                                                                 >
                                                                     <Text style = {{color: color.white, fontSize: temp_size * 3}}>Yes</Text>
                                                                 </TouchableOpacity>
