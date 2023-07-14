@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Image, StyleSheet, View, SafeAreaView, Text, TouchableOpacity, TouchableWithoutFeedback, Keyboard, Alert } from 'react-native';
+import { Image, StyleSheet, View, SafeAreaView, Text, TouchableOpacity, TouchableWithoutFeedback, Keyboard, Alert, KeyboardAvoidingView } from 'react-native';
 import { useForm } from 'react-hook-form';
 import { supabase } from '../../lib/supabase';
 
@@ -45,6 +45,11 @@ export default function Login() {
     };
 
     return (
+        <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
+        >
         <TouchableWithoutFeedback onPress={press}>
             <SafeAreaView style={styles.container}>
                 <Image style={styles.logo} 
@@ -90,6 +95,7 @@ export default function Login() {
                 </View>
             </SafeAreaView>
         </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
     );
 }
 
@@ -99,6 +105,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column', 
         alignItems: 'center',
         justifyContent: 'center',
+        width: '100%',
     },
 
     logo: {
@@ -113,6 +120,5 @@ const styles = StyleSheet.create({
 
     signup: {
         color: color.red,
-
     }
 })
