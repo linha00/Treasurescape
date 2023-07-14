@@ -15,6 +15,8 @@ import AppLoader from '../../components/AppLoader';
 import CustomButton from '../../components/customButton';
 import { Camera } from 'expo-camera';
 
+import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
+
 const temp_size = Dimensions.get('window').height / 50;
 
 function HomePage() {
@@ -289,10 +291,18 @@ function HomePage() {
 
                     {/* map */}
                     <View style={styles.home_section}>
-                        <Text style={styles.headers}>Map</Text>
+                        <Text style={styles.headers}>Map</Text> 
                         <TouchableWithoutFeedback onPress={() =>nav.push('/map')}>
-                            <View style={[styles.home_box , styles.temp_signout]}>
-                            </View>
+                            <MapView 
+                                style={[styles.home_box]}
+                                provider={PROVIDER_GOOGLE}
+                                initialRegion={{
+                                    latitude: 1.2966,
+                                    longitude: 103.7764,
+                                    latitudeDelta: 0.015,
+                                    longitudeDelta: 0.0421,
+                                }}
+                            /> 
                         </TouchableWithoutFeedback>
                     </View>
                     
