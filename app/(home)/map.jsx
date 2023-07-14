@@ -1,66 +1,124 @@
-/* eslint-disable react/no-unescaped-entities */
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View, Image, Dimensions, Button, Linking, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
+import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
+import * as Location from 'expo-location';
+import { StatusBar } from 'expo-status-bar';
 
-// import React from 'react';
-import {StyleSheet, View } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+const logo = Dimensions.get('window').width / 16;
+
+function LogoTitle() {
+  return (
+    <Image
+      style={{ width: logo, height: logo }}
+      source={require("../../assets/map.png")}
+    />
+  );
+}
 
 function MapPage() {
+  const [userLocation, setUserLocation] = useState(null);
+  const [startingLocation, setStartingLocation] = useState('');
+  const [destination, setDestination] = useState('');
 
-    // const [pin, setPin] = React.useState({
-    //     latitude: 1.2966, 
-    //     longitude: 103.7764
-    // });
+  useEffect(() => {
+    const getPermissionAndLocation = async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        console.log("Please grant location permissions");
+        return;
+      }
 
-    return (
-      <>
-        <View style={styles.container}>
-            <MapView 
-            style={styles.map} 
-                initialRegion={{
-                    latitude: 1.2966,
-                    longitude: 103.7764,
-                    latitudeDelta: 0.0922,
-                    longitudeDelta: 0.0421,
+      const location = await Location.getCurrentPositionAsync({});
+      setUserLocation(location);
+      setStartingLocation('Your location');
+    };
+
+    getPermissionAndLocation();
+  }, []);
+
+  const handleGetDirections = () => {
+    if (startingLocation && destination) {
+      const encodedStartingLocation = encodeURIComponent(startingLocation);
+      const encodedDestination = encodeURIComponent(destination);
+
+      const url = `https://www.google.com/maps/dir/?api=1&origin=${encodedStartingLocation}&destination=${encodedDestination}`;
+      Linking.openURL(url);
+    }
+  };
+
+  return (
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : null}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0} // Adjust the value as per your UI requirements
+    >
+      <StatusBar style="auto" />
+      <View style={styles.mapContainer}>
+        {userLocation && (
+          <MapView
+            style={styles.map}
+            showsUserLocation={true}
+            provider={PROVIDER_GOOGLE}
+            initialRegion={{
+              latitude: userLocation.coords.latitude,
+              longitude: userLocation.coords.longitude,
+              latitudeDelta: 0.02,
+              longitudeDelta: 0.02,
+            }}
+          >
+            {startingLocation !== 'Your location' && (
+              <Marker
+                coordinate={{
+                  latitude: userLocation.coords.latitude,
+                  longitude: userLocation.coords.longitude,
                 }}
-                showsUserLocation = {true} 
-                //onUserLocationChange={(e) => {
-                //    console.log("onUserLocationChange", e.nativeEvent.coordinate)
-                //    ;
-                //}}
-            >
-            <Marker
-                coordinate={{latitude : 1.2966, longitude : 103.7764}}
-                title={"National University of Singapore"}
-                description='NUS'
-                pinColor='red'
-                draggable={true}
-                onDragStart={(e) => {
-                    console.log("Drag Start", e.nativeEvent.coordinate.longitude);
-                }}
-                onDragEnd={(e) => {
-                    console.log("Drag End", e.nativeEvent.coordinate.latitude);
-                    //SetPin({
-                    //    latitude: e.nativeEvent.coordinate.latitude,
-                    //    longitude: e.nativeEvent.coordinate.longitude,
-                    //});
-                }}   
-            >
-            </Marker>
-            </MapView>
-          </View>
-        </>
-    )
+                title="Current Location"
+              />
+            )}
+          </MapView>
+        )}
+      </View>
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          placeholder="Starting Location"
+          value={startingLocation}
+          onChangeText={setStartingLocation}
+          editable={startingLocation !== 'Your location'}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Destination"
+          value={destination}
+          onChangeText={setDestination}
+        />
+        <Button title="Get Directions" onPress={handleGetDirections} />
+      </View>
+    </KeyboardAvoidingView>
+  );
 }
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-    },
-    map: {
-      width: '100%',
-      height: '100%',
-    },
-  }
-);
+  container: {
+    flex: 1,
+  },
+  mapContainer: {
+    flex: 1,
+  },
+  map: {
+    flex: 1,
+  },
+  inputContainer: {
+    padding: 10,
+    backgroundColor: '#fff',
+  },
+  input: {
+    marginBottom: 10,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: 'gray',
+    borderRadius: 5,
+  },
+});
 
 export default MapPage;
