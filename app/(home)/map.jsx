@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, View, Image, Dimensions, Button, Linking, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
@@ -17,8 +17,10 @@ function LogoTitle() {
 
 function MapPage() {
   const [userLocation, setUserLocation] = useState(null);
-  const [startingLocation, setStartingLocation] = useState('');
+  const [startingLocation, setStartingLocation] = useState('Your location');
   const [destination, setDestination] = useState('');
+
+  const startingLocationInputRef = useRef(null);
 
   useEffect(() => {
     const getPermissionAndLocation = async () => {
@@ -44,6 +46,10 @@ function MapPage() {
       const url = `https://www.google.com/maps/dir/?api=1&origin=${encodedStartingLocation}&destination=${encodedDestination}`;
       Linking.openURL(url);
     }
+  };
+
+  const handleStartingLocationFocus = () => {
+    startingLocationInputRef.current?.setSelection(0, startingLocation.length);//to select the whole text
   };
 
   return (
@@ -84,7 +90,8 @@ function MapPage() {
           placeholder="Starting Location"
           value={startingLocation}
           onChangeText={setStartingLocation}
-          editable={startingLocation !== 'Your location'}
+          onFocus={handleStartingLocationFocus}
+          ref={startingLocationInputRef}
         />
         <TextInput
           style={styles.input}
