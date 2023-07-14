@@ -55,13 +55,6 @@ const styles = StyleSheet.create({
         color: color.gold,
         paddingLeft: temp_size,
     },
-    temp_signout_buttom: {
-        width: '50%',
-    },
-    temp_signout: {
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
     home_avatar: {
         width: Dimensions.get('window').width / 4 + 10,
         height: (Dimensions.get('window').width / 4 + 10) * 1.3,
@@ -117,6 +110,12 @@ const styles = StyleSheet.create({
     profile_menu_button: {
         width: '45%',
     },
+
+    log_out_button: {
+        width: '100%',
+        marginVertical: 10,
+    },
+
     camera_cross: {
         position: 'absolute',
         alignItems: 'flex-end',
