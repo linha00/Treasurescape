@@ -160,6 +160,55 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
 
+    leaderboard_box: {
+        backgroundColor: color.primary,
+        width: '100%',
+        height: '85%',
+        borderRadius: 20,
+        paddingHorizontal: 15,
+        paddingVertical: 10,
+        flexDirection: 'row',
+    },
+
+    leaderboard_column: {
+        flex: 1,
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+    },
+
+    leaderboard_text:{
+        fontSize: temp_size * 0.8,
+        fontWeight: 'bold',
+    },
+
+    leaderboard_2nd: {
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        backgroundColor: color.tertiary,
+        width: '60%',
+        height: '25%',
+    },
+    
+    leaderboard_1st: {
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        backgroundColor: color.tertiary,
+        width: '60%',
+        height: '35%',
+    },
+    
+    leaderboard_3rd: {
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        backgroundColor: color.tertiary,
+        width: '60%',
+        height: '15%',
+    },
+
+    leaderboard_image: {
+        width: temp_size * 3.2,
+        height: temp_size * 3.2 * 1.2,
+    },
 })
 
 export default styles;

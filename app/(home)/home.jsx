@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState, useRef } from 'react';
-import { Text , View, SafeAreaView, Button , Image, TouchableWithoutFeedback, Dimensions, Modal, TouchableOpacity } from 'react-native';
+import { Text , View, SafeAreaView, Image, TouchableWithoutFeedback, Dimensions, Modal, TouchableOpacity } from 'react-native';
 import { useRouter } from "expo-router"
 import { useFocusEffect } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
@@ -15,7 +15,7 @@ import AppLoader from '../../components/AppLoader';
 import CustomButton from '../../components/customButton';
 import { Camera } from 'expo-camera';
 
-import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 
 const temp_size = Dimensions.get('window').height / 50;
 
@@ -30,6 +30,9 @@ function HomePage() {
     const [profile, setProfile] = useState("temp");
     const [missionId, setMissionId] = useState(0);
     const [missionText, setMissionText] = useState("temp");
+    const [top3, settop3] = useState([
+        {name: 'temp', image:"placeholder", mission: '1', key: '1'},
+    ]);
     
     async function getStuff() {
         setLoading(true);
@@ -43,6 +46,45 @@ function HomePage() {
             let {data} = await supabase.from('missions').select().eq('id', temp).single();
             setMissionText(data.description);
         }
+
+        //get leaderboard
+        
+        let database = await supabase.from('profiles').select('*');
+        let temp_name = [];
+        let temp_image = [];
+        let temp_mission = [];
+        let first = -1;
+        let second = -1;
+        let third = -1;
+
+        for (var i = 0; i< database.data.length; i++) {
+            if (first == -1 || database.data[i].mission > temp_mission[first]) {
+                temp_name = temp_name.concat([database.data[i].name]);
+                temp_image = temp_image.concat([database.data[i].imageUrl]);
+                temp_mission = temp_mission.concat([database.data[i].mission]);
+                second = first;
+                first = temp_image.length - 1;
+            } else if (database.data[i].mission == temp_mission[first] || database.data[i].mission > temp_mission[second]) {
+                temp_name = temp_name.concat([database.data[i].name]);
+                temp_image = temp_image.concat([database.data[i].imageUrl]);
+                temp_mission = temp_mission.concat([database.data[i].mission]);
+                third = second;
+                second = temp_image.length - 1;
+            } else if (database.data[i].mission == temp_mission[second] || database.data[i].mission > temp_mission[third]) {
+                temp_name = temp_name.concat([database.data[i].name]);
+                temp_image = temp_image.concat([database.data[i].imageUrl]);
+                temp_mission = temp_mission.concat([database.data[i].mission]);
+                third = temp_image.length - 1;
+            }
+        }
+
+        let templistout = [];
+        templistout = templistout.concat([{name: temp_name[first], image: temp_image[first], mission: temp_mission[first], key: '1'}]);
+        templistout = templistout.concat([{name: temp_name[second], image: temp_image[second], mission: temp_mission[second], key: '1'}]);
+        templistout = templistout.concat([{name: temp_name[third], image: temp_image[third], mission: temp_mission[third], key: '1'}]);
+
+        settop3(templistout)
+
         setLoading(false);
     }
     
@@ -122,7 +164,7 @@ function HomePage() {
                         type: `image/jpg`,
                     })
                     let {data, error} = await supabase.storage
-                        .from("images")
+                        .from("images") 
                         .upload(fileName, formData);
     
                     if (error) {
@@ -310,7 +352,28 @@ function HomePage() {
                     <View style={styles.home_section}>
                         <Text style={styles.headers}>Leaderboard</Text>
                         <TouchableWithoutFeedback onPress={() => nav.push('/friends')}>
-                            <View style={styles.home_box}>
+                            <View style={styles.leaderboard_box}>
+                                <View style={styles.leaderboard_column}>
+                                    <Image style={styles.leaderboard_image} source={{uri: top3[1].image}}/>
+                                    <View style={styles.leaderboard_2nd}>
+                                        <Text>mission {top3[1].mission}</Text>
+                                    </View>
+                                    <Text style={styles.leaderboard_text}>2nd</Text>
+                                </View>
+                                <View style={styles.leaderboard_column}>
+                                    <Image style={styles.leaderboard_image} source={{uri: top3[0].image}}/>
+                                    <View style={styles.leaderboard_1st}>
+                                    <Text>mission {top3[0].mission}</Text>
+                                    </View>
+                                    <Text style={styles.leaderboard_text}>1st</Text>
+                                </View>
+                                <View style={styles.leaderboard_column}>
+                                    <Image style={styles.leaderboard_image} source={{uri: top3[2].image}}/>
+                                    <View style={styles.leaderboard_3rd}>
+                                    <Text>mission {top3[2].mission}</Text>
+                                    </View>
+                                    <Text style={styles.leaderboard_text}>3rd</Text>
+                                </View>
                             </View>
                         </TouchableWithoutFeedback>
                     </View>
