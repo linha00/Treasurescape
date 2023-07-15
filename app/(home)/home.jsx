@@ -32,6 +32,8 @@ function HomePage() {
     const [missionText, setMissionText] = useState("temp");
     const [top3, settop3] = useState([
         {name: 'temp', image:"placeholder", mission: '1', key: '1'},
+        {name: 'temp', image:"placeholder", mission: '1', key: '2'},
+        {name: 'temp', image:"placeholder", mission: '1', key: '3'},
     ]);
     
     async function getStuff() {
