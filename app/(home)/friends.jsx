@@ -23,12 +23,13 @@ function FriendsPage() {
     const [loading, setLoading] = useState(false);
     const [friend_id, setFriend_id] = useState('placeholder');
     const [modalVisible, setModalVisible] = useState(false);
+    // const [removefriendmenu, setremovefriendmenu] = useState(false);
     // eslint-disable-next-line no-unused-vars
     const {control, handleSubmit, formState: {errors}} = useForm();
     const [addLoading, setAddLoading] = useState(false);
     
     const [items, setItems] = useState([
-        {name: 'temp', image:"placeholder", online: true, mission: '1', key: '1'},
+        {name: 'temp', image:"placeholder", code: "code", mission: '1', key: '1'},
     ]);
     const [nearby, setNearby] = useState([
         {name: 'temp', image:"placeholder", code: "code", mission: '1', key: '1'},
@@ -50,7 +51,7 @@ function FriendsPage() {
                 let {data} = await supabase.from('profiles').select().eq('friend_id', tempfriendlist[i]).single();
                 if (data != null) {
                     let temp = friendlistout;
-                    friendlistout = temp.concat([{name: data.name, image: data.imageUrl, online: data.online, mission: data.mission, key: i}]);
+                    friendlistout = temp.concat([{name: data.name, image: data.imageUrl, code: data.friend_id, mission: data.mission, key: i}]);
                 }
             }
         }
@@ -158,6 +159,8 @@ function FriendsPage() {
             Alert.alert("Please enter your friend's IDs");
         }
         setAddLoading(false);
+        getItems();
+        setRefresh(true);
     };
 
     //send friend request for nearby
@@ -213,6 +216,9 @@ function FriendsPage() {
         } else {
             Alert.alert("Please enter your friend's IDs");
         }
+
+        getItems();
+        setRefresh(true);
         setAddLoading(false);
     };
 
@@ -263,8 +269,8 @@ function FriendsPage() {
             })
             .eq('friend_id', user_id);
     
-        setLoading(false);
-        setRefresh(false);
+        getItems();
+        setRefresh(true);
     }
 
     const reject_friendRequest = async (input) => {
@@ -284,6 +290,48 @@ function FriendsPage() {
             .from('profiles')
             .update({ 
                 friendsRequest: user_friendsrequest_list,
+            })
+            .eq('friend_id', user_id);
+
+        getItems();
+        setLoading(false);
+        setRefresh(false);
+    }
+
+    const remove_friend = async (input) => {
+        const user_id = friend_id;
+        const keyed_id = input;
+        setRefresh(true);
+        setLoading(true);
+
+        let userData = await supabase.from('profiles').select().eq('id', user.id).single();
+        let friendData = await supabase.from('profiles').select().eq('friend_id', keyed_id).single();
+
+        let friend_list = [];
+        for (var i = 0; i < friendData.data.friends.length; i++) {
+            if (friendData.data.friends[i] != user_id) {
+                let temp = [friendData.data.friends[i]];
+                friend_list = friend_list.concat(temp);
+            }
+        }
+        await supabase
+            .from('profiles')
+            .update({ 
+                friends: friend_list,
+            })
+            .eq('friend_id', keyed_id);
+
+        let user_list = [];
+        for (var j = 0; j < userData.data.friends.length; j++) {
+            if (userData.data.friends[j] != keyed_id) {
+                let temp = [userData.data.friends[j]];
+                user_list = user_list.concat(temp);
+            }
+        }
+        await supabase
+            .from('profiles')
+            .update({ 
+                friends: user_list,
             })
             .eq('friend_id', user_id);
 
@@ -382,18 +430,18 @@ function FriendsPage() {
                                                     </Text>
                                                     <Text style={styles.mission}>mission {item.mission}</Text>
                                                     <View style={styles.friendRequest_button_group}>
-                                                    <TouchableOpacity
-                                                        style={styles.friendRequest_button}
-                                                        onPress= {() => accept_friendRequest(item.code)}
-                                                    >
-                                                        <Text style = {{color: color.white, fontSize: temp_size}}>accept</Text>
-                                                    </TouchableOpacity>
-                                                    <TouchableOpacity
-                                                        style={styles.friendRequest_button}
-                                                        onPress= {() => reject_friendRequest(item.code)}
-                                                    >
-                                                        <Text style = {{color: color.white, fontSize: temp_size}}>reject</Text>
-                                                    </TouchableOpacity>
+                                                        <TouchableOpacity
+                                                            style={styles.friendRequest_button}
+                                                            onPress= {() => accept_friendRequest(item.code)}
+                                                        >
+                                                            <Text style = {{color: color.white, fontSize: temp_size}}>accept</Text>
+                                                        </TouchableOpacity>
+                                                        <TouchableOpacity
+                                                            style={styles.friendRequest_button}
+                                                            onPress= {() => reject_friendRequest(item.code)}
+                                                        >
+                                                            <Text style = {{color: color.white, fontSize: temp_size}}>reject</Text>
+                                                        </TouchableOpacity>
                                                     </View>
                                                 </View>
                                             </View>
@@ -415,6 +463,7 @@ function FriendsPage() {
                                 data={items}
                                 renderItem={({item}) => (
                                 <View style={styles.box2} key={item.key}>
+                                    {/* <TouchableOpacity style={styles.box3} onPress = {() => setremovefriendmenu(true)}> */}
                                     <Image style={styles.main_friend_profile} source = {{ uri : item.image}} />
                                     <View style={styles.text}>
                                         <Text style={styles.name}>
@@ -422,6 +471,46 @@ function FriendsPage() {
                                         </Text>
                                         <Text style={styles.mission}>mission {item.mission}</Text>
                                     </View>
+                                    <TouchableOpacity
+                                        style={styles.removefriendmenu_menu_button}
+                                        onPress= {() => remove_friend(item.code)}
+                                    >
+                                        <Text style = {{color: color.white, fontSize: temp_size}}>Remove</Text>
+                                    </TouchableOpacity>
+                                    {/* </TouchableOpacity> */}
+                                    {/* <Modal
+                                        animationType = {'fade'}
+                                        transparent = {true}
+                                        visible = {removefriendmenu}
+                                    >
+                                        <View style = {styles.menuContainer}>
+                                            <View style = {styles.removefriendmenu_menu}>
+                                                <View style = {styles.removefriendmenu_menu_top}>
+                                                    <Text style = {styles.removefriendmenu_menu_header}>Remove friend?</Text>
+                                                    <View style={{position: 'absolute', width: '100%', alignItems: 'flex-end'}}>
+                                                        <CustomButton 
+                                                            type='cross' 
+                                                            onPress={() => setremovefriendmenu(false)}
+                                                        />
+                                                    </View>
+                                                </View>
+                                                <View style= {styles.removefriendmenu_menu_button_group}>
+                                                    <TouchableOpacity
+                                                        style={styles.removefriendmenu_menu_button}
+                                                        onPress= {() => remove_friend(item.name)}
+                                                    >
+                                                        <Text style = {{color: color.white, fontSize: temp_size * 2}}>Yes</Text>
+                                                    </TouchableOpacity>
+                                                    <TouchableOpacity
+                                                        style={styles.removefriendmenu_menu_button}
+                                                        onPress= {() => setremovefriendmenu(false)}
+                                                    >
+                                                        <Text style = {{color: color.white, fontSize: temp_size * 2}}>No</Text>
+                                                    </TouchableOpacity>
+                                                </View>
+                                            </View>
+                                        </View>
+                                    </Modal> */}
                                 </View>
                                 )}
                                 extraData={loading}

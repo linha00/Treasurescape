@@ -50,6 +50,17 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
     },
 
+    box3: {
+        flexDirection: 'row',
+        width: "100%",
+        height: componentHeight + 20,
+        alignItems: 'center',
+        justifyContent: 'space-around',
+        paddingHorizontal: 20,
+        paddingBottom: 5,
+        marginBottom: 10,
+    },
+
     main_friend_profile: {
         width: componentWidth,
         height: componentHeight,
@@ -59,7 +70,7 @@ const styles = StyleSheet.create({
     text: {
         width: componentWidth + 30,
         top: 15,
-        left: 20,
+        left: temp_size * 2,
     },
 
     name: {
@@ -189,6 +200,44 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     
+    removefriendmenu_menu: {
+        // alignItems: 'center',
+        // justifyContent: 'center',
+        flexDirection: 'column',
+        borderRadius: 20,
+        width: '65%',
+        height: '15%',
+        padding: 20,
+        backgroundColor: color.primary,
+    },
+
+    removefriendmenu_menu_top: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'row',
+        // backgroundColor: color.blue,
+    },
+
+    removefriendmenu_menu_header: {
+        fontSize: temp_size * 1.2,
+        fontWeight: 'bold',
+    },
+
+    removefriendmenu_menu_button_group: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-around',
+        marginVertical: temp_size * 0.8,
+    },
+
+    removefriendmenu_menu_button: {
+        width: '25%',
+        height: temp_size * 2.5,
+        borderRadius: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: color.tertiary,
+    },
 })
 
 export default styles;
