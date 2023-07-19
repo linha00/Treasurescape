@@ -325,7 +325,7 @@ function HomePage() {
                     {/* missions */}
                     <View style={styles.home_section}>
                         <Text style={styles.headers}>Misions</Text>
-                        <TouchableWithoutFeedback onPress={() => nav.push('/mission')}>
+                        <TouchableWithoutFeedback onPress={() => nav.push('/missionscreens')}>
                             <View style={styles.home_box}>
                                 <Text style = {{fontSize: temp_size * 1.1}}>Mission {missionId}:</Text>
                                 <Text style = {{fontSize: temp_size}}>{missionText}</Text>
