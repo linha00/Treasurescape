@@ -14,6 +14,7 @@ import CustomButton from '../../../components/customButton';
 import AppLoader from '../../../components/AppLoader';
 import CustomInput from '../../../components/customInput';
 import { useForm } from 'react-hook-form';
+import { Button } from 'react-native';
 
 function MissionPage() {
     const nav = useRouter();
@@ -177,6 +178,10 @@ function MissionPage() {
                                             <SafeAreaView style = {styles.correct}>
                                                     <Image style = {styles.correctImage} source={require('../../../assets/logo.png')} />
                                                     <Text style = {styles.correctText}>That's Right!</Text>
+                                                    <CustomButton 
+                                                        style = {styles.directionsButton}
+                                                        text ="Direct me there!" 
+                                                        onPress={() => {nav.push('/map'); setCorrect(false);setenter_prompt(false)}} />
                                             </SafeAreaView>
                                         </TouchableWithoutFeedback>
                                     </Modal>
@@ -339,6 +344,10 @@ const styles = StyleSheet.create({
     correctText: {
         fontSize: 30,
     },
+
+    directionsButton: {
+        paddingTop: 20,
+    }
 })
 
 export default MissionPage;
