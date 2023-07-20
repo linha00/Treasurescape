@@ -4,6 +4,9 @@ import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { StatusBar } from 'expo-status-bar';
 
+import { supabase } from '../../lib/supabase';
+import { useAuth } from '../../contexts/auth';
+
 const logo = Dimensions.get('window').width / 16;
 
 function LogoTitle() {
@@ -19,10 +22,85 @@ function MapPage() {
   const [userLocation, setUserLocation] = useState(null);
   const [startingLocation, setStartingLocation] = useState('Your location');
   const [destination, setDestination] = useState('');
+  const[missionIdForMap, setMissionId] = useState(null);
 
   const startingLocationInputRef = useRef(null);
+  const destinationInputRef = useRef(null);
+  
+  const { user } = useAuth();
+
 
   useEffect(() => {
+    const fetchData = async (userId) => {
+      try {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', userId)
+          .single();
+  
+        if (error) {
+          console.error('Error fetching profile data:', error.message);
+          return null;
+        }
+        return data;
+      } catch (error) {
+        console.error('Error occurred while fetching profile data:', error);
+        return null;
+      }
+    };
+
+
+    const fetchMissionData = async (missionId) => {
+      try {
+        const { data, error } = await supabase
+          .from('missions')
+          .select('*')
+          .eq('id', missionId)
+          .single();
+  
+        if (error) {
+          console.error('Error fetching mission data:', error.message);
+          return null;
+        }
+  
+        return data;
+      } catch (error) {
+        console.error('Error occurred while fetching mission data:', error);
+        return null;
+      }
+    };
+
+    const fetchUserData = async () => {
+      const userData = await fetchData(user.id);
+      if (userData) {
+        const newMissionId = userData.mission - 1;
+        if (newMissionId <= 0) {
+          setMissionId(null);
+          setDestination('');
+        }
+        else if (missionIdForMap !== newMissionId) {
+          setMissionId(newMissionId);
+          const missionData = await fetchMissionData(newMissionId);
+          setDestination(missionData.passcode);
+      }
+    }
+  };
+
+  /*const handleProfileUpdate = async (payload) => {
+    if (payload.new.id === user.id) {
+      const newMissionId = payload.new.mission - 1;
+      if (missionIdForMap !== newMissionId) {
+        setMissionId(newMissionId);
+      }
+    }
+  };
+
+    const missionSubscription = supabase
+    .from('profiles')
+    .on('UPDATE', handleProfileUpdate)
+    .subscribe();*/
+
     const getPermissionAndLocation = async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
@@ -35,8 +113,43 @@ function MapPage() {
       setStartingLocation('Your location');
     };
 
+    /*const resetStartingLocationAndDestination = async () => {
+      setStartingLocation('Your location');
+
+      // Fetch the previous mission data
+      const userData = await fetchData(user.id);
+      if (userData) {
+        const missionId = userData.mission - 1;
+        const latestMissionDataForMap = await fetchMissionData(missionId);
+        setMissionId(latestMissionDataForMap.id); // Update missionData state with the previous mission's data
+        setDestination(latestMissionDataForMap.passcode); // Set destination to the latest missionData.passcode
+      }
+    }; */
+
+    fetchUserData();
     getPermissionAndLocation();
-  }, []);
+
+  // Clean up the subscription when the component unmounts
+  /* return () => {
+    missionSubscription.unsubscribe();
+  };  */
+
+  }, [user.id,missionIdForMap]);
+
+  useEffect(() => {
+    // This useEffect will trigger whenever missionIdForMap changes
+    // You can use this effect to fetch the missionData and update the destination
+
+    const fetchMissionDataForMap = async () => {
+      if (missionIdForMap !== null) {
+        const missionData = await fetchMissionData(missionIdForMap);
+        setDestination(missionData.passcode);
+      }
+    };
+
+    fetchMissionDataForMap();
+  }, [missionIdForMap]);
+
 
   const handleGetDirections = () => {
     if (startingLocation && destination) {
@@ -50,6 +163,10 @@ function MapPage() {
 
   const handleStartingLocationFocus = () => {
     startingLocationInputRef.current?.setSelection(0, startingLocation.length);//to select the whole text
+  };
+
+  const handleDestinationFocus = () => {
+      destinationInputRef.current?.setSelection(0, destination.length);//to select the whole text
   };
 
   return (
@@ -98,6 +215,8 @@ function MapPage() {
           placeholder="Destination"
           value={destination}
           onChangeText={setDestination}
+          onFocus={handleDestinationFocus}
+          ref={destinationInputRef}
         />
         <Button title="Get Directions" onPress={handleGetDirections} />
       </View>
