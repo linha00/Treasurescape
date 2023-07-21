@@ -29,8 +29,7 @@ function MapPage() {
   
   const { user } = useAuth();
 
-
-  useEffect(() => {
+  //useEffect(() => {
     const fetchData = async (userId) => {
       try {
         const { data, error } = await supabase
@@ -71,35 +70,22 @@ function MapPage() {
       }
     };
 
-    const fetchUserData = async () => {
-      const userData = await fetchData(user.id);
-      if (userData) {
-        const newMissionId = userData.mission - 1;
-        if (newMissionId <= 0) {
-          setMissionId(null);
-          setDestination('');
-        }
-        else if (missionIdForMap !== newMissionId) {
-          setMissionId(newMissionId);
-          const missionData = await fetchMissionData(newMissionId);
-          setDestination(missionData.passcode);
+    
+  const fetchUserData = async () => {
+    const userData = await fetchData(user.id);
+    if (userData) {
+      const newMissionId = userData.mission - 1;
+      if (newMissionId <= 0) {
+        setMissionId(null);
+        setDestination('');
       }
-    }
-  };
-
-  /*const handleProfileUpdate = async (payload) => {
-    if (payload.new.id === user.id) {
-      const newMissionId = payload.new.mission - 1;
-      if (missionIdForMap !== newMissionId) {
+      else if (missionIdForMap !== newMissionId) {
         setMissionId(newMissionId);
-      }
+        const missionData = await fetchMissionData(newMissionId);
+        setDestination(missionData.passcode);
     }
+  }
   };
-
-    const missionSubscription = supabase
-    .from('profiles')
-    .on('UPDATE', handleProfileUpdate)
-    .subscribe();*/
 
     const getPermissionAndLocation = async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -113,42 +99,9 @@ function MapPage() {
       setStartingLocation('Your location');
     };
 
-    /*const resetStartingLocationAndDestination = async () => {
-      setStartingLocation('Your location');
-
-      // Fetch the previous mission data
-      const userData = await fetchData(user.id);
-      if (userData) {
-        const missionId = userData.mission - 1;
-        const latestMissionDataForMap = await fetchMissionData(missionId);
-        setMissionId(latestMissionDataForMap.id); // Update missionData state with the previous mission's data
-        setDestination(latestMissionDataForMap.passcode); // Set destination to the latest missionData.passcode
-      }
-    }; */
-
     fetchUserData();
     getPermissionAndLocation();
-
-  // Clean up the subscription when the component unmounts
-  /* return () => {
-    missionSubscription.unsubscribe();
-  };  */
-
-  }, [user.id,missionIdForMap]);
-
-  useEffect(() => {
-    // This useEffect will trigger whenever missionIdForMap changes
-    // You can use this effect to fetch the missionData and update the destination
-
-    const fetchMissionDataForMap = async () => {
-      if (missionIdForMap !== null) {
-        const missionData = await fetchMissionData(missionIdForMap);
-        setDestination(missionData.passcode);
-      }
-    };
-
-    fetchMissionDataForMap();
-  }, [missionIdForMap]);
+  //}, [user.id, missionIdForMap]);
 
 
   const handleGetDirections = () => {
