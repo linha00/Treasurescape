@@ -1,22 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, View, Image, Dimensions, Button, Linking, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
+import { useState, useRef } from 'react';
+import { StyleSheet, View, Button, Linking, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { StatusBar } from 'expo-status-bar';
 
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/auth';
-
-const logo = Dimensions.get('window').width / 16;
-
-function LogoTitle() {
-  return (
-    <Image
-      style={{ width: logo, height: logo }}
-      source={require("../../assets/map.png")}
-    />
-  );
-}
 
 function MapPage() {
   const [userLocation, setUserLocation] = useState(null);
