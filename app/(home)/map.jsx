@@ -63,15 +63,22 @@ function MapPage() {
     const fetchUserData = async () => {
         const userData = await fetchData(user.id);
         if (userData) {
-            const newMissionId = userData.mission - 1;
-            if (newMissionId <= 0) {
+            if (userData.mission === 0) {
+              setMissionId(4);
+              const lastMissionData = await fetchMissionData(4);
+              setDestination(lastMissionData.passcode);
+            } else {
+              const newMissionId = userData.mission - 1;
+
+              if (newMissionId <= 0) {
                 setMissionId(null);
                 setDestination('');
-            }
-            else if (missionIdForMap !== newMissionId) {
+              }
+              else if (missionIdForMap !== newMissionId) {
                 setMissionId(newMissionId);
                 const missionData = await fetchMissionData(newMissionId);
                 setDestination(missionData.passcode);
+              }
             }
         }
     };
