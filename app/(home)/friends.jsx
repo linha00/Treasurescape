@@ -159,7 +159,6 @@ function FriendsPage() {
             Alert.alert("Please enter your friend's IDs");
         }
         setAddLoading(false);
-        getItems();
         setRefresh(true);
     };
 
@@ -217,7 +216,6 @@ function FriendsPage() {
             Alert.alert("Please enter your friend's IDs");
         }
 
-        getItems();
         setRefresh(true);
         setAddLoading(false);
     };
@@ -269,7 +267,6 @@ function FriendsPage() {
             })
             .eq('friend_id', user_id);
     
-        getItems();
         setRefresh(true);
     }
 
@@ -293,7 +290,6 @@ function FriendsPage() {
             })
             .eq('friend_id', user_id);
 
-        getItems();
         setLoading(false);
         setRefresh(false);
     }
@@ -335,7 +331,6 @@ function FriendsPage() {
             })
             .eq('friend_id', user_id);
 
-        getItems();
         setLoading(false);
         setRefresh(false);
     }

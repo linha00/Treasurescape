@@ -1,5 +1,6 @@
-import { useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { StyleSheet, View, Button, Linking, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { StatusBar } from 'expo-status-bar';
@@ -8,108 +9,112 @@ import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../contexts/auth';
 
 function MapPage() {
-  const [userLocation, setUserLocation] = useState(null);
-  const [startingLocation, setStartingLocation] = useState('Your location');
-  const [destination, setDestination] = useState('');
-  const[missionIdForMap, setMissionId] = useState(null);
+    const [userLocation, setUserLocation] = useState(null);
+    const [startingLocation, setStartingLocation] = useState('Your location');
+    const [destination, setDestination] = useState('');
+    const[missionIdForMap, setMissionId] = useState(null);
 
-  const startingLocationInputRef = useRef(null);
-  const destinationInputRef = useRef(null);
+    const startingLocationInputRef = useRef(null);
+    const destinationInputRef = useRef(null);
   
-  const { user } = useAuth();
+    const { user } = useAuth();
 
-  //useEffect(() => {
     const fetchData = async (userId) => {
-      try {
-        const { data, error } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', userId)
-          .single();
-  
-        if (error) {
-          console.error('Error fetching profile data:', error.message);
-          return null;
+        try {
+            const { data, error } = await supabase
+                .from('profiles')
+                .select('*')
+                .eq('id', userId)
+                .single();
+    
+            if (error) {
+                console.error('Error fetching profile data:', error.message);
+                return null;
+            }
+            return data;
+        } catch (error) {
+            console.error('Error occurred while fetching profile data:', error);
+            return null;
         }
-        return data;
-      } catch (error) {
-        console.error('Error occurred while fetching profile data:', error);
-        return null;
-      }
     };
 
 
     const fetchMissionData = async (missionId) => {
-      try {
-        const { data, error } = await supabase
-          .from('missions')
-          .select('*')
-          .eq('id', missionId)
-          .single();
-  
-        if (error) {
-          console.error('Error fetching mission data:', error.message);
-          return null;
+        try {
+            const { data, error } = await supabase
+                .from('missions')
+                .select('*')
+                .eq('id', missionId)
+                .single();
+    
+            if (error) {
+                console.error('Error fetching mission data:', error.message);
+                return null;
+            }
+    
+            return data;
+        } catch (error) {
+            console.error('Error occurred while fetching mission data:', error);
+            return null;
         }
-  
-        return data;
-      } catch (error) {
-        console.error('Error occurred while fetching mission data:', error);
-        return null;
-      }
     };
 
     
-  const fetchUserData = async () => {
-    const userData = await fetchData(user.id);
-    if (userData) {
-      const newMissionId = userData.mission - 1;
-      if (newMissionId <= 0) {
-        setMissionId(null);
-        setDestination('');
-      }
-      else if (missionIdForMap !== newMissionId) {
-        setMissionId(newMissionId);
-        const missionData = await fetchMissionData(newMissionId);
-        setDestination(missionData.passcode);
-    }
-  }
-  };
-
-    const getPermissionAndLocation = async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        console.log("Please grant location permissions");
-        return;
-      }
-
-      const location = await Location.getCurrentPositionAsync({});
-      setUserLocation(location);
-      setStartingLocation('Your location');
+    const fetchUserData = async () => {
+        const userData = await fetchData(user.id);
+        if (userData) {
+            const newMissionId = userData.mission - 1;
+            if (newMissionId <= 0) {
+                setMissionId(null);
+                setDestination('');
+            }
+            else if (missionIdForMap !== newMissionId) {
+                setMissionId(newMissionId);
+                const missionData = await fetchMissionData(newMissionId);
+                setDestination(missionData.passcode);
+            }
+        }
     };
 
-    fetchUserData();
-    getPermissionAndLocation();
-  //}, [user.id, missionIdForMap]);
+    const getPermissionAndLocation = async () => {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+            console.log("Please grant location permissions");
+            return;
+        }
+
+        const location = await Location.getCurrentPositionAsync({});
+        setUserLocation(location);
+        setStartingLocation('Your location');
+    };
+
+    useFocusEffect(
+        React.useCallback(() => {
+            fetchUserData();
+            getPermissionAndLocation();
+        }, [])
+    );
+
+    //}, [user.id, missionIdForMap]);
 
 
-  const handleGetDirections = () => {
-    if (startingLocation && destination) {
-      const encodedStartingLocation = encodeURIComponent(startingLocation);
-      const encodedDestination = encodeURIComponent(destination);
+    const handleGetDirections = () => {
+        if (startingLocation && destination) {
+        const encodedStartingLocation = encodeURIComponent(startingLocation);
+        const encodedDestination = encodeURIComponent(destination);
 
-      const url = `https://www.google.com/maps/dir/?api=1&origin=${encodedStartingLocation}&destination=${encodedDestination}`;
-      Linking.openURL(url);
-    }
-  };
+        const url = `https://www.google.com/maps/dir/?api=1&origin=${encodedStartingLocation}&destination=${encodedDestination}`;
+        Linking.openURL(url);
+        }
+    };
 
-  const handleStartingLocationFocus = () => {
-    startingLocationInputRef.current?.setSelection(0, startingLocation.length);//to select the whole text
-  };
+    const handleStartingLocationFocus = () => {
+        startingLocationInputRef.current?.setSelection(0, startingLocation.length);//to select the whole text
+    };
 
-  const handleDestinationFocus = () => {
-      destinationInputRef.current?.setSelection(0, destination.length);//to select the whole text
-  };
+    const handleDestinationFocus = () => {
+        destinationInputRef.current?.setSelection(0, destination.length);//to select the whole text
+    };
 
   return (
     <KeyboardAvoidingView
