@@ -57,6 +57,20 @@ function MissionPage() {
         }
     }, [refresh])
 
+    const reset_pressed = async () => {
+        try {
+            await supabase
+            .from('profiles')
+            .update({ 
+                mission: 1,
+            }).eq('id', user.id);
+            nav.push('/home');
+            console.log("Mission reset successful")
+        } catch(error) {
+            console.log(error.message);
+        }   
+    };
+
     const enter_pressed = async input => {
         const keyed = input.passcode;
 
@@ -93,7 +107,7 @@ function MissionPage() {
                         .from('profiles')
                         .update({ 
                             gold: balance + reward,
-                            mission: 1
+                            mission: 0
                         })
                         .eq('id', user.id);
                         nav.push('/mission');
@@ -118,7 +132,6 @@ function MissionPage() {
                     <Image style={styles.logo} 
                         source={require('../../assets/logo.png')} />
                 </View>
-
                 <View style={styles.container2}>
                     <View style = {styles.headertab}>
                         <Text style={styles.header}>
@@ -132,9 +145,12 @@ function MissionPage() {
                     </View>
                 </View>
 
+                <View><Text>                        </Text></View>
                 <View style={styles.button}>
                     <CustomButton text= "let's go! i got it" onPress={() => setenter_prompt(true)} />
                     {/* <CustomButton text= "let's go! i got it" onPress={() => nav.push('/')} /> */}
+                    <View><Text>      </Text></View>
+                    <CustomButton text= "RESET(For testing)" onPress={() => reset_pressed()} />
                     <Modal
                         animationType = {'fade'}
                         transparent = {true}
@@ -158,7 +174,7 @@ function MissionPage() {
                                             control = {control}
                                             rules = {{
                                                 required: "enter the passcode",
-                                                minLength: {value: 8, message: "passcode should be 8 characers long"},
+                                                //minLength: {value: 8, message: "passcode should be 8 characers long"},
                                             }}
                                         />
                                     </View>
